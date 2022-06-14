@@ -1,0 +1,10 @@
+{
+  "theme_color": "#242322",
+  "background_color": "#000000",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": ".",
+  "name": "PractiLearn Training Program",
+  "short_name": "Practilearn Training",
+  "description": " "
+}

@@ -1,0 +1,238 @@
+.topbar {
+  width: 100%;
+  height: auto;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(245, 245, 245, 1) 32%,
+    rgba(224, 251, 252, 1) 100%
+  );
+  position: sticky;
+  color: #fff;
+  top: 0;
+  z-index: 999;
+}
+
+.topbarWrapper {
+  height: 100%;
+  padding: 0px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 250px;
+  height: 90px;
+  cursor: pointer;
+  cursor: pointer;
+}
+
+.topRight {
+  display: flex;
+  align-items: center;
+}
+
+.topbarIconContainer {
+  position: relative;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #555;
+}
+
+.topIconBadge {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: -5px;
+  right: 0px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.topAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.flex {
+  display: flex;
+}
+.sidebar {
+  flex: 1;
+  height: calc(100vh - 50px);
+  background-color: rgb(251, 251, 255);
+  position: sticky;
+  top: 50px;
+  width: 250px;
+}
+
+.sidebarWrapper {
+  padding: 20px;
+  color: #555;
+}
+
+.sidebarMenu {
+  margin-bottom: 10px;
+}
+
+.sidebarTitle {
+  font-size: 13px;
+  color: black;
+}
+
+.sidebarList {
+  list-style: none;
+  padding: 5px;
+}
+
+.sidebarListItem {
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  color: black;
+}
+
+.sidebarListItem.active,
+.sidebarListItem:hover {
+  background-color: rgb(240, 240, 255);
+}
+
+.sidebarIcon {
+  margin-right: 5px;
+  font-size: 20px !important;
+}
+.rightbarSect {
+  flex: 11;
+  height: auto !important;
+}
+.tableDiv {
+  padding: 40px 0px;
+}
+h1 {
+  margin-bottom: 20px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th {
+  height: 50px;
+  padding: 10px;
+}
+td {
+  height: 45px;
+  cursor: pointer;
+  padding: 10px;
+}
+tr:hover {
+  background-color: rgb(240, 240, 255);
+}
+table,
+th,
+td {
+  border: 1px solid black;
+  text-align: center;
+}
+.approve {
+  outline: none;
+  cursor: pointer;
+  padding: 7px 33px;
+  background-color: blue;
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+
+.approved {
+  outline: none;
+  cursor: not-allowed;
+  padding: 7px 33px;
+  background-color: green;
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+
+.disapproved {
+  outline: none;
+  cursor: not-allowed;
+  padding: 7px 24px;
+  background-color: rgb(238, 10, 10);
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+.disapproved1 {
+  outline: none;
+  cursor: pointer;
+  padding: 7px 24px;
+  background-color: rgb(238, 10, 10);
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+.approve:hover,
+.disapprove:hover {
+  opacity: 0.9;
+}
+.disapprove {
+  outline: none;
+  cursor: pointer;
+  padding: 7px 24px;
+  color: white;
+  border: none;
+  background-color: rgb(212, 87, 87);
+  transition: all 0.4s ease-in-out;
+  border-radius: 7px;
+}
+
+.greenBox {
+  width: 20px;
+  height: 20px;
+  background-color: green;
+  margin-right: 5px;
+}
+.redBox {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  margin-right: 5px;
+}
+.blueBox {
+  width: 20px;
+  height: 20px;
+  background-color: blue;
+  margin-right: 5px;
+}
+.yellowBox {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(212, 87, 87);
+  margin-right: 5px;
+}
+.tag {
+  display: block;
+}
+.itmes {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+.flex1 {
+  display: flex;
+  align-items: center;
+}

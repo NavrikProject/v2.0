@@ -1,0 +1,9 @@
+.disabled-date {
+  background-color: red;
+  border-radius: 5px;
+  cursor: not-allowed;
+}
+.available {
+  background-color: green;
+  border-radius: 5px;
+}
