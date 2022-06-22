@@ -8,30 +8,30 @@ import {
   MentorDetailsDiv,
   MentorName,
 } from "./MentorCardElements";
+import logo from "../../images/practi-logo.png";
 import { MentorCourseBox, MentorDiv } from "./MentorClubElements";
 import "react-datepicker/dist/react-datepicker.css";
 import "./MentorCardDate.css";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import "rc-time-picker/assets/index.css";
-
-import TimePicker from "rc-time-picker";
+import setHours from "date-fns/setHours";
+import setMinutes from "date-fns/setMinutes";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../utils/LoadingSpinner";
-
-const showSecond = true;
-
+import dotenv from "dotenv";
+dotenv.config();
 const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
-  const [mentorDetails, setMentorDetails] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [timeSlot, setTimeSlot] = useState("");
+  const [mentorDetails, setMentorDetails] = useState([]);
+  const [date, setDate] = useState();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [mentorBookingDate, setMentorBookingDate] = useState([]);
   const user = useSelector((state) => state.user.currentUser);
+
   useEffect(() => {
     try {
       const getAllMentorDetails = async () => {
@@ -44,98 +44,166 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
       };
       getAllMentorDetails();
     } catch (error) {
-      console.log(error.message);
+      return;
     }
   }, [searchItemWord]);
 
-  // useEffect(() => {
-  //   try {
-  //     const getAllMentorDetails = async () => {
-  //       const res = await axios.get(
-  //         `/mentor/get/mentors?name=${searchItemWord}`
-  //       );
-  //       setMentorDetails(res.data.mentors);
-  //     };
-  //     getAllMentorDetails();
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // }, [searchItemWord]);
-  const price = 1000;
-  const showDateForm = async (mentor) => {
-    if (!date && timeSlot) {
-    }
+  useEffect(() => {
     try {
-      const res = await axios.post("mentor/create/appointment", {
-        mentor: mentor.mentor_dtls_id,
-        date: date.toISOString().substring(0, 10),
-        timeSlot: timeSlot,
-        email: user?.email,
-      });
-      if (res.data.success) {
-        setSuccess(res.data.success);
-        toast.success(res.data.success, {
-          position: "top-center",
-        });
-        setLoading(false);
-      }
-      if (res.data.error) {
-        setError(res.data.error);
-        toast.error(res.data.error, {
-          position: "top-center",
-        });
-        setLoading(false);
-      }
+      const getAllMentorDetailsAvailability = async () => {
+        const res = await axios.get(`/mentor/get/booking`);
+        setMentorBookingDate(res.data);
+      };
+      getAllMentorDetailsAvailability();
     } catch (error) {
-      console.log(error.message);
+      return;
     }
-  };
-  const str = showSecond ? "HH:mm:ss" : "HH:mm";
+  }, []);
 
-  const now = moment().hour(14).minute(30);
+  const bookMentorHandler = async (mentor) => {
+    if (!date) {
+      return;
+    }
 
-  function generateOptions(length, excludedOptions) {
-    const arr = [];
-    for (let value = 0; value < length; value++) {
-      if (excludedOptions.indexOf(value) < 0) {
-        arr.push(value);
+    // const res = await axios.post("mentor/create/appointment", {
+    //   mentor: mentor.mentor_dtls_id,
+    //   date: date.toISOString().substring(0, 10),
+    //   timeSlot: timeSlot,
+    //   email: user?.email,
+    //   mentorEmail: mentor.mentor_email,
+    // });
+    // if (res.data.success) {
+    //   setSuccess(res.data.success);
+    //   toast.success(res.data.success, {
+    //     position: "top-center",
+    //   });
+    //   setLoading(false);
+    // }
+    // if (res.data.error) {
+    //   setError(res.data.error);
+    //   toast.error(res.data.error, {
+    //     position: "top-center",
+    //   });
+    //   setLoading(false);
+    // }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onerror = () => {
+      alert("Razorpay SDK failed to load. Are you online?");
+    };
+    script.onload = async () => {
+      try {
+        setLoading(true);
+        const result = await axios.post(
+          "mentor/create/appointment/create-order",
+          {
+            mentorId: mentor.mentor_dtls_id,
+            date: date.toLocaleDateString(),
+          }
+        );
+        if (result.data.error) {
+          return (
+            toast.error(result.data.error, {
+              position: "top-center",
+            }),
+            setLoading(false)
+          );
+        }
+        const { amount, id: order_id, currency } = result.data;
+        const {
+          data: { key: razorpayKey },
+        } = await axios.get("/get-razorpay-key");
+
+        const options = {
+          key: razorpayKey,
+          amount: amount.toString(),
+          currency: currency,
+          name: "Navrik Software Solutions",
+          description: "Paying for the mentor",
+          image: logo,
+          order_id: order_id,
+          handler: async function (response) {
+            const res = await axios.post(
+              "mentor/create/appointment/pay-order",
+              {
+                amount: amount,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpaySignature: response.razorpay_signature,
+                mentorId: mentor.mentor_dtls_id,
+                date: date.toLocaleDateString(),
+                userEmail: user?.email,
+                mentorEmail: mentor.mentor_email,
+                from: mentor.mentor_availability_slot_from,
+                to: mentor.mentor_availability_slot_to,
+              }
+            );
+            if (res.data.success) {
+              setSuccess(res.data.success);
+              toast.success(res.data.success, {
+                position: "top-center",
+              });
+              setLoading(false);
+            }
+            if (res.data.error) {
+              setError(res.data.error);
+              toast.error(res.data.error, {
+                position: "top-center",
+              });
+              setLoading(false);
+            }
+          },
+          prefill: {
+            name: "example name",
+            email: "email@example.com",
+            contact: "111111",
+          },
+          theme: {
+            color: "#80c0f0",
+          },
+        };
+        setLoading(false);
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+      } catch (err) {
+        alert(err);
+        setLoading(false);
       }
-    }
-    return arr;
-  }
-
-  function onChangeTime(value) {
-    setTimeSlot(value.format(str));
-  }
-
-  function disabledHours() {
-    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
-  }
-  function disabledMinutes(h) {
-    switch (h) {
-      case 9:
-        return generateOptions(60, [30]);
-      case 21:
-        return generateOptions(60, [0]);
-      default:
-        return generateOptions(60, [0, 30]);
-    }
-  }
-
-  function disabledSeconds(h, m) {
-    return [h + (m % 60)];
-  }
-  // disable the list of custom dates
-  const customDates = ["06/13/2022", "06/14/2022", "06/15/2022"];
-  const disableCustomDt = (current) => {
-    return customDates.includes(current.format("MM/DD/YYYY"));
+    };
+    document.body.appendChild(script);
   };
-  function addDays(theDate, days) {
-    return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
+
+  // disable the list of custom dates
+  function isWorkDay(available, date) {
+    const weekDay = new Date(date).getDay();
+    if (available === "weekends") {
+      return (
+        weekDay !== 1 &&
+        weekDay !== 2 &&
+        weekDay !== 3 &&
+        weekDay !== 4 &&
+        weekDay !== 5
+      );
+    } else if (available === "weekdays") {
+      return weekDay !== 0 && weekDay !== 6;
+    } else if (available === "saturday") {
+      return weekDay === 6;
+    } else if (available === "sunday") {
+      return weekDay === 0;
+    }
   }
+  mentorBookingDate.map((mentorBooking) => {
+    return mentorBooking.booking_mentor_date;
+  });
+  const getDate = (date) => {
+    // return mentorBookingDate.includes(date.toLocaleDateString())
+    //   ? "disabled-date"
+    //   : undefined;
+  };
   return (
     <>
       {loading && <Loading />}
+      {error && <p>please select the date</p>}
       {!categoryItem && mentorDetails?.length > 0
         ? mentorDetails?.map((mentor) => (
             <MentorDiv key={mentor.mentor_dtls_id}>
@@ -162,37 +230,32 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                     Sessions Conducted:{mentor.mentor_session_conducted}
                   </MentorDescP>
                   <MentorDescP>
-                    Price for One Session : {`${price}`}
+                    Price for One Session : {mentor.mentor_price}
                   </MentorDescP>
                 </MentorBoxDiv>
                 <MentorBoxDiv>
                   <MentorDescP>Choose the date :</MentorDescP>
                   <MentorDescP>
                     <DatePicker
+                      closeOnScroll={true}
                       selected={date}
                       onChange={(date) => setDate(date)}
                       minDate={new Date()}
-                      dayClassName={(date) =>
-                        date.getTime() === new Date("06/14/2022")
-                          ? "disabled-date"
-                          : undefined
+                      maxDate={new Date(mentor.mentor_available_end_date)}
+                      dayClassName={(date) => getDate(date)}
+                      filterDate={(date) =>
+                        isWorkDay(mentor.mentor_availability, date)
                       }
-                      excludeDates={[addDays(new Date(), 6)]}
                     />
                   </MentorDescP>
                 </MentorBoxDiv>
                 <MentorBoxDiv>
-                  <MentorDescP>Choose the time slot :</MentorDescP>
                   <MentorDescP>
-                    <TimePicker
-                      showSecond={showSecond}
-                      defaultValue={now}
-                      onChange={onChangeTime}
-                      disabledHours={disabledHours}
-                      disabledMinutes={disabledMinutes}
-                      disabledSeconds={disabledSeconds}
-                    />
+                    Available From :
+                    <strong>{mentor.mentor_availability_slot_from} </strong>
+                    to: <strong>{mentor.mentor_availability_slot_to}</strong>
                   </MentorDescP>
+                  <MentorDescP></MentorDescP>
                 </MentorBoxDiv>
                 <BookNowButtonDiv>
                   {!user ? (
@@ -200,7 +263,7 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                       <Link to={"/login"}>Login</Link>
                     </BookNowButton>
                   ) : (
-                    <BookNowButton onClick={() => showDateForm(mentor)}>
+                    <BookNowButton onClick={() => bookMentorHandler(mentor)}>
                       Book now
                     </BookNowButton>
                   )}
@@ -243,31 +306,37 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                       Sessions Conducted:{mentor.mentor_session_conducted}
                     </MentorDescP>
                     <MentorDescP>
-                      Price for One Session : {`${price}`}
+                      Price for One Session : {mentor.mentor_price}
                     </MentorDescP>
                   </MentorBoxDiv>
                   <MentorBoxDiv>
                     <MentorDescP>Choose the date :</MentorDescP>
                     <MentorDescP>
-                      <input
-                        type="date"
-                        name="date"
-                        onChange={(event) => setDate(event.target.value)}
+                      <DatePicker
+                        closeOnScroll={true}
+                        selected={date}
+                        onChange={(date) => setDate(date)}
+                        minDate={new Date()}
+                        maxDate={new Date(mentor.mentor_available_end_date)}
+                        dayClassName={(date) =>
+                          getDate(date) ? "available" : undefined
+                        }
+                        filterDate={(date) =>
+                          isWorkDay(mentor.mentor_availability, date)
+                        }
                       />
                     </MentorDescP>
                   </MentorBoxDiv>
                   <MentorBoxDiv>
                     <MentorDescP>Choose the time slot :</MentorDescP>
                     <MentorDescP>
-                      <input
-                        type="time"
-                        name="time"
-                        onChange={(event) => setTimeSlot(event.target.value)}
-                      />
+                      Available From :
+                      <strong>{mentor.mentor_availability_slot_from} </strong>
+                      to: <strong>{mentor.mentor_availability_slot_to}</strong>
                     </MentorDescP>
                   </MentorBoxDiv>
                   <BookNowButtonDiv>
-                    <BookNowButton onClick={() => showDateForm(mentor)}>
+                    <BookNowButton onClick={() => bookMentorHandler(mentor)}>
                       Book now
                     </BookNowButton>
                   </BookNowButtonDiv>

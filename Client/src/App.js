@@ -17,6 +17,7 @@ import MentorsPage from "./Pages/MentorsPage";
 import ScrollToTop from "./Components/ScrollToTop";
 import LoadingSpinner from "./Components/utils/LoadingSpinner";
 
+const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
   import("./Pages/ActivateAccountPage")
 );
@@ -30,7 +31,6 @@ const MentorPage = React.lazy(() => import("./Pages/MentorFormPage"));
 
 const App = () => {
   const user = useSelector((state) => state.user.currentUser);
-  console.log(user?.role);
   return (
     <>
       <ToastContainer />
@@ -46,6 +46,8 @@ const App = () => {
             <Route path="/forgot-password" element={<ForgotPwdPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/mentor/join" element={<MentorPage />} />
+            <Route path="/mentor/profile" element={<MentorProfilePage />} />
+
             <Route path="*" element={<NotFound />} />
             <Route
               exact

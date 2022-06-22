@@ -165,6 +165,7 @@ export const SlideDiv2 = styled.div`
     font-size: 15px;
   }
 `;
+
 export const SlideDiv3 = styled.div`
   height: 100%;
   width: 25%;
@@ -200,6 +201,27 @@ export const SlideDiv4 = styled.div`
   color: ${({ isActive4 }) => (isActive4 ? "#fff" : "#111")};
   background: ${({ isActive4 }) =>
     isActive4 ? "-webkit-linear-gradient(left, #3e5ce4, #4282fa)" : "none"};
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  @media only screen and (max-width: 768px) {
+    font-size: 17px;
+  }
+  @media only screen and (max-width: 468px) {
+    font-size: 15px;
+  }
+`;
+export const SlideDiv5 = styled.div`
+  height: 100%;
+  width: 25%;
+  font-size: 19px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 48px;
+  cursor: pointer;
+  z-index: 1;
+  color: ${({ isActive5 }) => (isActive5 ? "#fff" : "#111")};
+  transition: all 0.6s ease;
+  background: ${({ isActive5 }) =>
+    isActive5 ? "-webkit-linear-gradient(left, #3e5ce4, #4282fa)" : "none"};
   transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   @media only screen and (max-width: 768px) {
     font-size: 17px;

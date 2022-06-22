@@ -7,7 +7,7 @@ import azureStorage from "azure-storage";
 import intoStream from "into-stream";
 import updateEmail from "../middleware/updateEmail.js";
 import bcrypt from "bcrypt";
-
+import Razorpay from "razorpay";
 const containerName = "navrikimage";
 
 dotenv.config();
@@ -30,7 +30,6 @@ export async function registerMentor(req, res) {
     to,
     availability,
   } = req.body;
-  console.log(req.body);
   let saltRounds = await bcrypt.genSalt(12);
   let hashedPassword = await bcrypt.hash(password, saltRounds);
   const blobName = new Date().getTime() + "-" + req.files.image.name;
@@ -86,17 +85,22 @@ export async function registerMentor(req, res) {
                   }
                   if (success) {
                     sql.connect(config, async (err) => {
+                      let startDate = new Date().toISOString().substring(0, 10);
+                      let endDate = addMonths(new Date(startDate), 3);
+                      endDate = endDate.toISOString().substring(0, 10);
                       if (err) res.send(err.message);
                       const request = new sql.Request();
                       request.query(
-                        "insert into mentor_dtls (mentor_email,mentor_firstname,mentor_lastname,mentor_logintime,mentor_availability,mentor_availability_slot_from,mentor_availability_slot_to,mentor_creation,mentor_experience, mentor_skills,mentor_mentorship_area,mentor_speciality, mentor_sessions_conducted,mentor_image) VALUES('" +
+                        "insert into mentor_dtls (mentor_email,mentor_firstname,mentor_lastname,mentor_available_start_date,mentor_available_end_date,mentor_availability,mentor_availability_slot_from,mentor_availability_slot_to,mentor_creation,mentor_experience, mentor_skills,mentor_mentorship_area,mentor_speciality, mentor_sessions_conducted,mentor_image) VALUES('" +
                           email +
                           "','" +
                           firstname +
                           "','" +
                           lastname +
                           "','" +
-                          timestamp +
+                          startDate +
+                          "','" +
+                          endDate +
                           "','" +
                           availability +
                           "','" +
@@ -217,7 +221,7 @@ export async function getMentorBySearch(req, res) {
     res.send(error.message);
   }
 }
-
+// in web page show the approved candidates
 export async function getAllMentorApprovedDetails(req, res) {
   let mentorApproved = "Yes";
   try {
@@ -374,62 +378,65 @@ export async function updateMentorDisapprove(req, res, next) {
   }
 }
 
-export async function createMentorAppointment(req, res, next) {
-  const { date, mentor, timeSlot, email } = req.body;
+//create razor pay order
+export async function createMentorRazorPayOrder(req, res, next) {
+  const { mentorId, date } = req.body;
   try {
-    sql.connect(config, async (err) => {
+    sql.connect(config, (err) => {
       if (err) {
-        return res.send(err.message);
+        return res.json(err.message);
       }
       const request = new sql.Request();
-      request.input("date", sql.Date, date);
+      request.input("mentor", sql.Int, mentorId);
       request.query(
-        "select * from booking_appointments_dtls where booking_date = @date",
+        "select * from booking_appointments_dtls where mentor_dtls_id = @mentor",
         (err, result) => {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
-            return res.send({
-              error: "This date is booked all ready please choose another one!",
+            result.recordset.forEach((mentor) => {
+              if (
+                mentor.mentor_dtls_id === mentorId &&
+                new Date(mentor.booking_mentor_date).toLocaleDateString() ===
+                  date
+              ) {
+                return res.json({
+                  error: "This date is booked ,Please choose the another date",
+                });
+              }
             });
-          } else {
-            sql.connect(config, async (err) => {
-              if (err) res.send(err.message);
+            sql.connect(config, (err) => {
+              if (err) {
+                return res.send(err.message);
+              }
               const request = new sql.Request();
+              request.input("date", sql.Date, date);
+              request.input("mentorId", sql.Int, mentorId);
               request.query(
-                "insert into booking_appointments_dtls (mentor_dtls_id,booking_mentor_date,booking_date,booking_time) VALUES('" +
-                  mentor +
-                  "','" +
-                  date +
-                  "','" +
-                  date +
-                  "','" +
-                  timeSlot +
-                  "' )",
-                (err, success) => {
-                  if (err) {
-                    return res.send({ error: err.message });
-                  }
-                  if (success) {
-                    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                    const msg = updateEmail(
-                      email,
-                      "Appointment Booking Confirmation",
-                      "Successfully appointment is booked and mentor will be available on the same day with respective time!"
-                    );
-                    sgMail
-                      .send(msg)
-                      .then(() => {
-                        return res.send({
-                          success:
-                            "Successfully appointment is Booked with the mentor",
-                        });
+                "select * from mentor_dtls where mentor_dtls_id = @mentorId",
+                (err, result) => {
+                  if (err) return res.send(err.message);
+                  if (result.recordset.length > 0) {
+                    const mentorPrice = result.recordset[0].mentor_price;
+                    const instance = new Razorpay({
+                      key_id: process.env.RAZORPAY_KEY_ID,
+                      key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
+                    });
+                    const options = {
+                      amount: mentorPrice * 100,
+                      currency: "INR",
+                    };
+                    instance.orders
+                      .create(options)
+                      .then((order) => {
+                        res.send(order);
                       })
                       .catch((error) => {
-                        return res.send({
-                          error:
-                            "There was an error while submitting the details please try again later",
-                        });
+                        console.log(error.message);
                       });
+                  } else {
+                    return res.send({
+                      error: "There is an error while creating the order",
+                    });
                   }
                 }
               );
@@ -441,4 +448,168 @@ export async function createMentorAppointment(req, res, next) {
   } catch (error) {
     console.log(err.message);
   }
+}
+
+// create an appointment
+export async function createMentorAppointment(req, res, next) {
+  const {
+    mentorId,
+    mentorEmail,
+    userEmail,
+    from,
+    to,
+    amount,
+    razorpayPaymentId,
+    razorpayOrderId,
+    razorpaySignature,
+    date,
+  } = req.body;
+  const timeSlot = from + " " + "to" + " " + to;
+  try {
+    sql.connect(config, async (err) => {
+      let bookingDescription =
+        "An appointment with the following candidate" + " " + userEmail;
+      if (err) res.send(err.message);
+      const request = new sql.Request();
+      let amountPaid = "Yes";
+      request.query(
+        "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,user_email,booking_description,booking_mentor_date,booking_date,booking_time,mentor_amount,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_amount_paid) VALUES('" +
+          mentorId +
+          "','" +
+          mentorEmail +
+          "','" +
+          userEmail +
+          "','" +
+          bookingDescription +
+          "','" +
+          date +
+          "','" +
+          new Date().toISOString().substring(0, 10) +
+          "','" +
+          timeSlot +
+          "','" +
+          amount / 100 +
+          "','" +
+          razorpayPaymentId +
+          "','" +
+          razorpayOrderId +
+          "','" +
+          razorpaySignature +
+          "','" +
+          amountPaid +
+          "' )",
+        (err, success) => {
+          if (err) {
+            return res.send({ error: err.message });
+          }
+          if (success) {
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+            const msg = updateEmail(
+              userEmail,
+              "Appointment Booking Confirmation",
+              "Successfully appointment is booked and mentor will be available on the same day with respective time!"
+            );
+            sgMail
+              .send(msg)
+              .then(() => {
+                res.send({
+                  success:
+                    "Successfully appointment is booked and mentor will be available on the same day with respective time",
+                });
+              })
+              .catch((error) => {
+                res.send({
+                  error: "There was an error while booking the appointment",
+                });
+              });
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.log(err.message);
+  }
+}
+
+export async function getAllMentorApprovedDetailsAndAvailability(req, res) {
+  let mentorApproved = "Yes";
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      request.input("mentorApproved", sql.VarChar, mentorApproved);
+      request.query(
+        "select * from mentor_dtls WHERE mentor_approved = @mentorApproved AND mentor_availability",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            return res.send({ mentors: result.recordset });
+          } else {
+            return;
+          }
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+export async function getBookingDates(req, res) {
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      request.query(
+        "select * from booking_appointments_dtls",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              mentorArray.push(
+                new Date(mentor.booking_mentor_date).toLocaleDateString()
+              );
+            });
+            return res.send(mentorArray);
+          } else {
+            return;
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+// function to create add the Three months to joining date
+
+function addMonths(date, months) {
+  var d = date.getDate();
+  date.setMonth(date.getMonth() + months);
+  if (date.getDate() != d) {
+    date.setDate(0);
+  }
+  return date;
+}
+
+//console.log(addMonths(new Date(), 3));
+// console.log("The input date is :---- " + new Date("2022-01-01T12:46:02.166Z"));
+// console.log(
+//   "Final date after Three months is :---- " +
+//     addMonths(new Date("2022-01-01T12:46:02.166Z"), 3)
+// );
+
+function findTheDateRangeAndWeekdays(startDate, endDate) {
+  let count = 0;
+  let newDates = [];
+  const curDate = new Date(startDate.getTime());
+  while (curDate <= endDate) {
+    const dayOfWeek = curDate.getDay();
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      newDates.push(curDate.toLocaleDateString());
+      count++;
+      //console.log(new Date(curDate).toLocaleDateString());
+    }
+    curDate.setDate(curDate.getDate() + 1);
+  }
+  return newDates;
 }

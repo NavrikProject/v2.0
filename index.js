@@ -15,7 +15,6 @@ import trainerRoute from "./routes/trainerRoute.js";
 import trainerProfileRoute from "./routes/trainerProfileRoute.js";
 import traineeProfileRoute from "./routes/traineeProfileRoute.js";
 import trainerEarningsRoute from "./routes/trainerEarningRoute.js";
-import zoomRoute from "./routes/zoomRoute.js";
 import corporateCourseRoute from "./routes/corpCourseRoute.js";
 import mentorRoute from "./routes/mentorRoute.js";
 import config from "./config/dbconfig.js";
@@ -26,12 +25,17 @@ app.use(morgan("common"));
 app.use(cookieParser());
 app.use(cors());
 app.use(helmet());
+
 app.use(
   fileUpload({
     createParentPath: true,
   })
 );
 const port = process.env.PORT || 3000;
+
+app.get("/api/get-razorpay-key", (req, res) => {
+  res.send({ key: process.env.RAZORPAY_KEY_ID });
+});
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -72,7 +76,6 @@ app.use("/api/earnings", trainerEarningsRoute);
 app.use("/api/trainer/profile", trainerProfileRoute);
 app.use("/api/trainer", trainerRoute);
 app.use("/api/users", usersRoute);
-app.use("/api/zoom", zoomRoute);
 app.use("/api/corporate", corporateCourseRoute);
 app.use("/api/mentor", mentorRoute);
 

@@ -89,9 +89,12 @@ const MentorForm = () => {
     setError("");
     setSuccess("");
   }, 7000);
+  
   const showCalenderHandler = (event) => {
     if (event.target.value === "specific") {
       setShowCalender(true);
+    } else {
+      setShowCalender(false);
     }
   };
   return (

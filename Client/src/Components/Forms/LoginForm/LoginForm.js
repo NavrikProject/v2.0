@@ -29,6 +29,7 @@ import {
   HomeSectionComponent,
   LoginWrapper,
   SuccessDiv,
+  SlideDiv5,
 } from "./LoginFormElements";
 // import StudentImg from "../../../images/student-rm.png";
 // import TraineeImg from "../../../images/trainer-rm.png";
@@ -136,12 +137,14 @@ const LoginForm = () => {
   const [isActive2, setIsActive2] = useState(false);
   const [isActive3, setIsActive3] = useState(false);
   const [isActive4, setIsActive4] = useState(false);
+  const [isActive5, setIsActive5] = useState(false);
 
   const isActiveToggle1 = (e) => {
     setIsActive1(true);
     setIsActive2(false);
     setIsActive3(false);
     setIsActive4(false);
+    setIsActive5(false);
     const name = e.target.innerHTML;
     setType(name.toLowerCase());
   };
@@ -151,6 +154,7 @@ const LoginForm = () => {
     setIsActive1(false);
     setIsActive3(false);
     setIsActive4(false);
+    setIsActive5(false);
     const name = e.target.innerHTML;
     setType(name.toLowerCase());
   };
@@ -159,6 +163,7 @@ const LoginForm = () => {
     setIsActive2(false);
     setIsActive1(false);
     setIsActive4(false);
+    setIsActive5(false);
     const name = e.target.innerHTML;
     setType(name.toLowerCase());
   };
@@ -167,10 +172,19 @@ const LoginForm = () => {
     setIsActive2(false);
     setIsActive1(false);
     setIsActive3(false);
+    setIsActive5(false);
     const name = e.target.innerHTML;
     setType(name.toLowerCase());
   };
-
+  const isActiveToggle5 = (e) => {
+    setIsActive5(true);
+    setIsActive2(false);
+    setIsActive1(false);
+    setIsActive3(false);
+    setIsActive4(false);
+    const name = e.target.innerHTML;
+    setType(name.toLowerCase());
+  };
   return (
     <HomeSectionComponent>
       <LoginWrapper>
@@ -201,6 +215,13 @@ const LoginForm = () => {
                 >
                   Trainer
                 </SlideDiv2>
+                <SlideDiv5
+                  value="mentor"
+                  isActive5={isActive5}
+                  onClick={isActiveToggle5}
+                >
+                  Mentor
+                </SlideDiv5>
                 <SlideDiv3
                   value="jobseeker"
                   isActive3={isActive3}
