@@ -17,6 +17,8 @@ import traineeProfileRoute from "./routes/traineeProfileRoute.js";
 import trainerEarningsRoute from "./routes/trainerEarningRoute.js";
 import corporateCourseRoute from "./routes/corpCourseRoute.js";
 import mentorRoute from "./routes/mentorRoute.js";
+import MentorProfileRoute from "./routes/mentorProfileRoute.js";
+
 import config from "./config/dbconfig.js";
 const app = express();
 dotenv.config();
@@ -31,6 +33,7 @@ app.use(
     createParentPath: true,
   })
 );
+
 const port = process.env.PORT || 3000;
 
 app.get("/api/get-razorpay-key", (req, res) => {
@@ -78,7 +81,7 @@ app.use("/api/trainer", trainerRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/corporate", corporateCourseRoute);
 app.use("/api/mentor", mentorRoute);
-
+app.use("/api/mentor/profile", MentorProfileRoute);
 app.listen(port, (req, res) => {
   console.log("listening on port " + port);
 });

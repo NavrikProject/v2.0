@@ -13,10 +13,7 @@ import { MentorCourseBox, MentorDiv } from "./MentorClubElements";
 import "react-datepicker/dist/react-datepicker.css";
 import "./MentorCardDate.css";
 import DatePicker from "react-datepicker";
-import moment from "moment";
-import "rc-time-picker/assets/index.css";
-import setHours from "date-fns/setHours";
-import setMinutes from "date-fns/setMinutes";
+
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -61,10 +58,6 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
   }, []);
 
   const bookMentorHandler = async (mentor) => {
-    if (!date) {
-      return;
-    }
-
     // const res = await axios.post("mentor/create/appointment", {
     //   mentor: mentor.mentor_dtls_id,
     //   date: date.toISOString().substring(0, 10),
@@ -192,14 +185,19 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
       return weekDay === 0;
     }
   }
-  mentorBookingDate.map((mentorBooking) => {
-    return mentorBooking.booking_mentor_date;
-  });
-  const getDate = (date) => {
-    // return mentorBookingDate.includes(date.toLocaleDateString())
-    //   ? "disabled-date"
-    //   : undefined;
+
+  const getDate = (date, mentor) => {
+    for (let i = 0; i < mentorBookingDate.length; i++) {
+      const element = mentorBookingDate[i].mentorId;
+      if (
+        element === mentor.mentor_dtls_id &&
+        new Date(date).toLocaleDateString() === mentorBookingDate[i].bookedDate
+      ) {
+        return "disabled-date";
+      }
+    }
   };
+
   return (
     <>
       {loading && <Loading />}
@@ -239,15 +237,20 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                     <DatePicker
                       closeOnScroll={true}
                       selected={date}
+                      value={date}
                       onChange={(date) => setDate(date)}
                       minDate={new Date()}
                       maxDate={new Date(mentor.mentor_available_end_date)}
-                      dayClassName={(date) => getDate(date)}
+                      dayClassName={(date) => getDate(date, mentor)}
                       filterDate={(date) =>
                         isWorkDay(mentor.mentor_availability, date)
                       }
                     />
                   </MentorDescP>
+                </MentorBoxDiv>
+                <MentorBoxDiv>
+                  <div className="booked"></div> The red color shows those are
+                  not available
                 </MentorBoxDiv>
                 <MentorBoxDiv>
                   <MentorDescP>
@@ -280,7 +283,7 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                 course.mentor_mentorship_area === categoryItem
             )
             .map((mentor) => (
-              <MentorDiv>
+              <MentorDiv key={mentor.mentor_dtls_id}>
                 <MentorCourseBox>
                   <MentorBoxDiv>
                     <MentorDetailsDiv>
@@ -315,12 +318,11 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                       <DatePicker
                         closeOnScroll={true}
                         selected={date}
+                        value={date}
                         onChange={(date) => setDate(date)}
                         minDate={new Date()}
                         maxDate={new Date(mentor.mentor_available_end_date)}
-                        dayClassName={(date) =>
-                          getDate(date) ? "available" : undefined
-                        }
+                        dayClassName={(date) => getDate(date, mentor)}
                         filterDate={(date) =>
                           isWorkDay(mentor.mentor_availability, date)
                         }
@@ -328,17 +330,23 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                     </MentorDescP>
                   </MentorBoxDiv>
                   <MentorBoxDiv>
-                    <MentorDescP>Choose the time slot :</MentorDescP>
                     <MentorDescP>
                       Available From :
                       <strong>{mentor.mentor_availability_slot_from} </strong>
                       to: <strong>{mentor.mentor_availability_slot_to}</strong>
                     </MentorDescP>
+                    <MentorDescP></MentorDescP>
                   </MentorBoxDiv>
                   <BookNowButtonDiv>
-                    <BookNowButton onClick={() => bookMentorHandler(mentor)}>
-                      Book now
-                    </BookNowButton>
+                    {!user ? (
+                      <BookNowButton>
+                        <Link to={"/login"}>Login</Link>
+                      </BookNowButton>
+                    ) : (
+                      <BookNowButton onClick={() => bookMentorHandler(mentor)}>
+                        Book now
+                      </BookNowButton>
+                    )}
                   </BookNowButtonDiv>
                 </MentorCourseBox>
               </MentorDiv>

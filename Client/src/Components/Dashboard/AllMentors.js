@@ -56,22 +56,12 @@ const AllMentors = () => {
       setLoading(false);
     }
   };
-  console.log(allMentors);
+
   return (
     <div className="rightbarSect">
       <div className="tableDiv">
         <h1>Approve the Mentors</h1>
         {loading && <Loading />}
-        <div className="itmes">
-          <div className="flex1">
-            <div className="greenBox"></div>
-            <p className="tag"> Application is Approved</p>
-          </div>
-          <div className="flex1">
-            <div className="redBox"></div>
-            <p className="tag"> Application is Declined</p>
-          </div>
-        </div>
         <table>
           <tbody>
             <tr>

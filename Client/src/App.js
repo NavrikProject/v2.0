@@ -16,6 +16,8 @@ import RpaCoePage from "./Pages/RpaCoePage";
 import MentorsPage from "./Pages/MentorsPage";
 import ScrollToTop from "./Components/ScrollToTop";
 import LoadingSpinner from "./Components/utils/LoadingSpinner";
+import TraineeProfilePage from "./Pages/TraineeProfilePage";
+import TraineeBookingPage from "./Pages/TraineeBookingPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -31,6 +33,7 @@ const MentorPage = React.lazy(() => import("./Pages/MentorFormPage"));
 
 const App = () => {
   const user = useSelector((state) => state.user.currentUser);
+  console.log(user?.type);
   return (
     <>
       <ToastContainer />
@@ -46,8 +49,22 @@ const App = () => {
             <Route path="/forgot-password" element={<ForgotPwdPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/mentor/join" element={<MentorPage />} />
-            <Route path="/mentor/profile" element={<MentorProfilePage />} />
 
+            {user?.type === "mentor" && (
+              <Route path={`/mentor/profile`} element={<MentorProfilePage />} />
+            )}
+            {user?.type === "trainee" && (
+              <Route
+                path={`/trainee/profile`}
+                element={<TraineeProfilePage />}
+              />
+            )}
+            {user?.type === "trainee" && (
+              <Route
+                path={`/trainee/profile/bookings`}
+                element={<TraineeBookingPage />}
+              />
+            )}
             <Route path="*" element={<NotFound />} />
             <Route
               exact

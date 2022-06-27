@@ -56,6 +56,22 @@ const MentorForm = () => {
 
   const profileSubmitHandler = async (event) => {
     event.preventDefault();
+    if (
+      !image &&
+      !password &&
+      !skills &&
+      !experience &&
+      !specialty &&
+      !firstName &&
+      !lastName &&
+      !mentorshipArea &&
+      !fromTiming &&
+      !toTiming &&
+      !availability
+    ) {
+      setError("All details must be required");
+      toast.error("All details must be required", { position: "top-center" });
+    }
     let data = new FormData();
     data.append("image", image);
     data.append("skills", skills);
@@ -76,6 +92,18 @@ const MentorForm = () => {
       if (res.data.success) {
         setSuccess(res.data.success);
         toast.success(res.data.success, { position: "top-center" });
+        setEmail("");
+        setSpecialty("");
+        setImage("");
+        setSkills("");
+        setExperience("");
+        setFirstName("");
+        setLastName("");
+        setPassword("");
+        setMentorshipArea("");
+        setAvailability("");
+        setFromTiming("");
+        setToTiming("");
       }
       if (res.data.error) {
         setError(res.data.error);
@@ -89,7 +117,7 @@ const MentorForm = () => {
     setError("");
     setSuccess("");
   }, 7000);
-  
+
   const showCalenderHandler = (event) => {
     if (event.target.value === "specific") {
       setShowCalender(true);
@@ -121,6 +149,7 @@ const MentorForm = () => {
                   type="email"
                   placeholder="Enter your email"
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </Field>
               <Field>
@@ -128,6 +157,7 @@ const MentorForm = () => {
                   value={firstName}
                   type="text"
                   placeholder="Enter your First Name"
+                  required
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </Field>
@@ -136,6 +166,7 @@ const MentorForm = () => {
                   value={lastName}
                   type="text"
                   placeholder="Enter your Last Name"
+                  required
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </Field>
@@ -145,6 +176,7 @@ const MentorForm = () => {
                   type={showIcon ? "text" : "password"}
                   placeholder="Enter your password"
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$"
                 />
                 <PwdIcons onClick={(e) => setShowIcon(!showIcon)}>
@@ -202,6 +234,7 @@ const MentorForm = () => {
               <FormFlex>
                 <FormLabel>Specialty:</FormLabel>
                 <FormSelect
+                  required
                   name="specialty"
                   onChange={(event) => setSpecialty(event.target.value)}
                 >
@@ -220,6 +253,7 @@ const MentorForm = () => {
                 <FormLabel>Availability:</FormLabel>
                 <FormSelect
                   name="specialty"
+                  required
                   onChange={(event) => setAvailability(event.target.value)}
                   onClick={(event) => {
                     showCalenderHandler(event);
@@ -252,12 +286,14 @@ const MentorForm = () => {
                 <MentorFormSlotDiv>
                   From:
                   <MentorSlotTimerInput
+                    required
                     type="time"
                     min="1"
                     onChange={(event) => setFromTiming(event.target.value)}
                   />
                   <br /> To:
                   <MentorSlotTimerInput
+                    required
                     type="time"
                     onChange={(event) => setToTiming(event.target.value)}
                   />
@@ -266,6 +302,7 @@ const MentorForm = () => {
               <FormFlex>
                 <FormLabel>Experience:</FormLabel>
                 <FormSelect
+                  required
                   name="experience"
                   onChange={(event) => setExperience(event.target.value)}
                 >
@@ -282,6 +319,7 @@ const MentorForm = () => {
                 <FormFlex>
                   <FormLabel>Skills:</FormLabel>
                   <FormSelect
+                    required
                     name="skills"
                     onChange={(event) => setSkills(event.target.value)}
                   >
@@ -298,6 +336,7 @@ const MentorForm = () => {
                 <FormFlex>
                   <FormLabel>Mentorship Area:</FormLabel>
                   <FormSelect
+                    required
                     name="mentorArea"
                     onChange={(event) => setMentorshipArea(event.target.value)}
                   >
@@ -314,6 +353,7 @@ const MentorForm = () => {
                 <FormFlex>
                   <FormLabel>Profile Picture:</FormLabel>
                   <FormInputFile
+                    required
                     type="file"
                     name="image"
                     onChange={(e) => setImage(e.target.files[0])}

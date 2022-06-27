@@ -15,7 +15,7 @@ dotenv.config();
 const blobService = azureStorage.createBlobService(
   process.env.AZURE_STORAGE_CONNECTION_STRING
 );
-
+// to join as a mentor
 export async function registerMentor(req, res) {
   const {
     email,
@@ -30,6 +30,23 @@ export async function registerMentor(req, res) {
     to,
     availability,
   } = req.body;
+  if (
+    !email &&
+    experience &&
+    skills &&
+    specialty &&
+    password &&
+    firstname &&
+    lastname &&
+    mentorshipArea &&
+    from &&
+    to &&
+    req.files.image
+  ) {
+    return res.send({
+      error: "All details must be required",
+    });
+  }
   let saltRounds = await bcrypt.genSalt(12);
   let hashedPassword = await bcrypt.hash(password, saltRounds);
   const blobName = new Date().getTime() + "-" + req.files.image.name;
@@ -196,7 +213,6 @@ export async function getAllMentorDetails(req, res) {
     });
   } catch (error) {}
 }
-
 //get mentor search by the search
 export async function getMentorBySearch(req, res) {
   let searchItem = req.query.name;
@@ -205,7 +221,6 @@ export async function getMentorBySearch(req, res) {
       if (err) return res.send(err.message);
       const request = new sql.Request();
       request.input("searchItem", sql.VarChar, searchItem);
-
       const searchQuery =
         "SELECT * FROM mentor_dtls WHERE mentor_skills = @searchItem OR mentor_mentorship_area = @searchItem";
       request.query(searchQuery, (err, result) => {
@@ -221,6 +236,7 @@ export async function getMentorBySearch(req, res) {
     res.send(error.message);
   }
 }
+
 // in web page show the approved candidates
 export async function getAllMentorApprovedDetails(req, res) {
   let mentorApproved = "Yes";
@@ -241,9 +257,12 @@ export async function getAllMentorApprovedDetails(req, res) {
         }
       );
     });
-  } catch (error) {}
+  } catch (error) {
+    return;
+  }
 }
-// approve
+
+// approving the mentor
 export async function updateMentorApprove(req, res, next) {
   const paramsId = req.params.id;
   try {
@@ -262,7 +281,6 @@ export async function updateMentorApprove(req, res, next) {
               const request = new sql.Request();
               request.input("mentorApprove", sql.VarChar, mentorApprove);
               request.input("id", sql.Int, paramsId);
-
               const sqlUpdate =
                 "UPDATE mentor_dtls SET mentor_approved = @mentorApprove WHERE mentor_dtls_id= @id ";
               request.query(sqlUpdate, (err, result) => {
@@ -309,7 +327,7 @@ export async function updateMentorApprove(req, res, next) {
   }
 }
 
-//disapproved
+//disapproving the mentor
 export async function updateMentorDisapprove(req, res, next) {
   const paramsId = req.params.id;
   try {
@@ -384,67 +402,68 @@ export async function createMentorRazorPayOrder(req, res, next) {
   try {
     sql.connect(config, (err) => {
       if (err) {
-        return res.json(err.message);
+        return res.send(err.message);
       }
       const request = new sql.Request();
-      request.input("mentor", sql.Int, mentorId);
+      request.input("date", sql.Date, date);
+      request.input("mentorId", sql.Int, mentorId);
       request.query(
-        "select * from booking_appointments_dtls where mentor_dtls_id = @mentor",
+        "select * from mentor_dtls where mentor_dtls_id = @mentorId",
         (err, result) => {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
-            result.recordset.forEach((mentor) => {
-              if (
-                mentor.mentor_dtls_id === mentorId &&
-                new Date(mentor.booking_mentor_date).toLocaleDateString() ===
-                  date
-              ) {
-                return res.json({
-                  error: "This date is booked ,Please choose the another date",
-                });
-              }
+            const mentorPrice = result.recordset[0].mentor_price;
+            const instance = new Razorpay({
+              key_id: process.env.RAZORPAY_KEY_ID,
+              key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
             });
-            sql.connect(config, (err) => {
-              if (err) {
-                return res.send(err.message);
-              }
-              const request = new sql.Request();
-              request.input("date", sql.Date, date);
-              request.input("mentorId", sql.Int, mentorId);
-              request.query(
-                "select * from mentor_dtls where mentor_dtls_id = @mentorId",
-                (err, result) => {
-                  if (err) return res.send(err.message);
-                  if (result.recordset.length > 0) {
-                    const mentorPrice = result.recordset[0].mentor_price;
-                    const instance = new Razorpay({
-                      key_id: process.env.RAZORPAY_KEY_ID,
-                      key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
-                    });
-                    const options = {
-                      amount: mentorPrice * 100,
-                      currency: "INR",
-                    };
-                    instance.orders
-                      .create(options)
-                      .then((order) => {
-                        res.send(order);
-                      })
-                      .catch((error) => {
-                        console.log(error.message);
-                      });
-                  } else {
-                    return res.send({
-                      error: "There is an error while creating the order",
-                    });
-                  }
-                }
-              );
+            const options = {
+              amount: mentorPrice * 100,
+              currency: "INR",
+            };
+            instance.orders
+              .create(options)
+              .then((order) => {
+                res.send(order);
+              })
+              .catch((error) => {
+                console.log(error.message);
+              });
+          } else {
+            return res.send({
+              error: "There is an error while creating the order",
             });
           }
         }
       );
     });
+    // sql.connect(config, (err) => {
+    //   if (err) {
+    //     return res.json(err.message);
+    //   }
+    //   const request = new sql.Request();
+    //   request.input("mentor", sql.Int, mentorId);
+    //   request.query(
+    //     "select * from booking_appointments_dtls where mentor_dtls_id = @mentor",
+    //     (err, result) => {
+    //       if (err) return res.send(err.message);
+    //       if (result.recordset.length > 0) {
+    //         result.recordset.forEach((mentor) => {
+    //           if (
+    //             mentor.mentor_dtls_id === mentorId &&
+    //             new Date(mentor.booking_mentor_date).toLocaleDateString() ===
+    //               date
+    //           ) {
+    //             return res.json({
+    //               error:
+    //                 "This date is all ready booked ,Please choose the another date",
+    //             });
+    //           }
+    //         });
+    //       }
+    //     }
+    //   );
+    // });
   } catch (error) {
     console.log(err.message);
   }
@@ -553,6 +572,7 @@ export async function getAllMentorApprovedDetailsAndAvailability(req, res) {
   } catch (error) {}
 }
 
+// to get only appointment dates in booking table
 export async function getBookingDates(req, res) {
   try {
     sql.connect(config, (err) => {
@@ -565,9 +585,13 @@ export async function getBookingDates(req, res) {
           if (result.recordset.length > 0) {
             let mentorArray = [];
             result.recordset.forEach((mentor) => {
-              mentorArray.push(
-                new Date(mentor.booking_mentor_date).toLocaleDateString()
-              );
+              let data = {
+                mentorId: mentor.mentor_dtls_id,
+                bookedDate: new Date(
+                  mentor.booking_mentor_date
+                ).toLocaleDateString(),
+              };
+              mentorArray.push(data);
             });
             return res.send(mentorArray);
           } else {
@@ -580,8 +604,8 @@ export async function getBookingDates(req, res) {
     res.send(error.message);
   }
 }
-// function to create add the Three months to joining date
 
+// function to create add the Three months to joining date
 function addMonths(date, months) {
   var d = date.getDate();
   date.setMonth(date.getMonth() + months);

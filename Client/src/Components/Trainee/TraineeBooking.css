@@ -1,0 +1,84 @@
+.rightbarSect {
+  height: auto !important;
+  width: 90%;
+  margin: 0 auto;
+}
+.tableDiv {
+  padding: 40px 0px;
+}
+h1 {
+  margin-bottom: 20px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th {
+  height: 50px;
+  padding: 10px;
+}
+td {
+  height: 45px;
+  cursor: pointer;
+  padding: 10px;
+}
+tr:hover {
+  background-color: rgb(240, 240, 255);
+}
+table,
+th,
+td {
+  border: 1px solid black;
+  text-align: center;
+}
+.approve {
+  outline: none;
+  cursor: pointer;
+  padding: 7px 33px;
+  background-color: blue;
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+
+.approved {
+  outline: none;
+  cursor: not-allowed;
+  padding: 7px 33px;
+  background-color: green;
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+
+.disapproved {
+  outline: none;
+  cursor: pointer;
+  padding: 7px 24px;
+  background-color: rgb(238, 10, 10);
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+.approve:hover,
+.disapprove:hover {
+  opacity: 0.9;
+}
+.disapprove {
+  outline: none;
+  cursor: pointer;
+  padding: 7px 24px;
+  color: white;
+  border: none;
+  background-color: rgb(212, 87, 87);
+  transition: all 0.4s ease-in-out;
+  border-radius: 7px;
+}
+.disabled-date {
+  background-color: red;
+  border-radius: 5px;
+  cursor: not-allowed;
+}

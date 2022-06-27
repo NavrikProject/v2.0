@@ -7,3 +7,8 @@
   background-color: green;
   border-radius: 5px;
 }
+.booked {
+  width: 15px;
+  height: 15px;
+  background-color: red;
+}

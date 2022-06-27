@@ -137,7 +137,7 @@ const Navbar = ({ toggleMenuItems }) => {
               <NavItem>
                 <Link
                   style={{ textDecoration: "none", color: "#062C30" }}
-                  to={`/mentor/profile`}
+                  to={`/${user?.type}/profile`}
                 >
                   <i className="fa-solid fa-user"></i>Profile
                 </Link>
