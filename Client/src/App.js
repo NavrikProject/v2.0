@@ -18,6 +18,7 @@ import ScrollToTop from "./Components/ScrollToTop";
 import LoadingSpinner from "./Components/utils/LoadingSpinner";
 import TraineeProfilePage from "./Pages/TraineeProfilePage";
 import TraineeBookingPage from "./Pages/TraineeBookingPage";
+import MentorBookingPage from "./Pages/MentorBookingPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -63,6 +64,12 @@ const App = () => {
               <Route
                 path={`/trainee/profile/bookings`}
                 element={<TraineeBookingPage />}
+              />
+            )}
+            {user?.type === "mentor" && (
+              <Route
+                path={`/mentor/profile/bookings`}
+                element={<MentorBookingPage />}
               />
             )}
             <Route path="*" element={<NotFound />} />

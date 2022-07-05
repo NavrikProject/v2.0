@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Form1 from "../Forms/ProfileForm/Form1.js";
-import Form2 from "../Forms/ProfileForm/Form2.js";
-import Form3 from "../Forms/ProfileForm/Form3.js";
-import Form4 from "../Forms/ProfileForm/Form4.js";
-import ImageForm from "../Forms/ProfileForm/ImageForm.js";
-import GoToTop from "../GoToTop.js";
+import Form1 from "../../Forms/ProfileForm/Form1.js";
+import Form2 from "../../Forms/ProfileForm/Form2.js";
+import Form3 from "../../Forms/ProfileForm/Form3.js";
+import Form4 from "../../Forms/ProfileForm/Form4.js";
+import ImageForm from "../../Forms/ProfileForm/ImageForm.js";
+import GoToTop from "../../GoToTop.js";
 import Model from "./Model.js";
 import {
   DetailsFlex,
@@ -24,7 +24,7 @@ import {
   TraineeTitle,
   TraineeUl,
   TraineeWrapper,
-} from "./TraineeProfileElements.js";
+} from "./MentorBookingProfileElements.js";
 import { Link } from "react-router-dom";
 const TraineeProfile = () => {
   const [personalForm, setPersonalForm] = useState(false);
@@ -90,9 +90,9 @@ const TraineeProfile = () => {
             <h1>Update Your details Here</h1>
             <TraineeUl>
               <TraineeLi>
-                <Link to={`/trainee/profile/bookings`}>My Bookings</Link>
+                <Link to={`/mentor/profile/bookings`}>My Bookings</Link>
               </TraineeLi>
-              {/* <TraineeLi onClick={showPersonalForm}>Personal Details</TraineeLi> */}
+              <TraineeLi onClick={showPersonalForm}>Personal Details</TraineeLi>
               <TraineeLi onClick={showAccountForm}>Account</TraineeLi>
               <TraineeLi onClick={showImageForm}>
                 Change Profile Picture

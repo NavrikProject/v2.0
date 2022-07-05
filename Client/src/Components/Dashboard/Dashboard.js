@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import UsersTable from "./AllTrainersTable";
 import AllCourse from "./AllCourse";
 import Allusers from "./Allusers";
-import Logo from "../../images/practi-logo.png";
+import Logo from "../../images/practiwiz-logo.png";
 import AllMentors from "./AllMentors";
 const Dashboard = () => {
   const [showCourses, setShowCourse] = useState(false);

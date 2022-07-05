@@ -17,7 +17,9 @@ import traineeProfileRoute from "./routes/traineeProfileRoute.js";
 import trainerEarningsRoute from "./routes/trainerEarningRoute.js";
 import corporateCourseRoute from "./routes/corpCourseRoute.js";
 import mentorRoute from "./routes/mentorRoute.js";
-import MentorProfileRoute from "./routes/mentorProfileRoute.js";
+import TraineeBookingProfileRoute from "./routes/traineeBookingProfileRoute.js";
+import mentorBookingRoute from "./routes/MentorBookingRoute.js";
+import Razorpay from "razorpay";
 
 import config from "./config/dbconfig.js";
 const app = express();
@@ -81,7 +83,48 @@ app.use("/api/trainer", trainerRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/corporate", corporateCourseRoute);
 app.use("/api/mentor", mentorRoute);
-app.use("/api/mentor/profile", MentorProfileRoute);
+app.use("/api/mentor/profile", TraineeBookingProfileRoute);
+app.use("/api/mentor/bookings", mentorBookingRoute);
+
 app.listen(port, (req, res) => {
   console.log("listening on port " + port);
+
+  const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
+  });
+  // instance.customers
+  //   .create({
+  //     name: "Gaurav Kumar",
+  //     contact: 9123456780,
+  //     email: "gaurav.kumar@example.com",
+  //     fail_existing: 0,
+  //     notes: {
+  //       notes_key_1: "Tea, Earl Grey, Hot",
+  //       notes_key_2: "Tea, Earl Grey… decaf.",
+  //     },
+  //   })
+  //   .then((data) => {
+  //     console.log(data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err.message);
+  //   });
+  // instance.invoices
+  //   .create({
+  //     type: "invoice",
+  //     date: 1589994898,
+  //     customer_id: "cust_JpDVLSmsnSNSqs",
+  //     line_items: [
+  //       {
+  //         item_id: "1",
+  //       },
+  //     ],
+  //   })
+  //   .then((data) => {
+  //     console.log(data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 });

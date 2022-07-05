@@ -15,6 +15,7 @@ dotenv.config();
 const blobService = azureStorage.createBlobService(
   process.env.AZURE_STORAGE_CONNECTION_STRING
 );
+
 // to join as a mentor
 export async function registerMentor(req, res) {
   const {
@@ -413,6 +414,7 @@ export async function createMentorRazorPayOrder(req, res, next) {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
             const mentorPrice = result.recordset[0].mentor_price;
+
             const instance = new Razorpay({
               key_id: process.env.RAZORPAY_KEY_ID,
               key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
@@ -483,23 +485,20 @@ export async function createMentorAppointment(req, res, next) {
     razorpaySignature,
     date,
   } = req.body;
+
   const timeSlot = from + " " + "to" + " " + to;
   try {
     sql.connect(config, async (err) => {
-      let bookingDescription =
-        "An appointment with the following candidate" + " " + userEmail;
       if (err) res.send(err.message);
       const request = new sql.Request();
-      let amountPaid = "Yes";
+      let amountPaid = "Paid";
       request.query(
-        "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,user_email,booking_description,booking_mentor_date,booking_date,booking_time,mentor_amount,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_amount_paid) VALUES('" +
+        "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,user_email,booking_mentor_date,booking_date,booking_time,mentor_amount,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_amount_paid_status) VALUES('" +
           mentorId +
           "','" +
           mentorEmail +
           "','" +
           userEmail +
-          "','" +
-          bookingDescription +
           "','" +
           date +
           "','" +
@@ -548,6 +547,79 @@ export async function createMentorAppointment(req, res, next) {
   } catch (error) {
     console.log(err.message);
   }
+  // if (!bookAppointment) {
+  // } else {
+  //   const { amount, razorpayPaymentId, bookingId, date } = req.body;
+  //   try {
+  //     sql.connect(config, (err) => {
+  //       if (err) return res.send(err.message);
+  //       const request = new sql.Request();
+  //       request.input("bookingId", sql.Int, bookingId);
+  //       request.query(
+  //         "select * from booking_appointments_dtls where booking_appt_id = @bookingId",
+  //         (err, result) => {
+  //           if (err) return res.send(err.message);
+  //           if (result.recordset.length > 0) {
+  //             let email = result.recordset[0].user_email;
+  //             const changes = 2;
+  //             const request = new sql.Request();
+  //             request.input("changes", sql.Int, changes);
+  //             request.input("date", sql.Date, date);
+  //             const newDate = new Date();
+  //             request.input("newDate", sql.Date, newDate);
+  //             request.input("amount", sql.Int, amount);
+  //             request.input(
+  //               "razorpayPaymentId",
+  //               sql.VarChar,
+  //               razorpayPaymentId
+  //             );
+  //             const sqlUpdate =
+  //               "UPDATE booking_appointments_dtls SET booking_mentor_date = @date, booking_date = @newDate, trainee_modification_changed_times = @changes,refund_razorpay_payment_id = @razorpayPaymentId, refund_amount = @amount WHERE booking_appt_id= @bookingId ";
+  //             request.query(sqlUpdate, (err, result) => {
+  //               if (err) return res.send(err.message);
+  //               if (result) {
+  //                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  //                 const msg = {
+  //                   from: "no-reply@practilearn.com",
+  //                   to: email,
+  //                   subject: "Appointment date is changed",
+  //                   html: `<div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px; font-size: 110%;">
+  //                         <h2 style="text-align: center; text-transform: uppercase;color: teal;">Welcome to the Practiwiz Training Programme</h2>
+  //                         <p>Successfully appointment date is changed.
+  //                         </p>
+  //                         Do not reply this email address
+  //                         </div>`,
+  //                 };
+  //                 sgMail
+  //                   .send(msg)
+  //                   .then(() => {
+  //                     return res.send({
+  //                       success: "Successfully appointment date is changed",
+  //                     });
+  //                   })
+  //                   .catch((error) => {
+  //                     return res.send({
+  //                       error: "There was an error updating",
+  //                     });
+  //                   });
+  //               } else {
+  //                 res.send({
+  //                   error: "There was an error updating",
+  //                 });
+  //               }
+  //             });
+  //           } else {
+  //             return res.send({ error: "Couldn't find booking'" });
+  //           }
+  //         }
+  //       );
+  //     });
+  //   } catch (error) {
+  //     return res.send({
+  //       error: "There was an error updating",
+  //     });
+  //   }
+  // }
 }
 
 export async function getAllMentorApprovedDetailsAndAvailability(req, res) {
@@ -615,6 +687,14 @@ function addMonths(date, months) {
   return date;
 }
 
+function addDays(date, days) {
+  var d = date.getDay();
+  date.setDay(date.getDay() + days);
+  if (date.getDay() != d) {
+    date.setDay(0);
+  }
+  return date;
+}
 //console.log(addMonths(new Date(), 3));
 // console.log("The input date is :---- " + new Date("2022-01-01T12:46:02.166Z"));
 // console.log(

@@ -58,27 +58,6 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
   }, []);
 
   const bookMentorHandler = async (mentor) => {
-    // const res = await axios.post("mentor/create/appointment", {
-    //   mentor: mentor.mentor_dtls_id,
-    //   date: date.toISOString().substring(0, 10),
-    //   timeSlot: timeSlot,
-    //   email: user?.email,
-    //   mentorEmail: mentor.mentor_email,
-    // });
-    // if (res.data.success) {
-    //   setSuccess(res.data.success);
-    //   toast.success(res.data.success, {
-    //     position: "top-center",
-    //   });
-    //   setLoading(false);
-    // }
-    // if (res.data.error) {
-    //   setError(res.data.error);
-    //   toast.error(res.data.error, {
-    //     position: "top-center",
-    //   });
-    //   setLoading(false);
-    // }
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onerror = () => {
@@ -106,7 +85,6 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
         const {
           data: { key: razorpayKey },
         } = await axios.get("/get-razorpay-key");
-
         const options = {
           key: razorpayKey,
           amount: amount.toString(),
@@ -155,6 +133,7 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
             color: "#80c0f0",
           },
         };
+
         setLoading(false);
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();

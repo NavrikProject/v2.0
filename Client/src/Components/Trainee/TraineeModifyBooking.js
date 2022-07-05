@@ -8,9 +8,9 @@ import "./TraineeBooking.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
-import Loading from "../utils/LoadingSpinner";
 import { toast } from "react-toastify";
 import logo from "../../images/practi-logo.png";
+import LoadingSpinner from "../utils/LoadingSpinner.js";
 
 const CloseButton = styled(AiOutlineClose)`
   font-size: 25px;
@@ -35,6 +35,17 @@ const Terms = styled.div`
   bottom: 14px;
   left: 16px;
   cursor: pointer;
+`;
+const ModifyBtn = styled.button`
+  outline: none;
+  cursor: pointer;
+  padding: 12px 33px;
+  background-color: blue;
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+  margin: 40px 10px 0 0;
 `;
 const FormData = styled.div``;
 const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
@@ -112,20 +123,49 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
       }
     }
   };
-
   const modifyBookingAppointMent = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const res = await axios.put(
-      `/mentor/profile/update/bookings/${mentor.id}`,
+      `/mentor/profile/update/bookings/${mentor.bookingId}`,
       {
         date: date.toLocaleDateString(),
+        bookingId: mentor.bookingId,
       }
     );
-    console.log(res.data);
+    if (res.data.success) {
+      toast.success(res.data.success, { position: "top-center" });
+      setSuccess(res.data.success);
+      setLoading(false);
+    }
+    if (res.data.error) {
+      toast.error(res.data.error, { position: "top-center" });
+      setError(res.data.error);
+      setLoading(false);
+    }
   };
 
   const payAndModifyBooking = async (event) => {
+    let id = mentor.bookingId;
     event.preventDefault();
+    // setLoading(true);
+    // const res = await axios.put(
+    //   `/mentor/profile/update/bookings/modify-booking/pay`,
+    //   {
+    //     date: date.toLocaleDateString(),
+    //     bookingId: id,
+    //   }
+    // );
+    // if (res.data.success) {
+    //   toast.success(res.data.success, { position: "top-center" });
+    //   setSuccess(res.data.success);
+    //   setLoading(false);
+    // }
+    // if (res.data.error) {
+    //   toast.error(res.data.error, { position: "top-center" });
+    //   setError(res.data.error);
+    //   setLoading(false);
+    // }
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onerror = () => {
@@ -138,7 +178,7 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
         const result = await axios.post(
           "/mentor/profile/update/bookings/modify-order",
           {
-            mentorId: mentor.mentorId,
+            bookingId: mentor.bookingId,
             date: date.toLocaleDateString(),
           }
         );
@@ -164,17 +204,16 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
           image: logo,
           order_id: order_id,
           handler: async function (response) {
-            const res = await axios.post(
-              "mentor/create/appointment/pay-order",
+            const res = await axios.put(
+              "/mentor/profile/update/bookings/modify-booking/pay",
               {
                 amount: amount,
                 razorpayPaymentId: response.razorpay_payment_id,
-                razorpayOrderId: response.razorpay_order_id,
-                razorpaySignature: response.razorpay_signature,
-                mentorId: mentor.mentor_dtls_id,
+                bookingId: id,
                 date: date.toLocaleDateString(),
               }
             );
+            console.log(res);
             if (res.data.success) {
               setSuccess(res.data.success);
               toast.success(res.data.success, {
@@ -209,12 +248,18 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
     };
     document.body.appendChild(script);
   };
+
   return (
     <>
       <Model>
         <CloseButtonDiv onClick={modifyMentorAppointMent}>
           <CloseButton />
         </CloseButtonDiv>
+        {loading && <LoadingSpinner />}
+        {error && <p style={{ color: "red", fontSize: "20px" }}>{error}</p>}
+        {success && (
+          <p style={{ color: "green", fontSize: "20px" }}>{success}</p>
+        )}
         <FormDiv>
           <FormData>
             <form
@@ -236,14 +281,18 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
                 dayClassName={(date) => getDate(date)}
                 filterDate={(date) => isWorkDay(date)}
               />
-              <button type="submit">
+              <ModifyBtn type="submit">
                 {mentor.changes === 0
                   ? "Change appointment Date"
                   : "Pay and Modify Date"}
-              </button>
+              </ModifyBtn>
             </form>
           </FormData>
           <Terms>
+            <p>
+              * Modify amount can not be refunded see our
+              <Link to="/terms-conditions"> policies and conditions.</Link>
+            </p>
             <p>
               * You can not change the appointment date more than two time see
               our <Link to="/terms-conditions">policies and conditions.</Link>

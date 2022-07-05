@@ -11,7 +11,6 @@ import {
   getBookingDates,
   createMentorRazorPayOrder,
 } from "../controllers/mentorController.js";
-import { modifyBookingDate } from "../controllers/mentorProfileController.js";
 import { verifyTokenAndAuthorization } from "../middleware/verifyToken.js";
 let router = routers.Router();
 
@@ -47,5 +46,6 @@ router.post("/create/appointment/create-order", createMentorRazorPayOrder);
 
 // to get only appointment dates in booking table
 router.get("/get/booking", getBookingDates);
+
 
 export default router;

@@ -19,7 +19,7 @@ import {
   SocialIcon,
   Title,
 } from "./FooterElements";
-import logo from "../../images/practi-logo.png";
+import logo from "../../images/practiwiz-logo.png";
 import PaymentImage from "../../images/payment.png";
 import { useSelector } from "react-redux";
 

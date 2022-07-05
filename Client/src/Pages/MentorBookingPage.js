@@ -1,20 +1,21 @@
 import React, { Suspense } from "react";
 import LoadingSpinner from "../Components/utils/LoadingSpinner";
+
 const Footer = React.lazy(() => import("../Components/Footer/Footer"));
-const MentorProfile = React.lazy(() =>
-  import("../Components/MentorClub/MentorProfile/MentorProfile.js")
-);
 const NavbarRes = React.lazy(() => import("../Components/Navbar/NavbarRes"));
-const MentorProfilePage = () => {
+const MentorBookingTable = React.lazy(() =>
+  import("../Components/MentorClub/MentorProfile/MentorBookingTable.js")
+);
+const MentorBookingPage = () => {
   return (
     <>
       <Suspense fallback={<LoadingSpinner />}>
         <NavbarRes />
-        <MentorProfile />
+        <MentorBookingTable />
         <Footer />
       </Suspense>
     </>
   );
 };
 
-export default MentorProfilePage;
+export default MentorBookingPage;

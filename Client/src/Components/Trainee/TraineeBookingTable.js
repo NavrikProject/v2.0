@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Loading from "../utils/Loading";
+import CancelAppointment from "./CancelAppointment";
 import "./TraineeBooking.css";
 import TraineeModifyBooking from "./TraineeModifyBooking";
 const TraineeBookingTable = () => {
@@ -11,6 +12,7 @@ const TraineeBookingTable = () => {
   const [showModel, setShowModel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mentor, setMentor] = useState();
+  const [showCancelModel, setShowCancelModel] = useState(false);
 
   useEffect(() => {
     const getAllTheMentors = async () => {
@@ -31,10 +33,15 @@ const TraineeBookingTable = () => {
 
   const modifyMentorAppointMent = async (mentor) => {
     setShowModel(!showModel);
+    setShowCancelModel(false);
     setMentor(mentor);
   };
-  const cancelMentorAppointMent = async (mentor) => {};
 
+  const showCancelMentorModel = async (mentor) => {
+    setShowCancelModel(!showCancelModel);
+    setShowModel(false);
+    setMentor(mentor);
+  };
   return (
     <div className="rightbarSect">
       <div className="tableDiv">
@@ -44,6 +51,12 @@ const TraineeBookingTable = () => {
           <TraineeModifyBooking
             mentor={mentor}
             modifyMentorAppointMent={modifyMentorAppointMent}
+          />
+        )}
+        {showCancelModel && (
+          <CancelAppointment
+            mentor={mentor}
+            showCancelMentorModel={showCancelMentorModel}
           />
         )}
         <table>
@@ -57,6 +70,7 @@ const TraineeBookingTable = () => {
               <th>Session Time</th>
               <th>Mentor Price</th>
               <th>Mentor Confirmed</th>
+              <th>Payment Status</th>
               <th>Modify Appointment</th>
               <th>Cancel</th>
             </tr>
@@ -64,47 +78,62 @@ const TraineeBookingTable = () => {
           {allMentors?.length > 0 ? (
             allMentors?.map((mentor) => (
               <tbody>
-                <tr key={mentor.id}>
-                  <td>{mentor.id}</td>
+                <tr key={mentor.bookingId}>
+                  <td>{mentor.bookingId}</td>
                   <td>{mentor.userEmail}</td>
                   <td>{mentor.mentorEmail}</td>
-                  <td>{new Date(mentor.bookedOn).toLocaleDateString()}</td>
-                  <td>{new Date(mentor.bookingDate).toLocaleDateString()}</td>
+                  <td>{new Date(mentor.bookedOn).toDateString()}</td>
+                  <td>{new Date(mentor.bookingDate).toDateString()}</td>
                   <td>{mentor.time}</td>
                   <td>{mentor.amount}</td>
                   <td>{mentor.confirmed}</td>
+                  <td>{mentor.paymentStatus}</td>
                   <td>
-                    {mentor.changes === 0 && (
-                      <button
-                        mentor={mentor}
-                        className="approve"
-                        onClick={() => modifyMentorAppointMent(mentor)}
-                      >
-                        Modify
+                    {mentor.paymentStatus === "Refunded" ? (
+                      <button className="disapprove">
+                        Can not be modified after refund
                       </button>
-                    )}
-                    {mentor.changes === 1 && (
-                      <button
-                        mentor={mentor}
-                        className="approve"
-                        onClick={() => modifyMentorAppointMent(mentor)}
-                      >
-                        Pay & Modify
-                      </button>
-                    )}
-                    {mentor.changes === 2 && (
-                      <button mentor={mentor} className="disapproved">
-                        Can not be modified
-                      </button>
+                    ) : (
+                      <>
+                        {mentor.changes === 0 && (
+                          <button
+                            mentor={mentor}
+                            className="approve"
+                            onClick={() => modifyMentorAppointMent(mentor)}
+                          >
+                            Modify
+                          </button>
+                        )}
+                        {mentor.changes === 1 && (
+                          <button
+                            mentor={mentor}
+                            className="approve"
+                            onClick={() => modifyMentorAppointMent(mentor)}
+                          >
+                            Pay & Modify
+                          </button>
+                        )}
+                        {mentor.changes === 2 && (
+                          <button className="disapproved">
+                            Can not be modified
+                          </button>
+                        )}
+                      </>
                     )}
                   </td>
                   <td>
-                    <button
-                      onClick={() => cancelMentorAppointMent(mentor)}
-                      className="disapproved"
-                    >
-                      Cancel
-                    </button>
+                    {mentor.paymentStatus === "Refunded" ? (
+                      <button className="disapprove">
+                        Refund has been issued
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => showCancelMentorModel(mentor)}
+                        className="disapproved"
+                      >
+                        Cancel
+                      </button>
+                    )}
                   </td>
                 </tr>
               </tbody>

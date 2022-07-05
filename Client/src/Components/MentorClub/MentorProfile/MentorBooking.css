@@ -69,7 +69,7 @@ td {
 }
 .disapprove {
   outline: none;
-  cursor: not-allowed;
+  cursor: pointer;
   padding: 7px 24px;
   color: white;
   border: none;

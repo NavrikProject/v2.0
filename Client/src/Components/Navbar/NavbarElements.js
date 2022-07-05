@@ -47,7 +47,7 @@ export const LogoContainer = styled.div`
 
 export const LogoImage = styled.img`
   width: 250px;
-  height: 60px;
+  height: 80px;
   cursor: pointer;
 `;
 export const MenuContainer = styled.div`
