@@ -18,10 +18,10 @@ const Privacy = () => {
           <FaqTcSectTitle>Privacy Policy for elevation</FaqTcSectTitle>
 
           <FaqTcSectParagraph>
-            At www.practilearn.com, accessible from https://practilearn.com, one of
+            At www.practiwiz.com, accessible from https://practiwiz.com, one of
             our main priorities is the privacy of our visitors. This Privacy
             Policy document contains types of information that is collected and
-            recorded by www.practilearn.com and how we use it.
+            recorded by www.practiwiz.com and how we use it.
           </FaqTcSectParagraph>
 
           <FaqTcSectParagraph>
@@ -32,7 +32,7 @@ const Privacy = () => {
           <FaqTcSectParagraph>
             This Privacy Policy applies only to our online activities and is
             valid for visitors to our website with regards to the information
-            that they shared and/or collect in www.practilearn.com. This policy is
+            that they shared and/or collect in www.practiwiz.com. This policy is
             not applicable to any information collected offline or via channels
             other than this website. Our Privacy Policy was created with the
             help of the .
@@ -88,7 +88,7 @@ const Privacy = () => {
           <FaqTcSectTitleH3>Log Files</FaqTcSectTitleH3>
 
           <FaqTcSectParagraph>
-            www.practilearn.com follows a standard procedure of using log files.
+            www.practiwiz.com follows a standard procedure of using log files.
             These files log visitors when they visit websites. All hosting
             companies do this and a part of hosting services' analytics. The
             information collected by log files include internet protocol (IP)
@@ -103,7 +103,7 @@ const Privacy = () => {
           <FaqTcSectTitleH3>Cookies and Web Beacons</FaqTcSectTitleH3>
 
           <FaqTcSectParagraph>
-            Like any other website, www.practilearn.com uses 'cookies'. These
+            Like any other website, www.practiwiz.com uses 'cookies'. These
             cookies are used to store information including visitors'
             preferences, and the pages on the website that the visitor accessed
             or visited. The information is used to optimize the users'
@@ -115,14 +115,14 @@ const Privacy = () => {
 
           <FaqTcSectParagraph>
             You may consult this list to find the Privacy Policy for each of the
-            advertising partners of www.practilearn.com.
+            advertising partners of www.practiwiz.com.
           </FaqTcSectParagraph>
 
           <FaqTcSectParagraph>
             Third-party ad servers or ad networks uses technologies like
             cookies, JavaScript, or Web Beacons that are used in their
             respective advertisements and links that appear on
-            www.practilearn.com, which are sent directly to users' browser. They
+            www.practiwiz.com, which are sent directly to users' browser. They
             automatically receive your IP address when this occurs. These
             technologies are used to measure the effectiveness of their
             advertising campaigns and/or to personalize the advertising content
@@ -130,14 +130,14 @@ const Privacy = () => {
           </FaqTcSectParagraph>
 
           <FaqTcSectParagraph>
-            Note that www.practilearn.com has no access to or control over these
+            Note that www.practiwiz.com has no access to or control over these
             cookies that are used by third-party advertisers.
           </FaqTcSectParagraph>
 
           <FaqTcSectTitleH3>Third Party Privacy Policies</FaqTcSectTitleH3>
 
           <FaqTcSectParagraph>
-            www.practilearn.com's Privacy Policy does not apply to other
+            www.practiwiz.com's Privacy Policy does not apply to other
             advertisers or websites. Thus, we are advising you to consult the
             respective Privacy Policies of these third-party ad servers for more
             detailed information. It may include their practices and
@@ -223,7 +223,7 @@ const Privacy = () => {
           </FaqTcSectParagraph>
 
           <FaqTcSectParagraph>
-            www.practilearn.com does not knowingly collect any Personal
+            www.practiwiz.com does not knowingly collect any Personal
             Identifiable Information from children under the age of 13. If you
             think that your child provided this kind of information on our
             website, we strongly encourage you to contact us immediately and we

@@ -17,7 +17,11 @@ import {
 import MentorCourseCard from "./MentorCard";
 import { LineAfter } from "./MentorCardElements";
 import { Link } from "react-router-dom";
-import { mentorshipAreas, mentorSkills } from "../Data/MentorData";
+import {
+  mentorAvailabilityTimings,
+  mentorshipAreas,
+  mentorSkills,
+} from "../Data/MentorData";
 import GoToTop from "../GoToTop";
 const MentorClub = () => {
   const [searchItem, setSearchItem] = useState("");
@@ -65,19 +69,19 @@ const MentorClub = () => {
               ))}
             </MentorSelect>
           </MentorSearchRightDiv>
-          {/* <MentorSearchRightDiv>
-            <MentorLabel>Choose the Mentor by Mentorship Area:</MentorLabel>
+          <MentorSearchRightDiv>
+            <MentorLabel>Choose the Mentor by Availability:</MentorLabel>
             <MentorSelect
               onChange={(event) => setCategoryItem(event.target.value)}
             >
               <MentorOptions value="choose">Choose Below</MentorOptions>
-              {mentorshipAreas.map((mentorArea) => (
-                <MentorOptions key={mentorArea.id} value={mentorArea.area}>
-                  {mentorArea.area}
+              {mentorAvailabilityTimings.map((mentorArea) => (
+                <MentorOptions key={mentorArea.id} value={mentorArea.timings}>
+                  {mentorArea.timings}
                 </MentorOptions>
               ))}
             </MentorSelect>
-          </MentorSearchRightDiv> */}
+          </MentorSearchRightDiv>
           <SearchForm onSubmit={searchEngineAll}>
             <SearchBoxInput
               placeholder="Search any mentor"

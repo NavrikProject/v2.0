@@ -120,14 +120,14 @@ const Footer = () => {
                 <IconSpan>
                   <i className="fas fa-envelope"></i>
                 </IconSpan>
-                contact@practilearn.com
+                contact@practiwiz.com
               </ContactItem>
               <Payment src={PaymentImage} />
             </Right>
           </FooterWrapper>
           <FooterText>
-            Practilearn © 2022 | This site is developed by Navrik Team. All
-            rights reserved.
+            Practiwiz © 2022 | This site is developed by Navrik Team. All rights
+            reserved.
           </FooterText>
         </FooterSection>
       </FooterSect>

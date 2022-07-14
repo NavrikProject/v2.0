@@ -63,6 +63,20 @@ td {
   border: none;
   border-radius: 7px;
 }
+.startButton {
+  outline: none;
+  cursor: pointer;
+  padding: 7px 33px;
+  background-color: rgb(14, 127, 203);
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+.startButton a {
+  color: black;
+  text-decoration: none;
+}
 .approve:hover,
 .disapprove:hover {
   opacity: 0.9;

@@ -31,11 +31,13 @@
     "msnodesqlv8": "^2.4.6",
     "mssql": "^8.0.2",
     "node-fetch": "^3.2.0",
+    "node-schedule": "^2.1.0",
     "nodemon": "^2.0.15",
     "path": "^0.12.7",
     "razorpay": "^2.8.1",
     "rc-time-picker": "^3.7.3",
     "react-big-calendar": "^0.40.1",
-    "react-calendly": "^4.0.1"
+    "react-calendly": "^4.0.1",
+    "request-promise": "^4.2.6"
   }
 }

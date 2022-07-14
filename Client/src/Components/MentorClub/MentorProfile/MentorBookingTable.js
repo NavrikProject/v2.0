@@ -26,10 +26,9 @@ const TraineeBookingTable = () => {
     };
     getAllTheMentors();
   }, [token, user]);
-
+  console.log(allMentors);
   const cancelMentorAppointMent = async (mentor) => {};
   const confirmTheAppointMent = async (mentor) => {
-    console.log(mentor);
     setLoading(true);
     const res = await axios.put(
       `/mentor/bookings/update/confirm/appointment/${mentor.id}`,
@@ -71,6 +70,7 @@ const TraineeBookingTable = () => {
               <th>Booking Date</th>
               <th>Session Time</th>
               <th>Confirm the Session</th>
+              <th>Start Meeting</th>
               <th>Cancel</th>
             </tr>
           </tbody>
@@ -95,6 +95,17 @@ const TraineeBookingTable = () => {
                         className="approve"
                       >
                         Confirm the session
+                      </button>
+                    )}
+                  </td>
+                  <td>
+                    {mentor.amountStatus === "Refunded" ? (
+                      <button className="disapprove">
+                        Can not join after the refund
+                      </button>
+                    ) : (
+                      <button className="startButton">
+                        <a href={mentor.startUrl}>Start Meeting</a>
                       </button>
                     )}
                   </td>

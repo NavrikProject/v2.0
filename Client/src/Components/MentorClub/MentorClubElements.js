@@ -42,6 +42,7 @@ export const MentorCourseBox = styled.div`
   padding: 20px;
   margin: 20px;
   width: 100%;
+  border-radius: 15px;
 `;
 export const MentorCourseDivFlex = styled.div`
   display: flex;

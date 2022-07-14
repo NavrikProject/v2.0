@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import { AiOutlineClose } from "react-icons/ai";
 import styled from "styled-components";
 import Model from "./Model";
@@ -49,6 +51,8 @@ const ModifyBtn = styled.button`
 `;
 const FormData = styled.div``;
 const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
+  const user = useSelector((state) => state.user.currentUser);
+  console.log(user);
   const [date, setDate] = useState();
   const [mentorBookingDate, setMentorBookingDate] = useState([]);
   const [availability, setAvailability] = useState([]);
@@ -131,6 +135,7 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
       {
         date: date.toLocaleDateString(),
         bookingId: mentor.bookingId,
+        userEmail: user?.email,
       }
     );
     if (res.data.success) {
@@ -211,9 +216,9 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
                 razorpayPaymentId: response.razorpay_payment_id,
                 bookingId: id,
                 date: date.toLocaleDateString(),
+                userEmail: user?.email,
               }
             );
-            console.log(res);
             if (res.data.success) {
               setSuccess(res.data.success);
               toast.success(res.data.success, {

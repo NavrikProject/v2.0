@@ -30,6 +30,8 @@ export async function getAllMentorBookingsInProfile(req, res, next) {
                 confirmed: mentor.mentor_booking_confirmed,
                 changes: mentor.trainee_modification_changed_times,
                 mentorId: mentor.mentor_dtls_id,
+                startUrl: mentor.mentor_start_url,
+                amountStatus: mentor.mentor_amount_paid_status,
               };
               mentorArray.push(data);
             });

@@ -28,7 +28,7 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
   const [loading, setLoading] = useState(false);
   const [mentorBookingDate, setMentorBookingDate] = useState([]);
   const user = useSelector((state) => state.user.currentUser);
-
+  console.log(mentorDetails);
   useEffect(() => {
     try {
       const getAllMentorDetails = async () => {
@@ -259,7 +259,8 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
             .filter(
               (course) =>
                 course.mentor_skills === categoryItem ||
-                course.mentor_mentorship_area === categoryItem
+                course.mentor_mentorship_area === categoryItem ||
+                course.mentor_availability === categoryItem
             )
             .map((mentor) => (
               <MentorDiv key={mentor.mentor_dtls_id}>

@@ -8,6 +8,8 @@ import intoStream from "into-stream";
 import updateEmail from "../middleware/updateEmail.js";
 import bcrypt from "bcrypt";
 import Razorpay from "razorpay";
+import jwt from "jsonwebtoken";
+import rp from "request-promise";
 const containerName = "navrikimage";
 
 dotenv.config();
@@ -471,6 +473,12 @@ export async function createMentorRazorPayOrder(req, res, next) {
   }
 }
 
+const payload = {
+  iss: process.env.ZOOM_APP_API_KEY,
+  exp: new Date().getTime() + 5000,
+};
+
+const token = jwt.sign(payload, process.env.ZOOM_APP_API_SECRET_KEY);
 // create an appointment
 export async function createMentorAppointment(req, res, next) {
   const {
@@ -487,63 +495,133 @@ export async function createMentorAppointment(req, res, next) {
   } = req.body;
 
   const timeSlot = from + " " + "to" + " " + to;
+
   try {
-    sql.connect(config, async (err) => {
-      if (err) res.send(err.message);
-      const request = new sql.Request();
-      let amountPaid = "Paid";
-      request.query(
-        "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,user_email,booking_mentor_date,booking_date,booking_time,mentor_amount,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_amount_paid_status) VALUES('" +
-          mentorId +
-          "','" +
-          mentorEmail +
-          "','" +
-          userEmail +
-          "','" +
-          date +
-          "','" +
-          new Date().toISOString().substring(0, 10) +
-          "','" +
-          timeSlot +
-          "','" +
-          amount / 100 +
-          "','" +
-          razorpayPaymentId +
-          "','" +
-          razorpayOrderId +
-          "','" +
-          razorpaySignature +
-          "','" +
-          amountPaid +
-          "' )",
-        (err, success) => {
-          if (err) {
-            return res.send({ error: err.message });
-          }
-          if (success) {
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-            const msg = updateEmail(
-              userEmail,
-              "Appointment Booking Confirmation",
-              "Successfully appointment is booked and mentor will be available on the same day with respective time!"
-            );
-            sgMail
-              .send(msg)
-              .then(() => {
-                res.send({
-                  success:
-                    "Successfully appointment is booked and mentor will be available on the same day with respective time",
-                });
-              })
-              .catch((error) => {
-                res.send({
-                  error: "There was an error while booking the appointment",
-                });
-              });
-          }
-        }
-      );
-    });
+    var options = {
+      method: "POST",
+      uri: "https://api.zoom.us/v2/users/me/meetings",
+      body: {
+        topic: "Appointment booking",
+        type: 1,
+        start_time: new Date(date),
+        contact_email: userEmail,
+        registrants_email_notification: true,
+        calendar_type: 2,
+        recurrence: {
+          end_date_time: new Date(date),
+          end_times: 7,
+          monthly_day: 1,
+          monthly_week: 1,
+          monthly_week_day: 1,
+          repeat_interval: 1,
+          type: 1,
+          weekly_days: "1",
+        },
+        settings: {
+          host_video: "true",
+          participant_video: "true",
+        },
+      },
+      auth: {
+        bearer: token,
+      },
+      headers: {
+        "User-Agent": "Zoom-api-Jwt-Request",
+        "content-type": "application/json",
+      },
+      json: true, //Parse the JSON string in the response
+    };
+
+    rp(options)
+      .then(function (response) {
+        let startUrl = response.start_url;
+        let joinUrl = response.join_url;
+        sql.connect(config, async (err) => {
+          if (err) res.send(err.message);
+          const request = new sql.Request();
+          let amountPaid = "Paid";
+          request.query(
+            "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,user_email,booking_mentor_date,booking_date,booking_starts_time,booking_time,mentor_amount,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_start_url,mentor_join_url,mentor_amount_paid_status) VALUES('" +
+              mentorId +
+              "','" +
+              mentorEmail +
+              "','" +
+              userEmail +
+              "','" +
+              date +
+              "','" +
+              new Date().toISOString().substring(0, 10) +
+              "','" +
+              from +
+              "','" +
+              timeSlot +
+              "','" +
+              amount / 100 +
+              "','" +
+              razorpayPaymentId +
+              "','" +
+              razorpayOrderId +
+              "','" +
+              razorpaySignature +
+              "','" +
+              startUrl +
+              "','" +
+              joinUrl +
+              "','" +
+              amountPaid +
+              "' )",
+            (err, success) => {
+              if (err) {
+                return res.send({ error: err.message });
+              }
+              if (success) {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = updateEmail(
+                  userEmail,
+                  "Appointment Booking Confirmation",
+                  "Successfully appointment is booked and mentor will be available on the same day with respective time!, " +
+                    " " +
+                    joinUrl
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    const msg = updateEmail(
+                      mentorEmail,
+                      "Appointment Booking Confirmation",
+                      "Some one has booked the appointment and the joining url is " +
+                        " " +
+                        startUrl
+                    );
+                    sgMail
+                      .send(msg)
+                      .then(() => {
+                        res.send({
+                          success:
+                            "Successfully appointment is booked and mentor will be available on the same day with respective time",
+                        });
+                      })
+                      .catch((error) => {
+                        res.send({
+                          error:
+                            "There was an error while booking the appointment",
+                        });
+                      });
+                  })
+                  .catch((error) => {
+                    res.send({
+                      error: "There was an error while booking the appointment",
+                    });
+                  });
+              }
+            }
+          );
+        });
+      })
+      .catch(function (err) {
+        // API call failed...
+        console.log("API call failed, reason ", err.message);
+      });
   } catch (error) {
     console.log(err.message);
   }

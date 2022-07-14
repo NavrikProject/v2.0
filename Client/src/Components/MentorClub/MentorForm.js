@@ -85,6 +85,7 @@ const MentorForm = () => {
     data.append("from", fromTiming);
     data.append("to", toTiming);
     data.append("availability", availability);
+    console.log(fromTiming);
     try {
       const res = await axios.post(`/mentor/register`, data, {
         headers: { authorization: "Bearer " + token },
@@ -289,12 +290,14 @@ const MentorForm = () => {
                     required
                     type="time"
                     min="1"
+                    step="1800"
                     onChange={(event) => setFromTiming(event.target.value)}
                   />
                   <br /> To:
                   <MentorSlotTimerInput
                     required
                     type="time"
+                    step="1800"
                     onChange={(event) => setToTiming(event.target.value)}
                   />
                 </MentorFormSlotDiv>

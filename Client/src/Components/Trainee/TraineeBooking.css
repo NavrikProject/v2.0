@@ -41,7 +41,20 @@ td {
   border: none;
   border-radius: 7px;
 }
-
+.joinButton {
+  outline: none;
+  cursor: pointer;
+  padding: 7px 33px;
+  background-color: rgb(55, 164, 236);
+  color: white;
+  transition: all 0.4s ease-in-out;
+  border: none;
+  border-radius: 7px;
+}
+.joinButton a {
+  color: black;
+  text-decoration: none;
+}
 .approved {
   outline: none;
   cursor: not-allowed;

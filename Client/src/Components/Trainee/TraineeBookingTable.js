@@ -65,7 +65,6 @@ const TraineeBookingTable = () => {
               <th>Id</th>
               <th>Your Email</th>
               <th>Mentor Email</th>
-              <th>Booked On</th>
               <th>Booking Date</th>
               <th>Session Time</th>
               <th>Mentor Price</th>
@@ -73,6 +72,7 @@ const TraineeBookingTable = () => {
               <th>Payment Status</th>
               <th>Modify Appointment</th>
               <th>Cancel</th>
+              <th>Join Meeting</th>
             </tr>
           </tbody>
           {allMentors?.length > 0 ? (
@@ -82,7 +82,6 @@ const TraineeBookingTable = () => {
                   <td>{mentor.bookingId}</td>
                   <td>{mentor.userEmail}</td>
                   <td>{mentor.mentorEmail}</td>
-                  <td>{new Date(mentor.bookedOn).toDateString()}</td>
                   <td>{new Date(mentor.bookingDate).toDateString()}</td>
                   <td>{mentor.time}</td>
                   <td>{mentor.amount}</td>
@@ -132,6 +131,17 @@ const TraineeBookingTable = () => {
                         className="disapproved"
                       >
                         Cancel
+                      </button>
+                    )}
+                  </td>
+                  <td>
+                    {mentor.paymentStatus === "Refunded" ? (
+                      <button className="disapprove">
+                        Can not be join after refund
+                      </button>
+                    ) : (
+                      <button className="joinButton">
+                        <a href={mentor.joinUrl}>Join Meeting</a>
                       </button>
                     )}
                   </td>

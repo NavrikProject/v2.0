@@ -18,14 +18,14 @@ const Terms = () => {
           <FaqTcSectTitle>
             <strong>Terms and Conditions</strong>
           </FaqTcSectTitle>
-          <FaqTcSectParagraph>Welcome to www.practilearn.com!</FaqTcSectParagraph>
+          <FaqTcSectParagraph>Welcome to www.practiwiz.com!</FaqTcSectParagraph>
           <FaqTcSectParagraph>
             These terms and conditions outline the rules and regulations for the
-            use of elevation's Website, located at https://practilearn.com.
+            use of elevation's Website, located at https://practiwiz.com.
           </FaqTcSectParagraph>
           <FaqTcSectParagraph>
             By accessing this website we assume you accept these terms and
-            conditions. Do not continue to use www.practilearn.com if you do not
+            conditions. Do not continue to use www.practiwiz.com if you do not
             agree to take all of the terms and conditions stated on this page.
           </FaqTcSectParagraph>
           <FaqTcSectParagraph>
@@ -49,7 +49,7 @@ const Terms = () => {
             <strong>Cookies</strong>
           </FaqTcSectTitleH3>
           <FaqTcSectParagraph>
-            We employ the use of cookies. By accessing www.practilearn.com, you
+            We employ the use of cookies. By accessing www.practiwiz.com, you
             agreed to use cookies in agreement with the elevation's Privacy
             Policy.
           </FaqTcSectParagraph>
@@ -65,19 +65,19 @@ const Terms = () => {
           </FaqTcSectTitleH3>
           <FaqTcSectParagraph>
             Unless otherwise stated, elevation and/or its licensors own the
-            intellectual property rights for all material on www.practilearn.com.
+            intellectual property rights for all material on www.practiwiz.com.
             All intellectual property rights are reserved. You may access this
-            from www.practilearn.com for your own personal use subjected to
+            from www.practiwiz.com for your own personal use subjected to
             restrictions set in these terms and conditions.
           </FaqTcSectParagraph>
           <FaqTcSectParagraph>You must not:</FaqTcSectParagraph>
           <FaqTcSectUl>
-            <li>Republish material from www.practilearn.com</li>
-            <li>Sell, rent or sub-license material from www.practilearn.com</li>
+            <li>Republish material from www.practiwiz.com</li>
+            <li>Sell, rent or sub-license material from www.practiwiz.com</li>
             <li>
-              Reproduce, duplicate or copy material from www.practilearn.com
+              Reproduce, duplicate or copy material from www.practiwiz.com
             </li>
-            <li>Redistribute content from www.practilearn.com</li>
+            <li>Redistribute content from www.practiwiz.com</li>
           </FaqTcSectUl>
           <FaqTcSectParagraph>
             Parts of this website offer an opportunity for users to post and
