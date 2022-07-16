@@ -48,7 +48,7 @@ const IndividualTrainingMenu = () => {
           <SubmenuListItem>
             <Link
               style={{ textDecoration: "none", color: "#062C30" }}
-              to="/training/ba"
+              to="/training/individual/ba"
             >
               RPA BA PRACTICAL
             </Link>

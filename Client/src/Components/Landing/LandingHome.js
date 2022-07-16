@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ButtonDiv,
+  CorporateImage,
   DisplayDiv,
   DisplayDivItem1,
   DisplayDivItem2,
@@ -11,6 +12,7 @@ import {
   KnowMoreButton,
   LandingDiv,
   LandingSection,
+  PractiwizButton,
   RpaCoeBox,
   RpaCoeTitle,
 } from "./LandingHomeElements";
@@ -23,19 +25,18 @@ const LandingHome = () => {
           <DisplayDiv>
             <DisplayDivItem1>
               <DisplayDivItemTitleWhite>
-                We deliver RPA Project
+                Learn From the Corporate,
               </DisplayDivItemTitleWhite>
               <DisplayDivItemTitleWhite>
-                We pass on Our Learning
+                Step Into Corporate World!
               </DisplayDivItemTitleWhite>
-              <DisplayDivItemTitleWhite>
-                Real World Software-experts
-              </DisplayDivItemTitleWhite>
+              <PractiwizButton>Why Practiwiz ?</PractiwizButton>
             </DisplayDivItem1>
             <DisplayDivItem2>
-              <DisplayDivItemTitleGold>
-                Don't just learn, <br /> Prctilearn
-              </DisplayDivItemTitleGold>
+              {/* <CorporateImage
+                src="https://images.pexels.com/photos/3184405/pexels-photo-3184405.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt=""
+              /> */}
             </DisplayDivItem2>
           </DisplayDiv>
         </LandingDiv>

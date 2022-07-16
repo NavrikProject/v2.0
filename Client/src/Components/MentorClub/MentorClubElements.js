@@ -5,12 +5,39 @@ export const MentorSection = styled.section`
   width: 90%;
   height: auto;
   margin: 0 auto;
+  background-image: url("https://navrik.blob.core.windows.net/navrikimage/abstract-background-with-squares_23-2148995948.jpg");
 `;
 export const MentorDiv = styled.div`
-  width: 43%;
+  width: 30%;
   margin: 20px;
 `;
+export const MentorUpDiv = styled.div`
+  width: 100%;
+  height: 50px;
+  background-color: #fff;
+`;
+export const MentorDownDiv = styled.div`
+  width: 100%;
+  //background-color: #d1dfe3;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+`;
 
+export const MentorImgDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const MentorImg = styled.img`
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin: -100px auto 0 auto;
+  object-fit: cover;
+  border: 4px solid #fff;
+`;
 export const MentorWrapper = styled.div`
   padding: 50px 0;
 `;
@@ -38,9 +65,7 @@ export const MentorDivFlex = styled.div`
 
 export const MentorCourseBox = styled.div`
   cursor: pointer;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-  margin: 20px;
+
   width: 100%;
   border-radius: 15px;
 `;

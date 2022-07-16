@@ -31,10 +31,9 @@ const PrivacyPage = React.lazy(() => import("./Pages/PrivacyPage"));
 const ResetPwdPage = React.lazy(() => import("./Pages/ResetPwdPage"));
 const Terms = React.lazy(() => import("./Pages/T&CPage"));
 const MentorPage = React.lazy(() => import("./Pages/MentorFormPage"));
-
+const RpaBaPage = React.lazy(() => import("./Pages/RpaBaCoursePage"));
 const App = () => {
   const user = useSelector((state) => state.user.currentUser);
-  console.log(user?.type);
   return (
     <>
       <ToastContainer />
@@ -50,6 +49,7 @@ const App = () => {
             <Route path="/forgot-password" element={<ForgotPwdPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/mentor/join" element={<MentorPage />} />
+            <Route path="/training/individual/ba" element={<RpaBaPage />} />
 
             {user?.type === "mentor" && (
               <Route path={`/mentor/profile`} element={<MentorProfilePage />} />

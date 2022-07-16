@@ -9,7 +9,14 @@ import {
   MentorName,
 } from "./MentorCardElements";
 import logo from "../../images/practi-logo.png";
-import { MentorCourseBox, MentorDiv } from "./MentorClubElements";
+import {
+  MentorCourseBox,
+  MentorDiv,
+  MentorDownDiv,
+  MentorImg,
+  MentorImgDiv,
+  MentorUpDiv,
+} from "./MentorClubElements";
 import "react-datepicker/dist/react-datepicker.css";
 import "./MentorCardDate.css";
 import DatePicker from "react-datepicker";
@@ -184,73 +191,78 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
       {!categoryItem && mentorDetails?.length > 0
         ? mentorDetails?.map((mentor) => (
             <MentorDiv key={mentor.mentor_dtls_id}>
-              <MentorCourseBox>
-                <MentorBoxDiv>
-                  <MentorDetailsDiv>
-                    <MentorName>
-                      {mentor.mentor_firstname + " " + mentor.mentor_lastname}
-                    </MentorName>
-                  </MentorDetailsDiv>
-                </MentorBoxDiv>
-                <MentorDescP>Skills: {mentor.mentor_skills}</MentorDescP>
-                <MentorDescP>Experience:{mentor.mentor_experience}</MentorDescP>
-                <MentorBoxDiv>
+              <MentorUpDiv></MentorUpDiv>
+              <MentorDownDiv>
+                <MentorImgDiv>
+                  <MentorImg
+                    src="https://images.pexels.com/photos/4339867/pexels-photo-4339867.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    alt="trainer picture"
+                  />
+                </MentorImgDiv>
+                <MentorCourseBox>
+                  <MentorBoxDiv>
+                    <MentorDetailsDiv>
+                      <MentorName>
+                        {mentor.mentor_firstname + " " + mentor.mentor_lastname}
+                      </MentorName>
+                    </MentorDetailsDiv>
+                  </MentorBoxDiv>
+                  <MentorDescP>Skills: {mentor.mentor_skills}</MentorDescP>
                   <MentorDescP>
-                    Availability: {mentor.mentor_availability}
+                    Experience:{mentor.mentor_experience}
                   </MentorDescP>
-                  <MentorDescP>
-                    Specialty: {mentor.mentor_specialty}
-                  </MentorDescP>
-                </MentorBoxDiv>
-                <MentorBoxDiv>
-                  <MentorDescP>
-                    Sessions Conducted:{mentor.mentor_session_conducted}
-                  </MentorDescP>
-                  <MentorDescP>
-                    Price for One Session : {mentor.mentor_price}
-                  </MentorDescP>
-                </MentorBoxDiv>
-                <MentorBoxDiv>
-                  <MentorDescP>Choose the date :</MentorDescP>
-                  <MentorDescP>
-                    <DatePicker
-                      closeOnScroll={true}
-                      selected={date}
-                      value={date}
-                      onChange={(date) => setDate(date)}
-                      minDate={new Date()}
-                      maxDate={new Date(mentor.mentor_available_end_date)}
-                      dayClassName={(date) => getDate(date, mentor)}
-                      filterDate={(date) =>
-                        isWorkDay(mentor.mentor_availability, date)
-                      }
-                    />
-                  </MentorDescP>
-                </MentorBoxDiv>
-                <MentorBoxDiv>
-                  <div className="booked"></div> The red color shows those are
-                  not available
-                </MentorBoxDiv>
-                <MentorBoxDiv>
-                  <MentorDescP>
-                    Available From :
-                    <strong>{mentor.mentor_availability_slot_from} </strong>
-                    to: <strong>{mentor.mentor_availability_slot_to}</strong>
-                  </MentorDescP>
-                  <MentorDescP></MentorDescP>
-                </MentorBoxDiv>
-                <BookNowButtonDiv>
-                  {!user ? (
-                    <BookNowButton>
-                      <Link to={"/login"}>Login</Link>
-                    </BookNowButton>
-                  ) : (
-                    <BookNowButton onClick={() => bookMentorHandler(mentor)}>
-                      Book now
-                    </BookNowButton>
-                  )}
-                </BookNowButtonDiv>
-              </MentorCourseBox>
+                  <MentorBoxDiv>
+                    <MentorDescP>
+                      Availability: {mentor.mentor_availability}
+                    </MentorDescP>
+                  </MentorBoxDiv>
+                  <MentorBoxDiv>
+                    <MentorDescP>
+                      Price for One Session : {mentor.mentor_price}
+                    </MentorDescP>
+                  </MentorBoxDiv>
+                  <MentorBoxDiv>
+                    <MentorDescP>Choose the date:</MentorDescP>
+                    <MentorDescP>
+                      <DatePicker
+                        closeOnScroll={true}
+                        selected={date}
+                        value={date}
+                        onChange={(date) => setDate(date)}
+                        minDate={new Date()}
+                        maxDate={new Date(mentor.mentor_available_end_date)}
+                        dayClassName={(date) => getDate(date, mentor)}
+                        filterDate={(date) =>
+                          isWorkDay(mentor.mentor_availability, date)
+                        }
+                      />
+                    </MentorDescP>
+                  </MentorBoxDiv>
+                  <MentorBoxDiv>
+                    <div className="booked"></div> The red color shows those are
+                    not available
+                  </MentorBoxDiv>
+                  <MentorBoxDiv>
+                    <MentorDescP>
+                      Available From :
+                      <strong>{mentor.mentor_availability_slot_from} </strong>
+                      to: <strong>{mentor.mentor_availability_slot_to}</strong>
+                    </MentorDescP>
+                    <MentorDescP></MentorDescP>
+                  </MentorBoxDiv>
+                  <BookNowButtonDiv>
+                    {!user ? (
+                      <BookNowButton>
+                        <Link to={"/login"}>Login</Link>
+                      </BookNowButton>
+                    ) : (
+                      <BookNowButton onClick={() => bookMentorHandler(mentor)}>
+                        Book now <i className="fa-solid fa-right-long"></i>
+                      </BookNowButton>
+                    )}
+                  </BookNowButtonDiv>
+                </MentorCourseBox>
+              </MentorDownDiv>
             </MentorDiv>
           ))
         : null}
@@ -324,7 +336,7 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                       </BookNowButton>
                     ) : (
                       <BookNowButton onClick={() => bookMentorHandler(mentor)}>
-                        Book now
+                        Book now <i className="fa-solid fa-right-long"></i>
                       </BookNowButton>
                     )}
                   </BookNowButtonDiv>

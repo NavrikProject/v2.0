@@ -2,8 +2,14 @@ import styled from "styled-components";
 
 export const LandingSection = styled.section`
   width: 100%;
-  background-color: #541690;
+  //background-color: #541690;
   height: auto;
+  background-image: url("https://images.pexels.com/photos/3184405/pexels-photo-3184405.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 600px;
 `;
 
 export const LandingDiv = styled.div`
@@ -14,18 +20,32 @@ export const LandingDiv = styled.div`
 `;
 export const DisplayDiv = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 30px 40px;
 `;
 
 export const DisplayDivItem1 = styled.div`
-  padding: 80px 0px;
+  padding: 100px 0px;
+  width: 50%;
 `;
 export const DisplayDivItem2 = styled.div`
   padding: 80px 0px;
+  width: 50%;
 `;
-
+export const CorporateImage = styled.img`
+  width: 100%;
+`;
+export const PractiwizButton = styled.button`
+  outline: none;
+  padding: 15px 40px;
+  background: transparent;
+  background-color: #9926f0;
+  border: none;
+  cursor: pointer;
+  font-size: 21px;
+  color: white;
+  margin-top: 20px;
+`;
 export const DisplayDivItemTitleWhite = styled.h1`
   color: #fff;
   font-size: 36px;
