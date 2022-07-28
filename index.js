@@ -19,6 +19,7 @@ import corporateCourseRoute from "./routes/corpCourseRoute.js";
 import mentorRoute from "./routes/mentorRoute.js";
 import TraineeBookingProfileRoute from "./routes/traineeBookingProfileRoute.js";
 import mentorBookingRoute from "./routes/MentorBookingRoute.js";
+import FeedbackRoute from "./routes/feedbackRoute.js";
 import Razorpay from "razorpay";
 import jwt from "jsonwebtoken";
 import config from "./config/dbconfig.js";
@@ -89,14 +90,25 @@ app.use("/api/corporate", corporateCourseRoute);
 app.use("/api/mentor", mentorRoute);
 app.use("/api/mentor/profile", TraineeBookingProfileRoute);
 app.use("/api/mentor/bookings", mentorBookingRoute);
-
-//const payload = {
-
+app.use("/api/feedback", FeedbackRoute);
+// const payload = {
 //   iss: process.env.ZOOM_APP_API_KEY,
 //   exp: new Date().getTime() + 5000,
 // };
+const instance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
+});
 
-//const token = jwt.sign(payload, process.env.ZOOM_APP_API_SECRET_KEY);
+instance.payments
+  .all()
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+// const token = jwt.sign(payload, process.env.ZOOM_APP_API_SECRET_KEY);
 
 // app.get("/newmeeting", (req, res) => {
 //   var email = "b.mahesh311296@gmail.com";
@@ -106,12 +118,12 @@ app.use("/api/mentor/bookings", mentorBookingRoute);
 //     body: {
 //       topic: "test meeting title",
 //       type: 1,
-//       start_time: new Date("2022-07-23T12:46:02.166Z"),
+//       start_time: new Date("2022-07-29T12:46:02.166Z"),
 //       contact_email: email,
 //       registrants_email_notification: true,
 //       calendar_type: 2,
 //       recurrence: {
-//         end_date_time: new Date("2022-07-23T12:46:02.166Z"),
+//         end_date_time: new Date("2022-07-29T12:46:02.166Z"),
 //         end_times: 7,
 //         monthly_day: 1,
 //         monthly_week: 1,

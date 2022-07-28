@@ -30,7 +30,14 @@ const LandingHome = () => {
               <DisplayDivItemTitleWhite>
                 Step Into Corporate World!
               </DisplayDivItemTitleWhite>
-              <PractiwizButton>Why Practiwiz ?</PractiwizButton>
+              <PractiwizButton>
+                <Link
+                  to={"/why-practiwiz"}
+                  style={{ textDecoration: "none", color: "white" }}
+                >
+                  Why Practiwiz ?
+                </Link>
+              </PractiwizButton>
             </DisplayDivItem1>
             <DisplayDivItem2>
               {/* <CorporateImage

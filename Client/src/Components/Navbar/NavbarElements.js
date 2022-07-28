@@ -1,13 +1,26 @@
 import styled from "styled-components";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 export const NavSection = styled.section`
-  /* background: linear-gradient(
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
+  background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 1) 0%,
     rgba(245, 245, 245, 1) 32%,
     rgba(224, 251, 252, 1) 100%
-  ); */
-
+  );
+  z-index: 1000;
+  @media only screen and (max-width: 1068px) {
+    padding: 10px 0;
+  }
+  @media only screen and (max-width: 968px) {
+    padding: 10px 0;
+  }
+  @media only screen and (max-width: 768px) {
+    padding: 10px 0;
+  }
   padding: 10px 0;
 `;
 export const Div1 = styled.div`
@@ -15,28 +28,26 @@ export const Div1 = styled.div`
   align-items: center;
   justify-content: flex-end;
   padding-right: 30px;
+  position: absolute;
+  top: 10px;
+  right: 0;
 `;
 export const NavDiv = styled.div`
-  position: sticky;
-  top: 0;
-  right: 0;
-  left: 0;
   width: 100%;
-  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: #111;
-  padding: 0 90px;
+  padding: 20px 90px 0 90px;
   @media only screen and (max-width: 1068px) {
-    padding: 10px 20px;
+    padding: 0px 20px;
   }
   @media only screen and (max-width: 968px) {
-    padding: 10px 40px;
+    padding: 0px 40px;
     justify-content: space-between;
   }
   @media only screen and (max-width: 768px) {
-    padding: 10px 20px;
+    padding: 0px 20px;
   }
 `;
 
@@ -47,7 +58,7 @@ export const LogoContainer = styled.div`
 
 export const LogoImage = styled.img`
   width: 250px;
-  height: 80px;
+  height: 70px;
   cursor: pointer;
 `;
 export const MenuContainer = styled.div`
@@ -67,6 +78,11 @@ export const NavItem = styled.li`
   @media only screen and (max-width: 968px) {
     margin: 0 18px;
   }
+`;
+export const NavItemProfile = styled.p`
+  background-color: lightgreen;
+  padding: 10px;
+  border-radius: 50%;
 `;
 export const NavLink = styled.a``;
 

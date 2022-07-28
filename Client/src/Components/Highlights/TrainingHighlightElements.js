@@ -41,6 +41,9 @@ export const TrainingHighlightDiv = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  @media only screen and (max-width: 768px) {
+    display: block;
+  }
 `;
 export const TrainingHighlightItems = styled.div`
   width: 100%;
@@ -59,7 +62,8 @@ export const TrainerHighlightBox = styled.div`
 `;
 export const CourseTitleDiv = styled.div``;
 export const TrainerHighlightTitle = styled.h1`
-  color: black;
+  color: #1f4690;
   text-align: center;
   padding: 20px 0;
+  font-size: 35px;
 `;

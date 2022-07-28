@@ -13,3 +13,12 @@ export const sendRemainderOnTheDay = (email, subject, url, txt) => {
     `,
   };
 };
+
+export const sendFeedbackEmail = (email, subject, txt) => {
+  return {
+    to: `${email}`, // Change to your recipient
+    from: "no-reply@practilearn.com", // Change to your verified sender
+    subject: `${subject}`,
+    html: `<div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px;  font-size: 110%;"> <p>You have ${txt}</p></div>`,
+  };
+};

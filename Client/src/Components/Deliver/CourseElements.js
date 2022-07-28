@@ -41,6 +41,9 @@ export const CourseImgDiv = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  @media only screen and (max-width: 768px) {
+    display: block;
+  }
 `;
 export const CourseImgDivItems = styled.div`
   width: 100%;

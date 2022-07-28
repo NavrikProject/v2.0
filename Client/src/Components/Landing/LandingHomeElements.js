@@ -22,6 +22,9 @@ export const DisplayDiv = styled.div`
   display: flex;
   align-items: center;
   padding: 30px 40px;
+  @media only screen and (max-width: 968px) {
+    display: block;
+  }
 `;
 
 export const DisplayDivItem1 = styled.div`
@@ -48,7 +51,13 @@ export const PractiwizButton = styled.button`
 `;
 export const DisplayDivItemTitleWhite = styled.h1`
   color: #fff;
-  font-size: 36px;
+  font-size: 45px;
+  @media only screen and (max-width: 968px) {
+    font-size: 40px;
+  }
+  @media only screen and (max-width: 768px) {
+    font-size: 35px;
+  }
 `;
 export const DisplayDivItemTitleGold = styled.h1`
   color: gold;
@@ -59,6 +68,9 @@ export const DisplayFlexDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @media only screen and (max-width: 768px) {
+    display: block;
+  }
 `;
 
 export const DisplayFlexItems = styled.div`

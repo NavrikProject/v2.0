@@ -111,7 +111,7 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
           <form onSubmit={requestForRefundHandler}>
             <CancelDescriptor>
               * If you cancel the appointment there will be 20% charge on the
-              paid amount see our
+              paid amount see our{" "}
               <Link
                 to="/terms-conditions"
                 style={{

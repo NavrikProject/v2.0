@@ -78,7 +78,7 @@ const BaPractical = () => {
               </FlexBox>
               <FlexBox>
                 <Label>No of People Registered :</Label>
-                <PeopleRegistered>20</PeopleRegistered>
+                <PeopleRegistered></PeopleRegistered>
               </FlexBox>
               <FlexBox>
                 <Label>Last update on :</Label>
@@ -90,7 +90,7 @@ const BaPractical = () => {
               </FlexBox>
               <FlexBox>
                 <Label>Languages :</Label>
-                <CourseLanguages> Hindi, English</CourseLanguages>
+                <CourseLanguages> English</CourseLanguages>
               </FlexBox>
             </HeaderRightCol>
             <HeaderLeftCol>
@@ -110,7 +110,7 @@ const BaPractical = () => {
                   <a
                     target={`_blank`}
                     style={{ textDecoration: "none", color: "black" }}
-                    href="google.com"
+                    href="https://learn.practilearn.com/s/store/courses/description/RPA-hands-on-live-training-Program-with-live-projects"
                   >
                     <BuyNowBtn>Buy Now</BuyNowBtn>
                   </a>

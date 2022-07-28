@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-
+export const MentorSect = styled.section`
+  background-color: #f2f2f2;
+  width: 100%;
+`;
 export const MentorSection = styled.section`
   width: 90%;
   height: auto;
@@ -8,13 +11,14 @@ export const MentorSection = styled.section`
   background-image: url("https://navrik.blob.core.windows.net/navrikimage/abstract-background-with-squares_23-2148995948.jpg");
 `;
 export const MentorDiv = styled.div`
-  width: 30%;
+  width: 27%;
   margin: 20px;
+  margin-bottom: 40px;
 `;
 export const MentorUpDiv = styled.div`
   width: 100%;
   height: 50px;
-  background-color: #fff;
+  background-color: #f2f2f2;
 `;
 export const MentorDownDiv = styled.div`
   width: 100%;
@@ -22,7 +26,14 @@ export const MentorDownDiv = styled.div`
   margin: 0 auto;
   padding: 20px;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  background-color: #fff;
+  /* // background-color: #eeeeee; */
+  /* background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.5) 100%,
+    rgba(255, 255, 255, 0) 40%
+  ); */
 `;
 
 export const MentorImgDiv = styled.div`
@@ -36,7 +47,7 @@ export const MentorImg = styled.img`
   border-radius: 50%;
   margin: -100px auto 0 auto;
   object-fit: cover;
-  border: 4px solid #fff;
+  border: 7px solid light;
 `;
 export const MentorWrapper = styled.div`
   padding: 50px 0;
@@ -65,7 +76,6 @@ export const MentorDivFlex = styled.div`
 
 export const MentorCourseBox = styled.div`
   cursor: pointer;
-
   width: 100%;
   border-radius: 15px;
 `;

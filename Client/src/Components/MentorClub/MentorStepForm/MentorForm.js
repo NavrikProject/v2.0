@@ -24,9 +24,9 @@ import {
   PasswordDiv,
   MentorFormSlotDiv,
   MentorSlotTimerInput,
-} from "./MentorFormElements";
-import GoToTop from "../GoToTop";
-import { mentorshipAreas, mentorSkills } from "../Data/MentorData";
+} from "../MentorFormElements";
+import GoToTop from "../../GoToTop";
+import { mentorshipAreas, mentorSkills } from "../../Data/MentorData";
 
 const MentorForm = () => {
   const [specialty, setSpecialty] = useState("");
@@ -45,6 +45,7 @@ const MentorForm = () => {
   const [success, setSuccess] = useState("");
   const [showIcon, setShowIcon] = useState(false);
   const [showCalender, setShowCalender] = useState(false);
+  
   let pwdMinCharLen = password.length >= 8;
   let pwdHasLowChar = /(.*?[a-z].*)/.test(password);
   let pwdHasCapChar = /(?=.*?[A-Z].*)/.test(password);
@@ -85,7 +86,7 @@ const MentorForm = () => {
     data.append("from", fromTiming);
     data.append("to", toTiming);
     data.append("availability", availability);
-    console.log(fromTiming);
+
     try {
       const res = await axios.post(`/mentor/register`, data, {
         headers: { authorization: "Bearer " + token },

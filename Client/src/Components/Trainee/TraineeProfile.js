@@ -89,9 +89,6 @@ const TraineeProfile = () => {
           <TraineeLeftCol>
             <h1>Update Your details Here</h1>
             <TraineeUl>
-              <TraineeLi>
-                <Link to={`/trainee/profile/bookings`}>My Bookings</Link>
-              </TraineeLi>
               {/* <TraineeLi onClick={showPersonalForm}>Personal Details</TraineeLi> */}
               <TraineeLi onClick={showAccountForm}>Account</TraineeLi>
               <TraineeLi onClick={showImageForm}>

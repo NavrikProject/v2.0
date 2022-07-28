@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Loading from "../utils/Loading";
 import CancelAppointment from "./CancelAppointment";
+import FeedbackForm from "./FeedbackForm";
 import "./TraineeBooking.css";
 import TraineeModifyBooking from "./TraineeModifyBooking";
 const TraineeBookingTable = () => {
@@ -13,7 +15,7 @@ const TraineeBookingTable = () => {
   const [loading, setLoading] = useState(false);
   const [mentor, setMentor] = useState();
   const [showCancelModel, setShowCancelModel] = useState(false);
-
+  const [showFeedbackModel, setShowFeedbackModel] = useState(false);
   useEffect(() => {
     const getAllTheMentors = async () => {
       setLoading(true);
@@ -42,10 +44,15 @@ const TraineeBookingTable = () => {
     setShowModel(false);
     setMentor(mentor);
   };
+  const showFeedBackMentorHandler = async (mentor) => {
+    setShowFeedbackModel(!showFeedbackModel);
+    setShowModel(false);
+    setMentor(mentor);
+  };
   return (
     <div className="rightbarSect">
       <div className="tableDiv">
-        <h1>Modify booking dates</h1>
+        <h1>Modify booking dates Hello</h1>
         {loading && <Loading />}
         {showModel && (
           <TraineeModifyBooking
@@ -57,6 +64,12 @@ const TraineeBookingTable = () => {
           <CancelAppointment
             mentor={mentor}
             showCancelMentorModel={showCancelMentorModel}
+          />
+        )}
+        {showFeedbackModel && (
+          <FeedbackForm
+            mentor={mentor}
+            showFeedBackMentorHandler={showFeedBackMentorHandler}
           />
         )}
         <table>
@@ -73,6 +86,7 @@ const TraineeBookingTable = () => {
               <th>Modify Appointment</th>
               <th>Cancel</th>
               <th>Join Meeting</th>
+              <th>Feedback</th>
             </tr>
           </tbody>
           {allMentors?.length > 0 ? (
@@ -141,7 +155,29 @@ const TraineeBookingTable = () => {
                       </button>
                     ) : (
                       <button className="joinButton">
-                        <a href={mentor.joinUrl}>Join Meeting</a>
+                        {new Date(mentor.bookingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString() ? (
+                          <a href={mentor.joinUrl}>Join Meeting</a>
+                        ) : (
+                          "Joining Link will activate booking date"
+                        )}
+                      </button>
+                    )}
+                  </td>
+                  <td>
+                    {mentor.paymentStatus === "Refunded" ? (
+                      <button className="disapprove">
+                        Refund has been issued
+                      </button>
+                    ) : (
+                      <button
+                        className="joinButton"
+                        onClick={() => showFeedBackMentorHandler(mentor)}
+                      >
+                        Feedback
+                        {/* <Link to={`/trainee/profile/bookings/feedback`}>
+                          Give feedback
+                        </Link> */}
                       </button>
                     )}
                   </td>

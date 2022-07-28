@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CorporateTrainingMenu from "./CorporateTrainingMenu";
 import IndividualTrainingMenu from "./IndividualTrainingMenu";
 import { logOut } from "../../redux/userRedux";
+import NavbarProfile from "./NavbarProfile";
 const Navbar = ({ toggleMenuItems }) => {
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
@@ -59,6 +60,9 @@ const Navbar = ({ toggleMenuItems }) => {
             </NavItem>
           )}
           <NavItem> Contact Us</NavItem>
+          {/* <ContactButton>
+            <i className="fa-solid fa-phone"></i> +91 12345678
+          </ContactButton> */}
         </MenuItem>
       </Div1>
       <NavDiv>
@@ -114,43 +118,22 @@ const Navbar = ({ toggleMenuItems }) => {
                 Resources
               </Link>
             </NavItem>
+            {user && (
+              <NavItem>
+                <NavbarProfile onLogoutHandler={onLogoutHandler} />
+              </NavItem>
+            )}
           </MenuItem>
         </MenuContainer>
         <MenuBarContainer onClick={toggleMenuItems}>
+          {user && (
+            <NavItem>
+              <NavbarProfile />
+            </NavItem>
+          )}
           <FaBars />
         </MenuBarContainer>
       </NavDiv>
-      <Div1>
-        <MenuItem>
-          {user && (
-            <>
-              <NavItem>
-                {user?.role === 1 && (
-                  <Link
-                    style={{ textDecoration: "none", color: "#062C30" }}
-                    to={`/user/admin/dashboard`}
-                  >
-                    <i className="fa-solid fa-user"></i>Dashboard
-                  </Link>
-                )}
-              </NavItem>
-              <NavItem>
-                <Link
-                  style={{ textDecoration: "none", color: "#062C30" }}
-                  to={`/${user?.type}/profile`}
-                >
-                  <i className="fa-solid fa-user"></i>Profile
-                </Link>
-              </NavItem>
-            </>
-          )}
-          <NavItem>
-            <ContactButton>
-              <i className="fa-solid fa-phone"></i> +91 12345678
-            </ContactButton>
-          </NavItem>
-        </MenuItem>
-      </Div1>
     </NavSection>
   );
 };

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-
+import "./TraineeBooking.css";
 import { AiOutlineClose } from "react-icons/ai";
 import styled from "styled-components";
 import Model from "./Model";
@@ -47,7 +47,7 @@ const ModifyBtn = styled.button`
   transition: all 0.4s ease-in-out;
   border: none;
   border-radius: 7px;
-  margin: 40px 10px 0 0;
+  margin: 20px 10px 20px 0;
 `;
 const FormData = styled.div``;
 const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
@@ -274,8 +274,9 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
                   : payAndModifyBooking
               }
             >
-              Choose the next Date
+              Choose the next Date :
               <DatePicker
+                className="form-control"
                 required
                 closeOnScroll={true}
                 selected={date}

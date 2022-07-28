@@ -8,7 +8,13 @@ export const MentorBoxDiv = styled.div`
 
 export const MentorDetailsDiv = styled.div``;
 export const MentorDetailsImgDiv = styled.div``;
-export const MentorName = styled.h3``;
+export const MentorName = styled.h3`
+  text-transform: capitalize;
+  text-align: center;
+  padding-top: 10px;
+  font-size: 24px;
+  color: rgb(19, 25, 70);
+`;
 export const MentorImg = styled.img`
   width: 50%;
   height: 50%;
@@ -16,17 +22,25 @@ export const MentorImg = styled.img`
   margin: 0 auto;
 `;
 
+export const MentorDesc = styled.p`
+  padding: 10px;
+  font-size: 19px;
+  color: #627792;
+`;
 export const MentorDescP = styled.p`
   padding: 10px;
   font-size: 19px;
+  text-align: center;
+  span {
+    color: #66bfbf;
+  }
 `;
-
 export const BookNowButtonDiv = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px;
+  padding: 7px;
 `;
 export const BookNowButton = styled.button`
   margin: 0 auto;
@@ -37,9 +51,11 @@ export const BookNowButton = styled.button`
   outline: none;
   transition: all 0.5s ease-in-out;
   cursor: pointer;
+  background-color: #1363df;
+  color: #fff;
   border-radius: 5px;
   &:hover {
-    background-color: lightgreen;
+    opacity: 0.7;
     transition: all 0.5s ease-in-out;
   }
 `;

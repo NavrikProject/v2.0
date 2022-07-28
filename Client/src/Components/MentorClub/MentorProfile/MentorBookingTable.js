@@ -26,7 +26,6 @@ const TraineeBookingTable = () => {
     };
     getAllTheMentors();
   }, [token, user]);
-  console.log(allMentors);
   const cancelMentorAppointMent = async (mentor) => {};
   const confirmTheAppointMent = async (mentor) => {
     setLoading(true);

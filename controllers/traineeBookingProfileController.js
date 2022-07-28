@@ -10,6 +10,7 @@ import rp from "request-promise";
 import { sendRemainderOnTheDay } from "../middleware/sendRemainder.js";
 import schedule from "node-schedule";
 dotenv.config();
+
 // in trainee profile
 export async function getAllMentorBookings(req, res, next) {
   const { userEmail } = req.body;
@@ -168,7 +169,6 @@ export async function modifyBookingDate(req, res) {
       },
       json: true, //Parse the JSON string in the response
     };
-
     rp(options)
       .then(function (response) {
         let startUrl = response.start_url;
@@ -634,13 +634,19 @@ export async function issueRefundForBooking(req, res, next) {
                               sql.connect(config, (err) => {
                                 if (err) return res.send(err.message);
                                 let amountPaidStatus = "Refunded";
+                                const sessionStatus = "refunded";
                                 request.input(
                                   "amountPaidStatus",
                                   sql.VarChar,
                                   amountPaidStatus
                                 );
+                                request.input(
+                                  "sessionStatus",
+                                  sql.VarChar,
+                                  sessionStatus
+                                );
                                 const sqlUpdate =
-                                  "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus WHERE booking_appt_id= @bookingId ";
+                                  "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus,trainee_session_status = @sessionStatus WHERE booking_appt_id= @bookingId ";
                                 request.query(sqlUpdate, (err, result) => {
                                   if (err) return res.send(err.message);
                                   if (result) {
@@ -705,13 +711,19 @@ export async function issueRefundForBooking(req, res, next) {
                                 sql.connect(config, (err) => {
                                   if (err) return res.send(err.message);
                                   let amountPaidStatus = "Refunded";
+                                  const sessionStatus = "refunded";
                                   request.input(
                                     "amountPaidStatus",
                                     sql.VarChar,
                                     amountPaidStatus
                                   );
+                                  request.input(
+                                    "sessionStatus",
+                                    sql.VarChar,
+                                    sessionStatus
+                                  );
                                   const sqlUpdate =
-                                    "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus WHERE booking_appt_id= @bookingId ";
+                                    "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus,trainee_session_status = @sessionStatus WHERE booking_appt_id= @bookingId ";
                                   request.query(sqlUpdate, (err, result) => {
                                     if (err) return res.send(err.message);
                                     if (result) {
@@ -773,6 +785,203 @@ export async function issueRefundForBooking(req, res, next) {
   }
 }
 
+export async function getAllUpcomingSessions(req, res, next) {
+  const { userEmail } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const upcoming = "upcoming";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("upcoming", sql.VarChar, upcoming);
+      request.query(
+        "select * from booking_appointments_dtls where user_email = @userEmail AND trainee_session_status = @upcoming ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                mentorFullName: mentor.mentor_name,
+                userEmail: mentor.user_email,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                confirmed: mentor.mentor_booking_confirmed,
+                changes: mentor.trainee_modification_changed_times,
+                paymentStatus: mentor.mentor_amount_paid_status,
+                mentorId: mentor.mentor_dtls_id,
+                joinUrl: mentor.mentor_start_url,
+                sessionStatus: mentor.trainee_session_status,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return res.send();
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+
+export async function updateAttendedSessions(req, res, next) {
+  const { userEmail, bookingId } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("bookingId", sql.Int, bookingId);
+      request.query(
+        "select * from booking_appointments_dtls where user_email = @userEmail AND booking_appt_id = @bookingId",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            const sessionStatus = "attended";
+            const request = new sql.Request();
+            request.input("userEmail", sql.VarChar, userEmail);
+            request.input("sessionStatus", sql.VarChar, sessionStatus);
+            request.input("bookingId", sql.Int, bookingId);
+            const sqlUpdate =
+              "UPDATE booking_appointments_dtls SET trainee_session_status = @sessionStatus WHERE booking_appt_id= @bookingId AND user_email = @userEmail";
+            request.query(sqlUpdate, (err, result) => {
+              if (err) return res.send(err.message);
+              if (result) {
+                return res.send("Attended");
+              }
+            });
+          } else {
+            return;
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+export async function getAllAttendedSessions(req, res, next) {
+  const { userEmail } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const attended = "attended";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("attended", sql.VarChar, attended);
+      request.query(
+        "select * from booking_appointments_dtls where user_email = @userEmail AND trainee_session_status = @attended ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                mentorFullName: mentor.mentor_name,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                mentorId: mentor.mentor_dtls_id,
+                sessionStatus: mentor.trainee_session_status,
+                paymentStatus: mentor.mentor_amount_paid_status,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return res.send();
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+export async function getAllCompletedSessions(req, res, next) {
+  const { userEmail } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const completed = "completed";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("completed", sql.VarChar, completed);
+      request.query(
+        "select * from booking_appointments_dtls where user_email = @userEmail AND trainee_session_status = @completed ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                mentorId: mentor.mentor_dtls_id,
+                mentorFullName: mentor.mentor_name,
+                paymentStatus: mentor.mentor_amount_paid_status,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return;
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+export async function getAllRefundedSessions(req, res, next) {
+  const { userEmail } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const refunded = "refunded";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("refunded", sql.VarChar, refunded);
+      request.query(
+        "select * from booking_appointments_dtls where user_email = @userEmail AND trainee_session_status = @refunded ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                amount: mentor.mentor_amount,
+                mentorFullName: mentor.mentor_name,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                paymentStatus: mentor.mentor_amount_paid_status,
+                mentorId: mentor.mentor_dtls_id,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return res.send("");
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+
 //remainder email will be sent before one day to trainee
 function sentEmailRemainderBeforeOneDayToTrainee(req, res) {
   try {
@@ -792,6 +1001,7 @@ function sentEmailRemainderBeforeOneDayToTrainee(req, res) {
             var day = new Date(res.booking_mentor_date).getDate();
             day = day - 1;
             const date = new Date(year, month, day, 0, 0, 0);
+
             schedule.scheduleJob(date, function () {
               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
               const msg = sendRemainderOnTheDay(
@@ -864,7 +1074,7 @@ function sentEmailRemainderToTraineeBefore10Min(req, res) {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      let amountPaidStatus = "Refunded";
+      let amountPaidStatus = "Paid";
       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
       request.query(
         "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",

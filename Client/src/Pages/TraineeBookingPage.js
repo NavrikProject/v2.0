@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import TraineeSessionDetails from "../Components/Trainee/TraineeSessionDetails";
 import LoadingSpinner from "../Components/utils/LoadingSpinner";
 
 const Footer = React.lazy(() => import("../Components/Footer/Footer"));
@@ -11,7 +12,8 @@ const TraineeBookingPage = () => {
     <>
       <Suspense fallback={<LoadingSpinner />}>
         <NavbarRes />
-        <TraineeBookingTable />
+        <TraineeSessionDetails />
+        {/* <TraineeBookingTable /> */}
         <Footer />
       </Suspense>
     </>

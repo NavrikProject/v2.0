@@ -231,7 +231,6 @@ const RegisterForm = () => {
                         />
                         <InputRadLabel for="trainee">Trainee</InputRadLabel>
                       </RadioWrapper>
-
                       <RadioWrapper>
                         <InputRadio
                           type="radio"

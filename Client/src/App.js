@@ -19,6 +19,9 @@ import LoadingSpinner from "./Components/utils/LoadingSpinner";
 import TraineeProfilePage from "./Pages/TraineeProfilePage";
 import TraineeBookingPage from "./Pages/TraineeBookingPage";
 import MentorBookingPage from "./Pages/MentorBookingPage";
+import MentorIndividualPage from "./Pages/MentorIndividualPage";
+import WhyPractiwizPage from "./Pages/WhyPractiwizPage";
+import FeedbackFormPage from "./Pages/FeedbackFormPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -43,6 +46,12 @@ const App = () => {
             <Route path="/" exact element={<HomePage />} />
             <Route path="/faq" exact element={<FaqPage />} />
             <Route path="/login" exact element={<LoginPage />} />
+            {user ? (
+              <Route path="/" element={<Navigate to="/" />} />
+            ) : (
+              <Route path="/login" exact element={<LoginPage />} />
+            )}
+            <Route path="/why-practiwiz" exact element={<WhyPractiwizPage />} />
             <Route path="/register" exact element={<RegisterPage />} />
             <Route path="/training/rpa-coe" exact element={<RpaCoePage />} />
             <Route path="/mentors-club" exact element={<MentorsPage />} />
@@ -50,7 +59,10 @@ const App = () => {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/mentor/join" element={<MentorPage />} />
             <Route path="/training/individual/ba" element={<RpaBaPage />} />
-
+            <Route
+              path={`/mentors-club/individual/:id`}
+              element={<MentorIndividualPage />}
+            />
             {user?.type === "mentor" && (
               <Route path={`/mentor/profile`} element={<MentorProfilePage />} />
             )}
@@ -64,6 +76,12 @@ const App = () => {
               <Route
                 path={`/trainee/profile/bookings`}
                 element={<TraineeBookingPage />}
+              />
+            )}
+            {user?.type === "trainee" && (
+              <Route
+                path={`/trainee/profile/bookings/feedback`}
+                element={<FeedbackFormPage />}
               />
             )}
             {user?.type === "mentor" && (

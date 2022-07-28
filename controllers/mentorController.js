@@ -20,19 +20,28 @@ const blobService = azureStorage.createBlobService(
 
 // to join as a mentor
 export async function registerMentor(req, res) {
-  const {
+  let {
     email,
-    experience,
-    skills,
-    specialty,
     password,
     firstname,
     lastname,
+    bio,
+    experience,
+    skills,
+    firm,
+    currentRole,
+    previousRole,
+    specialty,
+    mentorAvailability,
+    startTime,
+    endTime,
     mentorshipArea,
-    from,
-    to,
-    availability,
+    website,
+    linkedInProfile,
   } = req.body;
+
+  firstname = firstname.toLowerCase();
+  lastname = lastname.toLowerCase();
   if (
     !email &&
     experience &&
@@ -111,7 +120,7 @@ export async function registerMentor(req, res) {
                       if (err) res.send(err.message);
                       const request = new sql.Request();
                       request.query(
-                        "insert into mentor_dtls (mentor_email,mentor_firstname,mentor_lastname,mentor_available_start_date,mentor_available_end_date,mentor_availability,mentor_availability_slot_from,mentor_availability_slot_to,mentor_creation,mentor_experience, mentor_skills,mentor_mentorship_area,mentor_speciality, mentor_sessions_conducted,mentor_image) VALUES('" +
+                        "insert into mentor_dtls (mentor_email,mentor_firstname,mentor_lastname,mentor_available_start_date,mentor_available_end_date,mentor_availability,mentor_availability_start_time,mentor_availability_end_time,mentor_creation,mentor_experience,mentor_skills,mentor_mentorship_area,mentor_speciality,mentor_bio,mentor_current_role,mentor_previous_role,mentor_firm,mentor_website,mentor_linkedin_profile, mentor_sessions_conducted,mentor_image) VALUES('" +
                           email +
                           "','" +
                           firstname +
@@ -122,11 +131,11 @@ export async function registerMentor(req, res) {
                           "','" +
                           endDate +
                           "','" +
-                          availability +
+                          mentorAvailability +
                           "','" +
-                          from +
+                          startTime +
                           "','" +
-                          to +
+                          endTime +
                           "','" +
                           timestamp +
                           "','" +
@@ -137,6 +146,18 @@ export async function registerMentor(req, res) {
                           mentorshipArea +
                           "','" +
                           specialty +
+                          "','" +
+                          bio +
+                          "','" +
+                          currentRole +
+                          "','" +
+                          previousRole +
+                          "','" +
+                          firm +
+                          "','" +
+                          website +
+                          "','" +
+                          linkedInProfile +
                           "','" +
                           1 +
                           "','" +
@@ -216,6 +237,7 @@ export async function getAllMentorDetails(req, res) {
     });
   } catch (error) {}
 }
+
 //get mentor search by the search
 export async function getMentorBySearch(req, res) {
   let searchItem = req.query.name;
@@ -441,33 +463,6 @@ export async function createMentorRazorPayOrder(req, res, next) {
         }
       );
     });
-    // sql.connect(config, (err) => {
-    //   if (err) {
-    //     return res.json(err.message);
-    //   }
-    //   const request = new sql.Request();
-    //   request.input("mentor", sql.Int, mentorId);
-    //   request.query(
-    //     "select * from booking_appointments_dtls where mentor_dtls_id = @mentor",
-    //     (err, result) => {
-    //       if (err) return res.send(err.message);
-    //       if (result.recordset.length > 0) {
-    //         result.recordset.forEach((mentor) => {
-    //           if (
-    //             mentor.mentor_dtls_id === mentorId &&
-    //             new Date(mentor.booking_mentor_date).toLocaleDateString() ===
-    //               date
-    //           ) {
-    //             return res.json({
-    //               error:
-    //                 "This date is all ready booked ,Please choose the another date",
-    //             });
-    //           }
-    //         });
-    //       }
-    //     }
-    //   );
-    // });
   } catch (error) {
     console.log(err.message);
   }
@@ -492,10 +487,12 @@ export async function createMentorAppointment(req, res, next) {
     razorpayOrderId,
     razorpaySignature,
     date,
+    selected,
+    questions,
+    mentorName,
   } = req.body;
 
   const timeSlot = from + " " + "to" + " " + to;
-
   try {
     var options = {
       method: "POST",
@@ -541,10 +538,12 @@ export async function createMentorAppointment(req, res, next) {
           const request = new sql.Request();
           let amountPaid = "Paid";
           request.query(
-            "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,user_email,booking_mentor_date,booking_date,booking_starts_time,booking_time,mentor_amount,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_start_url,mentor_join_url,mentor_amount_paid_status) VALUES('" +
+            "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,mentor_name,user_email,booking_mentor_date,booking_date,booking_starts_time,booking_end_time,booking_time,mentor_amount,mentor_options,mentor_questions,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_start_url,mentor_join_url,mentor_amount_paid_status) VALUES('" +
               mentorId +
               "','" +
               mentorEmail +
+              "','" +
+              mentorName +
               "','" +
               userEmail +
               "','" +
@@ -554,9 +553,15 @@ export async function createMentorAppointment(req, res, next) {
               "','" +
               from +
               "','" +
+              to +
+              "','" +
               timeSlot +
               "','" +
               amount / 100 +
+              "','" +
+              selected +
+              "','" +
+              questions +
               "','" +
               razorpayPaymentId +
               "','" +
@@ -625,79 +630,6 @@ export async function createMentorAppointment(req, res, next) {
   } catch (error) {
     console.log(err.message);
   }
-  // if (!bookAppointment) {
-  // } else {
-  //   const { amount, razorpayPaymentId, bookingId, date } = req.body;
-  //   try {
-  //     sql.connect(config, (err) => {
-  //       if (err) return res.send(err.message);
-  //       const request = new sql.Request();
-  //       request.input("bookingId", sql.Int, bookingId);
-  //       request.query(
-  //         "select * from booking_appointments_dtls where booking_appt_id = @bookingId",
-  //         (err, result) => {
-  //           if (err) return res.send(err.message);
-  //           if (result.recordset.length > 0) {
-  //             let email = result.recordset[0].user_email;
-  //             const changes = 2;
-  //             const request = new sql.Request();
-  //             request.input("changes", sql.Int, changes);
-  //             request.input("date", sql.Date, date);
-  //             const newDate = new Date();
-  //             request.input("newDate", sql.Date, newDate);
-  //             request.input("amount", sql.Int, amount);
-  //             request.input(
-  //               "razorpayPaymentId",
-  //               sql.VarChar,
-  //               razorpayPaymentId
-  //             );
-  //             const sqlUpdate =
-  //               "UPDATE booking_appointments_dtls SET booking_mentor_date = @date, booking_date = @newDate, trainee_modification_changed_times = @changes,refund_razorpay_payment_id = @razorpayPaymentId, refund_amount = @amount WHERE booking_appt_id= @bookingId ";
-  //             request.query(sqlUpdate, (err, result) => {
-  //               if (err) return res.send(err.message);
-  //               if (result) {
-  //                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  //                 const msg = {
-  //                   from: "no-reply@practilearn.com",
-  //                   to: email,
-  //                   subject: "Appointment date is changed",
-  //                   html: `<div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px; font-size: 110%;">
-  //                         <h2 style="text-align: center; text-transform: uppercase;color: teal;">Welcome to the Practiwiz Training Programme</h2>
-  //                         <p>Successfully appointment date is changed.
-  //                         </p>
-  //                         Do not reply this email address
-  //                         </div>`,
-  //                 };
-  //                 sgMail
-  //                   .send(msg)
-  //                   .then(() => {
-  //                     return res.send({
-  //                       success: "Successfully appointment date is changed",
-  //                     });
-  //                   })
-  //                   .catch((error) => {
-  //                     return res.send({
-  //                       error: "There was an error updating",
-  //                     });
-  //                   });
-  //               } else {
-  //                 res.send({
-  //                   error: "There was an error updating",
-  //                 });
-  //               }
-  //             });
-  //           } else {
-  //             return res.send({ error: "Couldn't find booking'" });
-  //           }
-  //         }
-  //       );
-  //     });
-  //   } catch (error) {
-  //     return res.send({
-  //       error: "There was an error updating",
-  //     });
-  //   }
-  // }
 }
 
 export async function getAllMentorApprovedDetailsAndAvailability(req, res) {
@@ -749,6 +681,35 @@ export async function getBookingDates(req, res) {
           }
         }
       );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+
+// get individual mentor details in individual page
+export async function getIndividualMentorDetails(req, res) {
+  let mentorName = req.query.name;
+  mentorName = mentorName.split("-");
+  let firstName = mentorName[0];
+  let lastName = mentorName[1];
+
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      request.input("firstName", sql.VarChar, firstName);
+      request.input("lastName", sql.VarChar, lastName);
+      const searchQuery =
+        "SELECT * FROM mentor_dtls WHERE mentor_firstname = @firstName AND mentor_lastname = @lastName";
+      request.query(searchQuery, (err, result) => {
+        if (err) return res.send(err.message);
+        if (result.recordset.length > 0) {
+          return res.send(result.recordset);
+        } else {
+          return;
+        }
+      });
     });
   } catch (error) {
     res.send(error.message);
