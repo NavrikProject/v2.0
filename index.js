@@ -91,72 +91,72 @@ app.use("/api/mentor", mentorRoute);
 app.use("/api/mentor/profile", TraineeBookingProfileRoute);
 app.use("/api/mentor/bookings", mentorBookingRoute);
 app.use("/api/feedback", FeedbackRoute);
-// const payload = {
-//   iss: process.env.ZOOM_APP_API_KEY,
-//   exp: new Date().getTime() + 5000,
-// };
-const instance = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
-});
-
-instance.payments
-  .all()
-  .then((data) => {
-    console.log(data);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-// const token = jwt.sign(payload, process.env.ZOOM_APP_API_SECRET_KEY);
-
-// app.get("/newmeeting", (req, res) => {
-//   var email = "b.mahesh311296@gmail.com";
-//   var options = {
-//     method: "POST",
-//     uri: "https://api.zoom.us/v2/users/me/meetings",
-//     body: {
-//       topic: "test meeting title",
-//       type: 1,
-//       start_time: new Date("2022-07-29T12:46:02.166Z"),
-//       contact_email: email,
-//       registrants_email_notification: true,
-//       calendar_type: 2,
-//       recurrence: {
-//         end_date_time: new Date("2022-07-29T12:46:02.166Z"),
-//         end_times: 7,
-//         monthly_day: 1,
-//         monthly_week: 1,
-//         monthly_week_day: 1,
-//         repeat_interval: 1,
-//         type: 1,
-//         weekly_days: "1",
-//       },
-//       settings: {
-//         host_video: "true",
-//         participant_video: "true",
-//       },
-//     },
-//     auth: {
-//       bearer: token,
-//     },
-//     headers: {
-//       "User-Agent": "Zoom-api-Jwt-Request",
-//       "content-type": "application/json",
-//     },
-//     json: true, //Parse the JSON string in the response
-//   };
-
-//   rp(options)
-//     .then(function (response) {
-//       console.log("response is: ", response);
-//       res.send("create meeting result: " + JSON.stringify(response));
-//     })
-//     .catch(function (err) {
-//       // API call failed...
-//       console.log("API call failed, reason ", err.message);
-//     });
+const payload = {
+  iss: process.env.ZOOM_APP_API_KEY,
+  exp: new Date().getTime() + 5000,
+};
+// const instance = new Razorpay({
+//   key_id: process.env.RAZORPAY_KEY_ID,
+//   key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
 // });
+
+// instance.payments
+//   .all()
+//   .then((data) => {
+//     console.log(data);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+const token = jwt.sign(payload, process.env.ZOOM_APP_API_SECRET_KEY);
+
+app.get("/newmeeting", (req, res) => {
+  var email = "b.mahesh311296@gmail.com";
+  var options = {
+    method: "POST",
+    uri: "https://api.zoom.us/v2/users/me/meetings",
+    body: {
+      topic: "test meeting title",
+      type: 1,
+      start_time: new Date("2022-07-29T12:46:02.166Z"),
+      contact_email: email,
+      registrants_email_notification: true,
+      calendar_type: 2,
+      recurrence: {
+        end_date_time: new Date("2022-07-29T12:46:02.166Z"),
+        end_times: 7,
+        monthly_day: 1,
+        monthly_week: 1,
+        monthly_week_day: 1,
+        repeat_interval: 1,
+        type: 1,
+        weekly_days: "1",
+      },
+      settings: {
+        host_video: "true",
+        participant_video: "true",
+      },
+    },
+    auth: {
+      bearer: token,
+    },
+    headers: {
+      "User-Agent": "Zoom-api-Jwt-Request",
+      "content-type": "application/json",
+    },
+    json: true, //Parse the JSON string in the response
+  };
+
+  rp(options)
+    .then(function (response) {
+      console.log("response is: ", response);
+      res.send("create meeting result: " + JSON.stringify(response));
+    })
+    .catch(function (err) {
+      // API call failed...
+      console.log("API call failed, reason ", err.message);
+    });
+});
 
 app.listen(port, (req, res) => {
   console.log("listening on port " + port);

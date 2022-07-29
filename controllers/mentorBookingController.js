@@ -4,6 +4,7 @@ import sgMail from "@sendgrid/mail";
 import moment from "moment";
 import dotenv from "dotenv";
 import Razorpay from "razorpay";
+import schedule from "node-schedule";
 
 export async function getAllMentorBookingsInProfile(req, res, next) {
   const { mentorEmail } = req.body;
@@ -30,8 +31,9 @@ export async function getAllMentorBookingsInProfile(req, res, next) {
                 confirmed: mentor.mentor_booking_confirmed,
                 changes: mentor.trainee_modification_changed_times,
                 mentorId: mentor.mentor_dtls_id,
-                startUrl: mentor.mentor_start_url,
+                hostUrl: mentor.mentor_host_url,
                 amountStatus: mentor.mentor_amount_paid_status,
+                sessionStatus: mentor.mentor_session_status,
               };
               mentorArray.push(data);
             });
@@ -49,7 +51,6 @@ export async function getAllMentorBookingsInProfile(req, res, next) {
 
 export async function updateTheConfirmAppointment(req, res, next) {
   const paramsId = req.params.id;
-  console.log(paramsId);
   try {
     sql.connect(config, (err) => {
       const request = new sql.Request();
@@ -110,3 +111,495 @@ export async function updateTheConfirmAppointment(req, res, next) {
     if (error) res.send(error.message);
   }
 }
+
+export async function getMentorAllUpcomingSessions(req, res, next) {
+  const { userEmail } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const upcoming = "upcoming";
+      const paid = "Paid";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("upcoming", sql.VarChar, upcoming);
+      request.input("paid", sql.VarChar, paid);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_email = @userEmail AND mentor_session_status = @upcoming AND mentor_amount_paid_status = @paid ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                mentorFullName: mentor.mentor_name,
+                userEmail: mentor.user_email,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                confirmed: mentor.mentor_booking_confirmed,
+                mentorId: mentor.mentor_dtls_id,
+                hostUrl: mentor.mentor_host_url,
+                sessionStatus: mentor.mentor_session_status,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return res.send();
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+
+export async function updateMentorAttendedSessions(req, res, next) {
+  const { userEmail, bookingId } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("bookingId", sql.Int, bookingId);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_email = @userEmail AND booking_appt_id = @bookingId",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            const sessionStatus = "attended";
+            const request = new sql.Request();
+            request.input("userEmail", sql.VarChar, userEmail);
+            request.input("sessionStatus", sql.VarChar, sessionStatus);
+            request.input("bookingId", sql.Int, bookingId);
+            const sqlUpdate =
+              "UPDATE booking_appointments_dtls SET mentor_session_status = @sessionStatus WHERE booking_appt_id= @bookingId AND mentor_email = @userEmail";
+            request.query(sqlUpdate, (err, result) => {
+              if (err) return res.send(err.message);
+              if (result) {
+                return res.send("Attended");
+                console.log("Attended");
+              }
+            });
+          } else {
+            return;
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+export async function getMentorAllAttendedSessions(req, res, next) {
+  const { userEmail } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const attended = "attended";
+      const paid = "Paid";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("attended", sql.VarChar, attended);
+      request.input("paid", sql.VarChar, paid);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_email = @userEmail AND mentor_session_status = @attended AND mentor_amount_paid_status = @paid ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                mentorFullName: mentor.mentor_name,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                mentorId: mentor.mentor_dtls_id,
+                userEmail: mentor.user_email,
+                sessionStatus: mentor.mentor_session_status,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return res.send();
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+export async function getMentorAllCompletedSessions(req, res, next) {
+  const { userEmail } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const attended = "attended";
+      const completed = "completed";
+      const paid = "Paid";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("attended", sql.VarChar, attended);
+      request.input("completed", sql.VarChar, completed);
+      request.input("paid", sql.VarChar, paid);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_email = @userEmail AND mentor_session_status = @attended AND mentor_amount_paid_status = @paid AND trainee_session_status = @completed ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                mentorId: mentor.mentor_dtls_id,
+                mentorFullName: mentor.mentor_name,
+                paymentStatus: mentor.mentor_amount_paid_status,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return;
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+export async function getMentorAllRefundedSessions(req, res, next) {
+  const { userEmail } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const refunded = "refunded";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("refunded", sql.VarChar, refunded);
+      request.query(
+        "select * from booking_appointments_dtls where user_email = @userEmail AND trainee_session_status = @refunded ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                amount: mentor.mentor_amount,
+                mentorFullName: mentor.mentor_name,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                paymentStatus: mentor.mentor_amount_paid_status,
+                mentorId: mentor.mentor_dtls_id,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return res.send("");
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
+
+//remainder email will be sent before one day to mentor
+function sentEmailRemainderBeforeOneDayToMentor(req, res) {
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const amountPaidStatus = "Paid";
+      const mentorSessionsStatus = "upcoming";
+      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("mentorSessionsStatus", sql.VarChar, mentorSessionsStatus);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND mentor_session_status = @mentorSessionsStatus",
+        (err, result) => {
+          result.recordset.forEach((res) => {
+            let mentorEmail = res.mentor_email;
+            let mentorHostUrl = res.mentor_host_url;
+            let year = new Date(res.booking_mentor_date).getFullYear();
+            let month = new Date(res.booking_mentor_date).getMonth();
+            var day = new Date(res.booking_mentor_date).getDate();
+            day = day - 1;
+            const date = new Date(year, month, day, 0, 0, 0);
+            schedule.scheduleJob(date, function () {
+              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+              const msg = sendRemainderOnTheDay(
+                mentorEmail,
+                "Remainder for the session",
+                mentorHostUrl,
+                "Host Meeting"
+              );
+              sgMail
+                .send(msg)
+                .then(() => {
+                  console.log("Sent");
+                })
+                .catch((error) => {
+                  console.log(error.message);
+                });
+            });
+          });
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+// remainder will be sent on the day to mentor
+function sentEmailRemainderOnTheDayToMentor(req, res) {
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const amountPaidStatus = "Paid";
+      const mentorSessionsStatus = "upcoming";
+      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("mentorSessionsStatus", sql.VarChar, mentorSessionsStatus);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND mentor_session_status = @mentorSessionsStatus",
+        (err, result) => {
+          result.recordset.forEach((res) => {
+            let mentorEmail = res.mentor_email;
+            let mentorHostUrl = res.mentor_host_url;
+            let year = new Date(res.booking_mentor_date).getFullYear();
+            let month = new Date(res.booking_mentor_date).getMonth();
+            var day = new Date(res.booking_mentor_date).getDate();
+            const date = new Date(year, month, day, 0, 0, 0);
+            schedule.scheduleJob(date, function () {
+              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+              const msg = sendRemainderOnTheDay(
+                mentorEmail,
+                "Remainder for the session",
+                mentorHostUrl,
+                "Host Meeting"
+              );
+              sgMail
+                .send(msg)
+                .then(() => {
+                  console.log("Sent");
+                })
+                .catch((error) => {
+                  console.log(error.message);
+                });
+            });
+          });
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+// remainder will be sent on before 10 minutes to mentor
+function sentEmailRemainderToMentorBefore10Min(req, res) {
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const amountPaidStatus = "Paid";
+      const mentorSessionsStatus = "upcoming";
+      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("mentorSessionsStatus", sql.VarChar, mentorSessionsStatus);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND mentor_session_status = @mentorSessionsStatus",
+        (err, result) => {
+          result.recordset.forEach((res) => {
+            let mentorEmail = res.mentor_email;
+            let mentorHostUrl = res.mentor_host_url;
+            let year = new Date(res.booking_mentor_date).getDay();
+            let month = new Date(res.booking_mentor_date).getMonth();
+            let day = new Date(res.booking_mentor_date).getDate();
+            let hour = res.booking_starts_time.split(":")[0];
+            let min = res.booking_starts_time.split(":")[1];
+            if (min === "00") {
+              hour = hour - 1;
+              const date = new Date(year, month, day, hour, 50, 0);
+              schedule.scheduleJob(date, function () {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = sendRemainderOnTheDay(
+                  mentorEmail,
+                  "Remainder for the session will start in 10 minutes",
+                  mentorHostUrl,
+                  "Host Meeting"
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    console.log("Sent");
+                  })
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              });
+            }
+            if (min === "30") {
+              min = min - 10;
+              const date = new Date(year, month, day, hour, min, 0);
+              schedule.scheduleJob(date, function () {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = sendRemainderOnTheDay(
+                  mentorEmail,
+                  "Remainder for the session will start in 10 minutes",
+                  joinUrl,
+                  "Start Meeting"
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    console.log("Sent");
+                  })
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              });
+            }
+          });
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+function sentEmailRemainderToMentorBefore5Min(req, res) {
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const amountPaidStatus = "Paid";
+      const mentorSessionsStatus = "upcoming";
+      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("mentorSessionsStatus", sql.VarChar, mentorSessionsStatus);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND mentor_session_status = @mentorSessionsStatus",
+        (err, result) => {
+          result.recordset.forEach((res) => {
+            let mentorEmail = res.mentor_email;
+            let mentorHostUrl = res.mentor_host_url;
+            let year = new Date(res.booking_mentor_date).getDay();
+            let month = new Date(res.booking_mentor_date).getMonth();
+            let day = new Date(res.booking_mentor_date).getDate();
+            let hour = res.booking_starts_time.split(":")[0];
+            let min = res.booking_starts_time.split(":")[1];
+            if (min === "00") {
+              hour = hour - 1;
+              const date = new Date(year, month, day, hour, 55, 0);
+              schedule.scheduleJob(date, function () {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = sendRemainderOnTheDay(
+                  mentorEmail,
+                  "Remainder for the session will start in 5 minutes",
+                  mentorHostUrl,
+                  "Join Meeting"
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    console.log("Sent");
+                  })
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              });
+            }
+            if (min === "30") {
+              min = min - 5;
+              const date = new Date(year, month, day, hour, min, 0);
+              schedule.scheduleJob(date, function () {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = sendRemainderOnTheDay(
+                  mentorEmail,
+                  "Remainder for the session will start in 5 minutes",
+                  mentorHostUrl,
+                  "Host Meeting"
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    console.log("Sent");
+                  })
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              });
+            }
+          });
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+function sentEmailRemainderToMentorToStart(req, res) {
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const amountPaidStatus = "Paid";
+      const mentorSessionsStatus = "upcoming";
+      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("mentorSessionsStatus", sql.VarChar, mentorSessionsStatus);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND mentor_session_status = @mentorSessionsStatus",
+        (err, result) => {
+          result.recordset.forEach((res) => {
+            let mentorEmail = res.mentor_email;
+            let mentorHostUrl = res.mentor_host_url;
+            let year = new Date(res.booking_mentor_date).getDay();
+            let month = new Date(res.booking_mentor_date).getMonth();
+            let day = new Date(res.booking_mentor_date).getDate();
+            let hour = res.booking_starts_time.split(":")[0];
+            let min = res.booking_starts_time.split(":")[1];
+            const date = new Date(year, month, day, hour, min, 0);
+            schedule.scheduleJob(date, function () {
+              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+              const msg = sendRemainderOnTheDay(
+                mentorEmail,
+                "Remainder for the session is stared",
+                mentorHostUrl,
+                "Start Meeting"
+              );
+              sgMail
+                .send(msg)
+                .then(() => {
+                  console.log("Sent");
+                })
+                .catch((error) => {
+                  console.log(error.message);
+                });
+            });
+          });
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+//remainder email will be sent before one day function call
+sentEmailRemainderBeforeOneDayToMentor();
+
+// remainder will be sent on the day function call
+sentEmailRemainderOnTheDayToMentor();
+
+// remainder will be sent on before 10 minutes function call
+sentEmailRemainderToMentorBefore10Min();
+
+// remainder will be sent on before 5 minutes function call
+sentEmailRemainderToMentorBefore5Min();
+
+// remainder will be sent to start or join meeting function call
+sentEmailRemainderToMentorToStart();

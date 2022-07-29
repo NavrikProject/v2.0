@@ -474,6 +474,7 @@ const payload = {
 };
 
 const token = jwt.sign(payload, process.env.ZOOM_APP_API_SECRET_KEY);
+
 // create an appointment
 export async function createMentorAppointment(req, res, next) {
   const {
@@ -491,8 +492,8 @@ export async function createMentorAppointment(req, res, next) {
     questions,
     mentorName,
   } = req.body;
-
   const timeSlot = from + " " + "to" + " " + to;
+
   try {
     var options = {
       method: "POST",
@@ -531,14 +532,14 @@ export async function createMentorAppointment(req, res, next) {
 
     rp(options)
       .then(function (response) {
-        let startUrl = response.start_url;
-        let joinUrl = response.join_url;
+        let mentorHostUrl = response.start_url;
+        let traineeJoinUrl = response.join_url;
         sql.connect(config, async (err) => {
           if (err) res.send(err.message);
           const request = new sql.Request();
           let amountPaid = "Paid";
           request.query(
-            "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,mentor_name,user_email,booking_mentor_date,booking_date,booking_starts_time,booking_end_time,booking_time,mentor_amount,mentor_options,mentor_questions,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_start_url,mentor_join_url,mentor_amount_paid_status) VALUES('" +
+            "insert into booking_appointments_dtls (mentor_dtls_id,mentor_email,mentor_name,user_email,booking_mentor_date,booking_date,booking_starts_time,booking_end_time,booking_time,mentor_amount,mentor_options,mentor_questions,mentor_razorpay_payment_id,mentor_razorpay_order_id,mentor_razorpay_signature,mentor_host_url,trainee_join_url,mentor_amount_paid_status) VALUES('" +
               mentorId +
               "','" +
               mentorEmail +
@@ -569,9 +570,9 @@ export async function createMentorAppointment(req, res, next) {
               "','" +
               razorpaySignature +
               "','" +
-              startUrl +
+              mentorHostUrl +
               "','" +
-              joinUrl +
+              traineeJoinUrl +
               "','" +
               amountPaid +
               "' )",
@@ -585,8 +586,7 @@ export async function createMentorAppointment(req, res, next) {
                   userEmail,
                   "Appointment Booking Confirmation",
                   "Successfully appointment is booked and mentor will be available on the same day with respective time!, " +
-                    " " +
-                    joinUrl
+                    " "
                 );
                 sgMail
                   .send(msg)
@@ -594,9 +594,7 @@ export async function createMentorAppointment(req, res, next) {
                     const msg = updateEmail(
                       mentorEmail,
                       "Appointment Booking Confirmation",
-                      "Some one has booked the appointment and the joining url is " +
-                        " " +
-                        startUrl
+                      "Some one has booked the appointment and the joining url is "
                     );
                     sgMail
                       .send(msg)

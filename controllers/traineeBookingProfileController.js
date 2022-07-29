@@ -38,7 +38,7 @@ export async function getAllMentorBookings(req, res, next) {
                 changes: mentor.trainee_modification_changed_times,
                 paymentStatus: mentor.mentor_amount_paid_status,
                 mentorId: mentor.mentor_dtls_id,
-                joinUrl: mentor.mentor_join_url,
+                traineeJoinUrl: mentor.trainee_join_url,
               };
               mentorArray.push(data);
             });
@@ -171,8 +171,8 @@ export async function modifyBookingDate(req, res) {
     };
     rp(options)
       .then(function (response) {
-        let startUrl = response.start_url;
-        let joinUrl = response.join_url;
+        let mentorHostUrl = response.start_url;
+        let traineeJoinUrl = response.join_url;
         sql.connect(config, (err) => {
           if (err) return res.send(err.message);
           const request = new sql.Request();
@@ -189,12 +189,12 @@ export async function modifyBookingDate(req, res) {
                 request.input("changes", sql.Int, changes);
                 request.input("bookingId", sql.Int, bookingId);
                 request.input("date", sql.Date, date);
-                request.input("startUrl", sql.Text, startUrl);
-                request.input("joinUrl", sql.VarChar, joinUrl);
+                request.input("mentorHostUrl", sql.Text, mentorHostUrl);
+                request.input("traineeJoinUrl", sql.VarChar, traineeJoinUrl);
                 const newDate = new Date();
                 request.input("newDate", sql.Date, newDate);
                 const sqlUpdate =
-                  "UPDATE booking_appointments_dtls SET booking_mentor_date = @date, booking_date = @newDate, trainee_modification_changed_times = @changes, mentor_start_url = @startUrl, mentor_join_url = @joinUrl WHERE booking_appt_id= @bookingId";
+                  "UPDATE booking_appointments_dtls SET booking_mentor_date = @date, booking_date = @newDate, trainee_modification_changed_times = @changes, mentor_host_url = @mentorHostUrl, trainee_join_url = @traineeJoinUrl WHERE booking_appt_id= @bookingId";
                 request.query(sqlUpdate, (err, result) => {
                   if (err) return res.send(err.message);
                   if (result) {
@@ -202,9 +202,7 @@ export async function modifyBookingDate(req, res) {
                     const msg = updateEmail(
                       userEmail,
                       "Appointment Booking date is changed",
-                      "Successfully appointment booking date is changed, " +
-                        " " +
-                        joinUrl
+                      "Successfully appointment booking date is changed, "
                     );
                     sgMail
                       .send(msg)
@@ -212,9 +210,7 @@ export async function modifyBookingDate(req, res) {
                         const msg = updateEmail(
                           mentorEmail,
                           "Appointment Booking changed",
-                          "Some one has booked changed the booking date " +
-                            " " +
-                            startUrl
+                          "Some one has booked changed the booking date "
                         );
                         sgMail
                           .send(msg)
@@ -359,8 +355,8 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
 
   rp(options)
     .then(function (response) {
-      let startUrl = response.start_url;
-      let joinUrl = response.join_url;
+      let mentorHostUrl = response.start_url;
+      let traineeJoinUrl = response.join_url;
       sql.connect(config, (err) => {
         if (err) return res.send(err.message);
         const request = new sql.Request();
@@ -378,10 +374,10 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
               request.input("date", sql.Date, date);
               const newDate = new Date();
               request.input("newDate", sql.Date, newDate);
-              request.input("startUrl", sql.Text, startUrl);
-              request.input("joinUrl", sql.VarChar, joinUrl);
+              request.input("mentorHostUrl", sql.Text, mentorHostUrl);
+              request.input("traineeJoinUrl", sql.VarChar, traineeJoinUrl);
               const sqlUpdate =
-                "UPDATE booking_appointments_dtls SET booking_mentor_date = @date, booking_date = @newDate, trainee_modification_changed_times = @changes, mentor_start_url = @startUrl, mentor_join_url = @joinUrl WHERE booking_appt_id= @bookingId";
+                "UPDATE booking_appointments_dtls SET booking_mentor_date = @date, booking_date = @newDate, trainee_modification_changed_times = @changes, mentor_host_url = @mentorHostUrl, trainee_join_url = @traineeJoinUrl WHERE booking_appt_id= @bookingId";
               request.query(sqlUpdate, (err, result) => {
                 if (err) return res.send(err.message);
                 if (result) {
@@ -424,9 +420,7 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
                               const msg = updateEmail(
                                 userEmail,
                                 "Appointment Booking date is changed",
-                                "Successfully appointment booking date is changed,The link is given below  " +
-                                  " " +
-                                  joinUrl
+                                "Successfully appointment booking date is changed,The link is given below "
                               );
                               sgMail
                                 .send(msg)
@@ -434,9 +428,7 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
                                   const msg = updateEmail(
                                     mentorEmail,
                                     "Appointment Booking changed",
-                                    "Some one has changed the booking date click the link to join the meeting " +
-                                      " " +
-                                      startUrl
+                                    "Some one has changed the booking date click the link to join the meeting "
                                   );
                                   sgMail
                                     .send(msg)
@@ -500,9 +492,7 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
                                   const msg = updateEmail(
                                     userEmail,
                                     "Appointment Booking date is changed",
-                                    "Successfully appointment booking date is changed,The link is given below  " +
-                                      " " +
-                                      joinUrl
+                                    "Successfully appointment booking date is changed,The link is given below "
                                   );
                                   sgMail
                                     .send(msg)
@@ -510,9 +500,7 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
                                       const msg = updateEmail(
                                         mentorEmail,
                                         "Appointment Booking changed",
-                                        "Some one has changed the booking date click the link to join the meeting " +
-                                          " " +
-                                          startUrl
+                                        "Some one has changed the booking date click the link to join the meeting "
                                       );
                                       sgMail
                                         .send(msg)
@@ -646,7 +634,7 @@ export async function issueRefundForBooking(req, res, next) {
                                   sessionStatus
                                 );
                                 const sqlUpdate =
-                                  "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus,trainee_session_status = @sessionStatus WHERE booking_appt_id= @bookingId ";
+                                  "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus,trainee_session_status = @sessionStatus, mentor_session_status = @sessionStatus WHERE booking_appt_id= @bookingId ";
                                 request.query(sqlUpdate, (err, result) => {
                                   if (err) return res.send(err.message);
                                   if (result) {
@@ -723,7 +711,7 @@ export async function issueRefundForBooking(req, res, next) {
                                     sessionStatus
                                   );
                                   const sqlUpdate =
-                                    "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus,trainee_session_status = @sessionStatus WHERE booking_appt_id= @bookingId ";
+                                    "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus,trainee_session_status = @sessionStatus, mentor_session_status = @sessionStatus WHERE booking_appt_id= @bookingId ";
                                   request.query(sqlUpdate, (err, result) => {
                                     if (err) return res.send(err.message);
                                     if (result) {
@@ -812,7 +800,7 @@ export async function getAllUpcomingSessions(req, res, next) {
                 changes: mentor.trainee_modification_changed_times,
                 paymentStatus: mentor.mentor_amount_paid_status,
                 mentorId: mentor.mentor_dtls_id,
-                joinUrl: mentor.mentor_start_url,
+                traineeJoinUrl: mentor.trainee_join_url,
                 sessionStatus: mentor.trainee_session_status,
               };
               mentorArray.push(data);
@@ -988,27 +976,28 @@ function sentEmailRemainderBeforeOneDayToTrainee(req, res) {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      let amountPaidStatus = "Paid";
+      const amountPaidStatus = "Paid";
+      const traineeSessionStatus = "upcoming";
       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
       request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
         (err, result) => {
           result.recordset.forEach((res) => {
             let traineeEmail = res.user_email;
-            let joinUrl = res.mentor_join_url;
+            let traineeJoinUrl = res.trainee_join_url;
             let year = new Date(res.booking_mentor_date).getDay();
             let month = new Date(res.booking_mentor_date).getMonth();
             var day = new Date(res.booking_mentor_date).getDate();
             day = day - 1;
             const date = new Date(year, month, day, 0, 0, 0);
-
             schedule.scheduleJob(date, function () {
               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
               const msg = sendRemainderOnTheDay(
                 traineeEmail,
                 "Remainder for the session",
-                joinUrl,
-                "Start Meeting"
+                traineeJoinUrl,
+                "Join Meeting"
               );
               sgMail
                 .send(msg)
@@ -1032,14 +1021,16 @@ function sentEmailRemainderOnTheDayToTrainee(req, res) {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      let amountPaidStatus = "Paid";
+      const amountPaidStatus = "Paid";
+      const traineeSessionStatus = "upcoming";
       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
       request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
         (err, result) => {
           result.recordset.forEach((res) => {
             let traineeEmail = res.user_email;
-            let joinUrl = res.mentor_join_url;
+            let traineeJoinUrl = res.trainee_join_url;
             let year = new Date(res.booking_mentor_date).getFullYear();
             let month = new Date(res.booking_mentor_date).getMonth();
             var day = new Date(res.booking_mentor_date).getDate();
@@ -1049,8 +1040,8 @@ function sentEmailRemainderOnTheDayToTrainee(req, res) {
               const msg = sendRemainderOnTheDay(
                 traineeEmail,
                 "Remainder for the session",
-                joinUrl,
-                "Start Meeting"
+                traineeJoinUrl,
+                "Join Meeting"
               );
               sgMail
                 .send(msg)
@@ -1074,14 +1065,16 @@ function sentEmailRemainderToTraineeBefore10Min(req, res) {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      let amountPaidStatus = "Paid";
+      const amountPaidStatus = "Paid";
+      const traineeSessionStatus = "upcoming";
       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
       request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
         (err, result) => {
           result.recordset.forEach((res) => {
             let traineeEmail = res.user_email;
-            let joinUrl = res.mentor_join_url;
+            let traineeJoinUrl = res.trainee_join_url;
             let year = new Date(res.booking_mentor_date).getDay();
             let month = new Date(res.booking_mentor_date).getMonth();
             let day = new Date(res.booking_mentor_date).getDate();
@@ -1095,8 +1088,8 @@ function sentEmailRemainderToTraineeBefore10Min(req, res) {
                 const msg = sendRemainderOnTheDay(
                   traineeEmail,
                   "Remainder for the session will start in 10 minutes",
-                  joinUrl,
-                  "Start Meeting"
+                  traineeJoinUrl,
+                  "Join Meeting"
                 );
                 sgMail
                   .send(msg)
@@ -1114,9 +1107,9 @@ function sentEmailRemainderToTraineeBefore10Min(req, res) {
               schedule.scheduleJob(date, function () {
                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                 const msg = sendRemainderOnTheDay(
-                  email,
+                  traineeEmail,
                   "Remainder for the session will start in 10 minutes",
-                  joinUrl,
+                  traineeJoinUrl,
                   "Start Meeting"
                 );
                 sgMail
@@ -1142,14 +1135,16 @@ function sentEmailRemainderToTraineeBefore5Min(req, res) {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      let amountPaidStatus = "Refunded";
+      const amountPaidStatus = "Paid";
+      const traineeSessionStatus = "upcoming";
       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
       request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
         (err, result) => {
           result.recordset.forEach((res) => {
             let traineeEmail = res.user_email;
-            let joinUrl = res.mentor_join_url;
+            let traineeJoinUrl = res.trainee_join_url;
             let year = new Date(res.booking_mentor_date).getDay();
             let month = new Date(res.booking_mentor_date).getMonth();
             let day = new Date(res.booking_mentor_date).getDate();
@@ -1163,7 +1158,7 @@ function sentEmailRemainderToTraineeBefore5Min(req, res) {
                 const msg = sendRemainderOnTheDay(
                   traineeEmail,
                   "Remainder for the session will start in 5 minutes",
-                  joinUrl,
+                  traineeJoinUrl,
                   "Join Meeting"
                 );
                 sgMail
@@ -1184,7 +1179,7 @@ function sentEmailRemainderToTraineeBefore5Min(req, res) {
                 const msg = sendRemainderOnTheDay(
                   traineeEmail,
                   "Remainder for the session will start in 5 minutes",
-                  joinUrl,
+                  traineeJoinUrl,
                   "Join Meeting"
                 );
                 sgMail
@@ -1209,14 +1204,16 @@ function sentEmailRemainderToTraineeToStart(req, res) {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      let amountPaidStatus = "Refunded";
+      const amountPaidStatus = "Paid";
+      const traineeSessionStatus = "upcoming";
       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
       request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
         (err, result) => {
           result.recordset.forEach((res) => {
             let traineeEmail = res.user_email;
-            let joinUrl = res.mentor_join_url;
+            let traineeJoinUrl = res.trainee_join_url;
             let year = new Date(res.booking_mentor_date).getDay();
             let month = new Date(res.booking_mentor_date).getMonth();
             let day = new Date(res.booking_mentor_date).getDate();
@@ -1228,270 +1225,7 @@ function sentEmailRemainderToTraineeToStart(req, res) {
               const msg = sendRemainderOnTheDay(
                 traineeEmail,
                 "Remainder for the session is stared",
-                joinUrl,
-                "Join Meeting"
-              );
-              sgMail
-                .send(msg)
-                .then(() => {
-                  console.log("Sent");
-                })
-                .catch((error) => {
-                  console.log(error.message);
-                });
-            });
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
-
-//remainder email will be sent before one day to mentor
-function sentEmailRemainderBeforeOneDayToMentor(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      let amountPaidStatus = "Paid";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let mentorEmail = res.mentor_email;
-            let startUrl = res.mentor_start_url;
-            let year = new Date(res.booking_mentor_date).getFullYear();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            var day = new Date(res.booking_mentor_date).getDate();
-            day = day - 1;
-            const date = new Date(year, month, day, 0, 0, 0);
-            schedule.scheduleJob(date, function () {
-              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-              const msg = sendRemainderOnTheDay(
-                mentorEmail,
-                "Remainder for the session",
-                startUrl,
-                "Start Meeting"
-              );
-              sgMail
-                .send(msg)
-                .then(() => {
-                  console.log("Sent");
-                })
-                .catch((error) => {
-                  console.log(error.message);
-                });
-            });
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
-
-// remainder will be sent on the day to mentor
-function sentEmailRemainderOnTheDayToMentor(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      let amountPaidStatus = "Paid";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let mentorEmail = res.mentor_email;
-            let startUrl = res.mentor_start_url;
-            let year = new Date(res.booking_mentor_date).getFullYear();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            var day = new Date(res.booking_mentor_date).getDate();
-            const date = new Date(year, month, day, 0, 0, 0);
-            schedule.scheduleJob(date, function () {
-              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-              const msg = sendRemainderOnTheDay(
-                mentorEmail,
-                "Remainder for the session",
-                startUrl,
-                "Start Meeting"
-              );
-              sgMail
-                .send(msg)
-                .then(() => {
-                  console.log("Sent");
-                })
-                .catch((error) => {
-                  console.log(error.message);
-                });
-            });
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
-
-// remainder will be sent on before 10 minutes to mentor
-function sentEmailRemainderToMentorBefore10Min(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      let amountPaidStatus = "Refunded";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let mentorEmail = res.mentor_email;
-            let joinUrl = res.mentor_start_url;
-            let year = new Date(res.booking_mentor_date).getDay();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            let day = new Date(res.booking_mentor_date).getDate();
-            let hour = res.booking_starts_time.split(":")[0];
-            let min = res.booking_starts_time.split(":")[1];
-            if (min === "00") {
-              hour = hour - 1;
-              const date = new Date(year, month, day, hour, 50, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  mentorEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  joinUrl,
-                  "Start Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-            if (min === "30") {
-              min = min - 10;
-              const date = new Date(year, month, day, hour, min, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  mentorEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  joinUrl,
-                  "Start Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
-
-function sentEmailRemainderToMentorBefore5Min(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      let amountPaidStatus = "Refunded";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let mentorEmail = res.mentor_email;
-            let startUrl = res.mentor_start_url;
-            let year = new Date(res.booking_mentor_date).getDay();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            let day = new Date(res.booking_mentor_date).getDate();
-            let hour = res.booking_starts_time.split(":")[0];
-            let min = res.booking_starts_time.split(":")[1];
-            if (min === "00") {
-              hour = hour - 1;
-              const date = new Date(year, month, day, hour, 55, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  mentorEmail,
-                  "Remainder for the session will start in 5 minutes",
-                  startUrl,
-                  "Start Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-            if (min === "30") {
-              min = min - 5;
-              const date = new Date(year, month, day, hour, min, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  mentorEmail,
-                  "Remainder for the session will start in 5 minutes",
-                  startUrl,
-                  "Start Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
-
-function sentEmailRemainderToMentorToStart(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      let amountPaidStatus = "Refunded";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let traineeEmail = res.user_email;
-            let joinUrl = res.mentor_join_url;
-            let year = new Date(res.booking_mentor_date).getDay();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            let day = new Date(res.booking_mentor_date).getDate();
-            let hour = res.booking_starts_time.split(":")[0];
-            let min = res.booking_starts_time.split(":")[1];
-            const date = new Date(year, month, day, hour, min, 0);
-            schedule.scheduleJob(date, function () {
-              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-              const msg = sendRemainderOnTheDay(
-                traineeEmail,
-                "Remainder for the session is stared",
-                joinUrl,
+                traineeJoinUrl,
                 "Join Meeting"
               );
               sgMail
@@ -1512,20 +1246,15 @@ function sentEmailRemainderToMentorToStart(req, res) {
 
 //remainder email will be sent before one day function call
 sentEmailRemainderBeforeOneDayToTrainee();
-sentEmailRemainderBeforeOneDayToMentor();
 
 // remainder will be sent on the day function call
 sentEmailRemainderOnTheDayToTrainee();
-sentEmailRemainderOnTheDayToMentor();
 
 // remainder will be sent on before 10 minutes function call
 sentEmailRemainderToTraineeBefore10Min();
-sentEmailRemainderToMentorBefore10Min();
 
 // remainder will be sent on before 5 minutes function call
 sentEmailRemainderToTraineeBefore5Min();
-sentEmailRemainderToMentorBefore5Min();
 
 // remainder will be sent to start or join meeting function call
 sentEmailRemainderToTraineeToStart();
-sentEmailRemainderToMentorToStart();

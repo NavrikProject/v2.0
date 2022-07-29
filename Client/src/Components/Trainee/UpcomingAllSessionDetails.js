@@ -51,7 +51,7 @@ const UpcomingAllSessionDetails = (props) => {
 
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
-
+  console.log(props);
   const attendMeetingHandler = async (bookingId) => {
     console.log(bookingId);
     await axios.post(
@@ -124,7 +124,7 @@ const UpcomingAllSessionDetails = (props) => {
               {new Date(props.mentor.bookingDate).toLocaleDateString() ===
               new Date().toLocaleDateString() ? (
                 <a
-                  href={props.mentor.joinUrl}
+                  href={props.mentor.traineeJoinUrl}
                   onClick={() => attendMeetingHandler(props.mentor.bookingId)}
                 >
                   Join Meeting

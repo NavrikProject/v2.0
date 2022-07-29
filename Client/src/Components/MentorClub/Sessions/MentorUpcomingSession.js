@@ -2,9 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import UpcomingAllSessionDetails from "./UpcomingAllSessionDetails";
-import LoadingSpinner from "../utils/LoadingSpinner";
-import { Link } from "react-router-dom";
+import UpcomingAllSessionDetails from "./MentorUpcomingAllSessionDetails";
+import LoadingSpinner from "../../utils/LoadingSpinner";
 const Div = styled.div``;
 const UpcomingTitle = styled.h1`
   color: #111;
@@ -54,7 +53,7 @@ const UpcomingDivButtons = styled.button`
 const SessionDetailsDiv = styled.div`
   padding: 30px;
 `;
-const UpcomingSession = () => {
+const MentorUpcomingSession = () => {
   const [loading, setLoading] = useState(false);
   const [upComingSessions, setUpComingSessions] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -63,12 +62,15 @@ const UpcomingSession = () => {
   const token = user?.accessToken;
 
   useEffect(() => {
-    const getAllUpcomingSessions = async () => {
+    const getAllMentorUpcomingSessions = async () => {
       setLoading(true);
-      const res = await axios.post(`/mentor/profile/get/bookings/upcoming`, {
-        headers: { authorization: "Bearer " + token },
-        userEmail: user?.email,
-      });
+      const res = await axios.post(
+        `/mentor/bookings/get/all-bookings/upcoming`,
+        {
+          headers: { authorization: "Bearer " + token },
+          userEmail: user?.email,
+        }
+      );
       if (res.data.details) {
         setLoading(false);
         setUpComingSessions(res.data.details);
@@ -76,9 +78,9 @@ const UpcomingSession = () => {
         return setLoading(false);
       }
     };
-    getAllUpcomingSessions();
+    getAllMentorUpcomingSessions();
   }, [token, user]);
-  console.log(upComingSessions);
+
   const toggleShowDetails = (index) => {
     console.log(index);
     if (selected === index) {
@@ -131,16 +133,10 @@ const UpcomingSession = () => {
             <UpcomingDivFlex>
               <UpcomingDivRight>
                 <UpcomingDivContent>
-                  <span> Noo appointment found, Book right now!</span>
+                  <span> Noo appointments found</span>
                 </UpcomingDivContent>
               </UpcomingDivRight>
-              <UpcomingDivLeft>
-                <UpcomingDivButtons>
-                  <Link to={"/mentors-club"} style={{ color: "white" }}>
-                    Find Mentors
-                  </Link>
-                </UpcomingDivButtons>
-              </UpcomingDivLeft>
+              <UpcomingDivLeft></UpcomingDivLeft>
             </UpcomingDivFlex>
           </UpcomingDiv>
         )}
@@ -149,4 +145,4 @@ const UpcomingSession = () => {
   );
 };
 
-export default UpcomingSession;
+export default MentorUpcomingSession;
