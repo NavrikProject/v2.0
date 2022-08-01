@@ -89,17 +89,17 @@ const Navbar = ({ toggleMenuItems }) => {
             <NavItem>
               <Link
                 style={{ textDecoration: "none", color: "#062C30" }}
-                to={`/mentors-club`}
+                to="/professionals"
               >
-                Mentors Club
+                Professionals
               </Link>
             </NavItem>
             <NavItem>
               <Link
                 style={{ textDecoration: "none", color: "#062C30" }}
-                to="/faq"
+                to={`/mentors-club`}
               >
-                FAQ's
+                Mentors Club
               </Link>
             </NavItem>
             <NavItem>
@@ -110,14 +110,14 @@ const Navbar = ({ toggleMenuItems }) => {
                 Jobs
               </Link>
             </NavItem>
-            <NavItem>
+            {/* <NavItem>
               <Link
                 style={{ textDecoration: "none", color: "#062C30" }}
                 to={`/resources`}
               >
                 Resources
               </Link>
-            </NavItem>
+            </NavItem> */}
             {user && (
               <NavItem>
                 <NavbarProfile onLogoutHandler={onLogoutHandler} />

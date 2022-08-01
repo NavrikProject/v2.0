@@ -22,6 +22,7 @@ import MentorBookingPage from "./Pages/MentorBookingPage";
 import MentorIndividualPage from "./Pages/MentorIndividualPage";
 import WhyPractiwizPage from "./Pages/WhyPractiwizPage";
 import FeedbackFormPage from "./Pages/FeedbackFormPage";
+import ProfessionalPage from "./Pages/ProfessionalPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -45,6 +46,7 @@ const App = () => {
           <Routes>
             <Route path="/" exact element={<HomePage />} />
             <Route path="/faq" exact element={<FaqPage />} />
+            <Route path="/professionals" exact element={<ProfessionalPage />} />
             <Route path="/login" exact element={<LoginPage />} />
             {user ? (
               <Route path="/" element={<Navigate to="/" />} />

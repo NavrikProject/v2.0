@@ -69,8 +69,8 @@ const NavbarProfile = (props) => {
                 </NotificationDiv>
                 Notifications
               </SubmenuListItem>
-              <SubmenuListItem>
-                {user?.role === 1 && (
+              {user?.role === 1 && (
+                <SubmenuListItem>
                   <Link
                     style={{ textDecoration: "none", color: "#062C30" }}
                     to={`/user/admin/dashboard`}
@@ -80,8 +80,8 @@ const NavbarProfile = (props) => {
                     </span>
                     Dashboard
                   </Link>
-                )}
-              </SubmenuListItem>
+                </SubmenuListItem>
+              )}
               <SubmenuListItem>
                 <Link
                   style={{ textDecoration: "none", color: "#062C30" }}
