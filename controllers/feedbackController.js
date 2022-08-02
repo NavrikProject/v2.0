@@ -37,7 +37,7 @@ export async function insertFeedBackController(req, res) {
             request.input("sessionStatus", sql.VarChar, sessionStatus);
             request.input("bookingId", sql.Int, bookingId);
             const sqlUpdate =
-              "UPDATE booking_appointments_dtls SET trainee_session_status = @sessionStatus WHERE booking_appt_id= @bookingId AND user_email = @userEmail";
+              "UPDATE booking_appointments_dtls SET trainee_session_status = @sessionStatus, mentor_session_status = @sessionStatus WHERE booking_appt_id= @bookingId AND user_email = @userEmail";
             request.query(sqlUpdate, (err, result) => {
               if (err) return res.send(err.message);
               if (result) {
@@ -126,6 +126,31 @@ export async function insertFeedBackController(req, res) {
             });
           } else {
             return;
+          }
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+export async function getFeedbackMentorController(req, res, next) {
+  const { userEmail, bookingId } = req.body;
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("bookingId", sql.Int, bookingId);
+      request.query(
+        "select * from trainee_feedback_dtls where trainee_feedback_booking_id = @bookingId and trainee_feedback_mentor_email = @userEmail",
+        (err, result) => {
+          if (err) {
+            return res.send(err.message);
+          }
+          if (result.recordset.length > 0) {
+            return res.send({ data: result.recordset });
+          } else {
+            return res.send("");
           }
         }
       );

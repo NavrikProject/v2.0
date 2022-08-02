@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import AttendedAllSessionDetails from "./MentorAttendedAllSessionDetails";
 import LoadingSpinner from "../../utils/LoadingSpinner";
-import { Link } from "react-router-dom";
 const Div = styled.div``;
 const AttendedTitle = styled.h1`
   color: #111;
@@ -83,7 +82,6 @@ const AttendedSessions = () => {
   }, [token, user]);
 
   const toggleShowDetails = (index) => {
-    console.log(index);
     if (selected === index) {
       return setSelected(null);
     }
@@ -134,18 +132,10 @@ const AttendedSessions = () => {
             <AttendedDivFlex>
               <AttendedDivRight>
                 <AttendedDivContent>
-                  <span>
-                    You have not attended any sessions, Book right now!
-                  </span>
+                  <span>You have not attended any sessions!</span>
                 </AttendedDivContent>
               </AttendedDivRight>
-              <AttendedDivLeft>
-                <AttendedDivButtons>
-                  <Link to={"/mentors-club"} style={{ color: "white" }}>
-                    Find Mentors
-                  </Link>
-                </AttendedDivButtons>
-              </AttendedDivLeft>
+              <AttendedDivLeft></AttendedDivLeft>
             </AttendedDivFlex>
           </AttendedDiv>
         )}

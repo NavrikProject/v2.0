@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import MentorAttendedSessions from "./MentorAttendedSessions";
 import MentorCompletedSessions from "./MentorCompletedSessions";
-//import RefundedSessions from "./Sessions/RefundedSessions";
+import MentorCancelledSession from "./MentorCancelledSession";
 import MentorUpcomingSession from "./MentorUpcomingSession";
 const Section = styled.section`
   width: 100%;
@@ -120,7 +120,7 @@ const MentorSessionDetails = () => {
             {showUpcomingSessions && <MentorUpcomingSession />}
             {attendedSession && <MentorAttendedSessions />}
             {completedSession && <MentorCompletedSessions />}
-            {/* {refundedSession && <RefundedSessions />} */}
+            {refundedSession && <MentorCancelledSession />}
           </Wrapper>
         </LeftDiv>
       </Div>

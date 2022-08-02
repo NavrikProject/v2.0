@@ -2,8 +2,8 @@ import routers from "express";
 import {
   getAllMentorBookingsInProfile,
   getMentorAllAttendedSessions,
+  getMentorAllCancelledSessions,
   getMentorAllCompletedSessions,
-  getMentorAllRefundedSessions,
   getMentorAllUpcomingSessions,
   updateMentorAttendedSessions,
   updateTheConfirmAppointment,
@@ -28,5 +28,5 @@ router.post(
 );
 router.post("/get/all-bookings/attended", getMentorAllAttendedSessions);
 router.post("/get/all-bookings/completed", getMentorAllCompletedSessions);
-router.post("/get/all-bookings/refunded", getMentorAllRefundedSessions);
+router.post("/get/all-bookings/cancelled", getMentorAllCancelledSessions);
 export default router;

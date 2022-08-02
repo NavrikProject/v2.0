@@ -240,15 +240,13 @@ export async function getMentorAllCompletedSessions(req, res, next) {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      const attended = "attended";
       const completed = "completed";
       const paid = "Paid";
       request.input("userEmail", sql.VarChar, userEmail);
-      request.input("attended", sql.VarChar, attended);
       request.input("completed", sql.VarChar, completed);
       request.input("paid", sql.VarChar, paid);
       request.query(
-        "select * from booking_appointments_dtls where mentor_email = @userEmail AND mentor_session_status = @attended AND mentor_amount_paid_status = @paid AND trainee_session_status = @completed ORDER BY booking_appt_id DESC",
+        "select * from booking_appointments_dtls where mentor_email = @userEmail AND mentor_session_status = @completed AND mentor_amount_paid_status = @paid AND trainee_session_status = @completed ORDER BY booking_appt_id DESC",
         (err, result) => {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
@@ -267,7 +265,7 @@ export async function getMentorAllCompletedSessions(req, res, next) {
             });
             return res.send({ details: mentorArray });
           } else {
-            return;
+            return res.send("");
           }
         }
       );
@@ -276,17 +274,17 @@ export async function getMentorAllCompletedSessions(req, res, next) {
     res.send(error.message);
   }
 }
-export async function getMentorAllRefundedSessions(req, res, next) {
+export async function getMentorAllCancelledSessions(req, res, next) {
   const { userEmail } = req.body;
   try {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      const refunded = "refunded";
+      const cancelled = "cancelled";
       request.input("userEmail", sql.VarChar, userEmail);
-      request.input("refunded", sql.VarChar, refunded);
+      request.input("cancelled", sql.VarChar, cancelled);
       request.query(
-        "select * from booking_appointments_dtls where user_email = @userEmail AND trainee_session_status = @refunded ORDER BY booking_appt_id DESC",
+        "select * from booking_appointments_dtls where mentor_email = @userEmail AND mentor_session_status = @cancelled ORDER BY booking_appt_id DESC",
         (err, result) => {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {

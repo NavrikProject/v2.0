@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import {
   JoinButton,
-  ModifyButton,
   RefundedDoneButton,
   UnModifiedButton,
 } from "./ButtonElements";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import CancelWarningModal from "./CancelWarningModal";
 
 const UpcomingAllDivContent = styled.p`
   font-size: 20px;
@@ -23,9 +23,6 @@ const JoinButtonDiv = styled.div`
   padding: 20px 0;
 `;
 const AllButtonDiv = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
   padding: 10px 0;
 `;
 const MoreOptionText = styled.h1`
@@ -41,7 +38,14 @@ const NoteText = styled.p`
   opacity: 0.5;
   padding-top: 10px;
 `;
+const ErrorText = styled.p`
+  color: #f24c4c;
+  padding-top: 10px;
+  font-size: 16px;
+`;
 const UpcomingAllSessionDetails = (props) => {
+  const [showWarningModel, setShowWarningModel] = useState(false);
+  const [sendMentor, setSendMentor] = useState("");
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
 
@@ -54,8 +58,19 @@ const UpcomingAllSessionDetails = (props) => {
       }
     );
   };
+  const cancelAppointmentHandler = (mentor) => {
+    setShowWarningModel(!showWarningModel);
+    setSendMentor(mentor);
+  };
+
   return (
     <div>
+      {showWarningModel && (
+        <CancelWarningModal
+          cancelAppointmentHandler={cancelAppointmentHandler}
+          sendMentor={sendMentor}
+        />
+      )}
       <div>
         <UpcomingAllDivContent>
           You have successfully booked a mentorship session with
@@ -79,7 +94,7 @@ const UpcomingAllSessionDetails = (props) => {
                 new Date().toLocaleDateString()
               }
             >
-              {new Date(props.mentor.bookingDate).toLocaleDateString() !==
+              {new Date(props.mentor.bookingDate).toLocaleDateString() ===
               new Date().toLocaleDateString() ? (
                 <a
                   href={props.mentor.hostUrl}
@@ -97,6 +112,17 @@ const UpcomingAllSessionDetails = (props) => {
       </div>
       <MoreOptionText>
         More Options: <hr />
+        <AllButtonDiv>
+          <UnModifiedButton
+            onClick={() => cancelAppointmentHandler(props.mentor)}
+          >
+            Cancel Appointment
+          </UnModifiedButton>
+        </AllButtonDiv>
+        <ErrorText>
+          *If the cancellation of bookings is more than five times your account
+          will be deactivated.
+        </ErrorText>
       </MoreOptionText>
     </div>
   );

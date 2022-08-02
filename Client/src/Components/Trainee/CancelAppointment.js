@@ -21,47 +21,101 @@ const CloseButtonDiv = styled.div`
   cursor: pointer;
 `;
 const FormDiv = styled.div`
-  padding: 40px 20px;
+  padding: 0px 0px;
   width: 90%;
   margin: 0 auto;
 `;
 const Terms = styled.div`
   position: absolute;
   bottom: 14px;
-  left: 16px;
+  left: 14px;
   cursor: pointer;
-`;
-const ProceedBtn = styled.button`
-  outline: none;
-  cursor: pointer;
-  padding: 12px 33px;
-  background-color: blue;
-  color: white;
-  transition: all 0.4s ease-in-out;
-  border: none;
-  border-radius: 7px;
-  margin-right: 10px;
-`;
-const CancelBtn = styled.button`
-  outline: none;
-  cursor: pointer;
-  padding: 12px 24px;
-  background-color: red;
-  color: white;
-  transition: all 0.4s ease-in-out;
-  border: none;
-  border-radius: 7px;
-  margin-left: 10px;
 `;
 const CancelDescriptor = styled.p`
-  margin-bottom: 20px;
-  font-size: 20px;
+  font-size: 16px;
+`;
+
+const MentorBoxDiv = styled.div`
+  width: 90%;
+  margin: 0 auto;
+  padding: 10px;
+`;
+
+const ConfirmButton = styled.button`
+  margin: 0 10px 0 0;
+  width: 100%;
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 17px;
+  border: none;
+  outline: none;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: red;
+
+  &:hover {
+    opacity: 0.7;
+    background-color: red;
+
+    transition: all 0.5s ease-in-out;
+  }
+`;
+const CancelProcess = styled.button`
+  margin: 0 0 0 10px;
+  width: 100%;
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 17px;
+  border: none;
+  outline: none;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #9772fb;
+  &:hover {
+    background-color: lightblue;
+    transition: all 0.5s ease-in-out;
+  }
+`;
+const FormSelect = styled.select`
+  height: 30px;
+  width: 100%;
+  font-size: 18px;
+  border-radius: 5px;
+  padding-bottom: 10px;
+  &:focus {
+    border-color: #fc83bb;
+  }
+`;
+const FormOption = styled.option``;
+const LabelTitle = styled.p`
+  font-size: 16px;
+  padding: 7px 0;
+`;
+const TextArea = styled.textarea`
+  width: 100%;
+  padding-bottom: 10px;
+  ::placeholder {
+    font-size: 18px;
+    padding-left: 10px;
+  }
+`;
+const ButtonDiv = styled.div`
+  width: 90%;
+  margin: 0 auto;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 `;
 const FormData = styled.div``;
 const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [selected, setSelected] = useState("");
+  const [questions, setQuestions] = useState("");
   const requestForRefundHandler = async (event) => {
     event.preventDefault();
     try {
@@ -109,27 +163,57 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
           )}
           {success && <p style={{ color: "green" }}>{success}</p>}
           <form onSubmit={requestForRefundHandler}>
-            <CancelDescriptor>
-              * If you cancel the appointment there will be 20% charge on the
-              paid amount see our{" "}
-              <Link
-                to="/terms-conditions"
-                style={{
-                  textDecoration: "none",
-                  color: "red",
-                  curser: "pointer",
-                }}
+            <MentorBoxDiv>
+              <LabelTitle>Choose one the Reason for cancellation:</LabelTitle>
+              <FormSelect
+                required
+                onChange={(event) => setSelected(event.target.value)}
+                name="selected"
               >
-                policies and conditions.
-              </Link>
-            </CancelDescriptor>
-            <ProceedBtn type="submit">Cancel Appointment</ProceedBtn>
-            <CancelBtn type="submit" onClick={showCancelMentorModel}>
-              Cancel this process
-            </CancelBtn>
+                <FormOption value=""></FormOption>
+                <FormOption value="health issues">Health issues</FormOption>
+                <FormOption value="I don't have time for attending the session">
+                  I don't have time for attending the session
+                </FormOption>
+                <FormOption value="Reason not listed">
+                  Reason not listed
+                </FormOption>
+              </FormSelect>
+              <LabelTitle>Reason for cancellation :</LabelTitle>
+              <TextArea
+                required
+                onChange={(event) => setQuestions(event.target.value)}
+                name=""
+                id=""
+                cols="30"
+                rows="10"
+                placeholder="Explain the reason of cancelling appointment in detail....."
+              ></TextArea>
+            </MentorBoxDiv>
+            <ButtonDiv>
+              <ConfirmButton type="submit">Confirm Cancel</ConfirmButton>
+              <CancelProcess onClick={showCancelMentorModel}>
+                Abort Process
+              </CancelProcess>
+            </ButtonDiv>
+            <MentorBoxDiv>
+              <CancelDescriptor>
+                * If you cancel the appointment there will be 20% charge on the
+                paid amount see our
+                <Link
+                  to="/terms-conditions"
+                  style={{
+                    textDecoration: "none",
+                    color: "red",
+                    curser: "pointer",
+                  }}
+                >
+                  policies and conditions.
+                </Link>
+              </CancelDescriptor>
+            </MentorBoxDiv>
           </form>
         </FormData>
-        <Terms></Terms>
       </FormDiv>
     </Model>
   );

@@ -66,7 +66,7 @@ app.get("/hello-world", async (req, res) => {
       // create request object
       var request = new sql.Request();
       // query to the database
-      request.query("select * from users_dtls", function (err, result) {
+      request.query("select * from user_dtls", function (err, result) {
         if (err) {
           res.send(err.message);
         } else {
@@ -160,4 +160,20 @@ app.get("/newmeeting", (req, res) => {
 
 app.listen(port, (req, res) => {
   console.log("listening on port " + port);
+  sql.connect(config, function (err) {
+    if (err) {
+      res.json(err.message);
+      console.log(err);
+    }
+    var request = new sql.Request();
+    // query to the database
+    request.query("select * from user_dtls", function (err, result) {
+      if (err) {
+        console.log(err.message);
+      } else {
+        console.log(result.recordset);
+        console.log(result.recordset);
+      }
+    });
+  });
 });

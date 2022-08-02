@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React from "react";
 
 //import FeedbackForm from "../FeedbackForm";
 import styled from "styled-components";
-import { JoinButton, RefundedDoneButton } from "./ButtonElements";
+import { JoinButton } from "./ButtonElements";
 const UpcomingAllDivContent = styled.p`
   font-size: 20px;
   color: #111;
@@ -16,12 +17,10 @@ const JoinButtonDiv = styled.div`
   padding: 20px 0;
 `;
 
-const NoteText = styled.p`
-  color: #111;
-  opacity: 0.5;
-  padding-top: 10px;
-`;
 const AttendedAllSessionDetails = (props) => {
+  const sendRemainderHandler = async (bookingId) => {
+    const res = await axios.post();
+  };
   return (
     <div>
       <div>
@@ -38,7 +37,11 @@ const AttendedAllSessionDetails = (props) => {
         </UpcomingAllDivContent>
       </div>
       <JoinButtonDiv>
-        <JoinButton>Send Remainder to trainee</JoinButton>
+        <JoinButton
+          onClick={() => sendRemainderHandler(props.mentor.bookingId)}
+        >
+          Send Remainder to trainee
+        </JoinButton>
       </JoinButtonDiv>
     </div>
   );

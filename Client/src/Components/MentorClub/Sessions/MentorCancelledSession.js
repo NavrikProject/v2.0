@@ -2,31 +2,30 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import CompletedAllSessionDetails from "./MentorCompletedAllSessionDetails";
+import CancelledAllSessionDetails from "./MentorCancelledAllSessionDetails";
 import LoadingSpinner from "../../utils/LoadingSpinner";
-import { Link } from "react-router-dom";
 const Div = styled.div``;
-const CompletedTitle = styled.h1`
+const CancelledTitle = styled.h1`
   color: #111;
   opacity: 0.7;
   padding-bottom: 10px;
 `;
-const CompletedDiv = styled.div`
+const CancelledDiv = styled.div`
   margin: 5px 0;
   padding: 20px;
   box-shadow: rgb(142 151 158 / 15%) 0px 4px 19px;
   height: auto;
 `;
-const CompletedUl = styled.ol``;
-const CompletedList = styled.li``;
-const CompletedDivFlex = styled.div`
+const CancelledUl = styled.ol``;
+const CancelledList = styled.li``;
+const CancelledDivFlex = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
 `;
-const CompletedDivRight = styled.div``;
-const CompletedDivContent = styled.p`
+const CancelledDivRight = styled.div``;
+const CancelledDivContent = styled.p`
   font-size: 18px;
   color: #111;
   opacity: 0.9;
@@ -34,8 +33,8 @@ const CompletedDivContent = styled.p`
     font-weight: 600;
   }
 `;
-const CompletedDivLeft = styled.div``;
-const CompletedDivButtons = styled.button`
+const CancelledDivLeft = styled.div``;
+const CancelledDivButtons = styled.button`
   margin: 0 auto;
   padding: 12px 20px;
   text-align: center;
@@ -54,19 +53,19 @@ const CompletedDivButtons = styled.button`
 const SessionDetailsDiv = styled.div`
   padding: 30px;
 `;
-const CompletedSessions = () => {
+const CancelledSessions = () => {
   const [loading, setLoading] = useState(false);
-  const [completedSessions, setCompletedSessions] = useState([]);
+  const [cancelledSessions, setCancelledSessions] = useState([]);
   const [selected, setSelected] = useState(null);
 
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
 
   useEffect(() => {
-    const getAllCompletedSessions = async () => {
+    const getAllCancelledSessions = async () => {
       setLoading(true);
       const res = await axios.post(
-        `/mentor/bookings/get/all-bookings/completed`,
+        `/mentor/bookings/get/all-bookings/cancelled`,
         {
           headers: { authorization: "Bearer " + token },
           userEmail: user?.email,
@@ -74,12 +73,12 @@ const CompletedSessions = () => {
       );
       if (res.data.details) {
         setLoading(false);
-        setCompletedSessions(res.data.details);
+        setCancelledSessions(res.data.details);
       } else {
         return setLoading(false);
       }
     };
-    getAllCompletedSessions();
+    getAllCancelledSessions();
   }, [token, user]);
   const toggleShowDetails = (index) => {
     if (selected === index) {
@@ -90,60 +89,60 @@ const CompletedSessions = () => {
   return (
     <Div>
       {loading && <LoadingSpinner />}
-      <CompletedTitle>Your Completed Sessions</CompletedTitle>
-      <CompletedUl>
-        {completedSessions?.length > 0 ? (
-          completedSessions?.map((completedSession) => (
-            <CompletedDiv key={completedSession.bookingId}>
-              <CompletedList>
-                <CompletedDivFlex>
-                  <CompletedDivRight>
-                    <CompletedDivContent>
+      <CancelledTitle>Your Cancelled Sessions</CancelledTitle>
+      <CancelledUl>
+        {cancelledSessions?.length > 0 ? (
+          cancelledSessions?.map((cancelledSession) => (
+            <CancelledDiv key={cancelledSession.bookingId}>
+              <CancelledList>
+                <CancelledDivFlex>
+                  <CancelledDivRight>
+                    <CancelledDivContent>
                       A session on
                       <span>
                         {" " +
                           new Date(
-                            completedSession.bookingDate
+                            cancelledSession.bookingDate
                           ).toDateString() +
                           " "}
                       </span>
                       and Time is
-                      <span>{" " + completedSession.time}</span>
-                    </CompletedDivContent>
-                  </CompletedDivRight>
-                  <CompletedDivLeft>
-                    <CompletedDivButtons
+                      <span>{" " + cancelledSession.time}</span>
+                    </CancelledDivContent>
+                  </CancelledDivRight>
+                  <CancelledDivLeft>
+                    <CancelledDivButtons
                       onClick={() =>
-                        toggleShowDetails(completedSession.bookingId)
+                        toggleShowDetails(cancelledSession.bookingId)
                       }
                     >
                       Click here to view all session details
-                    </CompletedDivButtons>
-                  </CompletedDivLeft>
-                </CompletedDivFlex>
-                {selected === completedSession.bookingId ? (
+                    </CancelledDivButtons>
+                  </CancelledDivLeft>
+                </CancelledDivFlex>
+                {selected === cancelledSession.bookingId ? (
                   <SessionDetailsDiv>
-                    <CompletedAllSessionDetails mentor={completedSession} />
+                    <CancelledAllSessionDetails mentor={cancelledSession} />
                   </SessionDetailsDiv>
                 ) : null}
-              </CompletedList>
-            </CompletedDiv>
+              </CancelledList>
+            </CancelledDiv>
           ))
         ) : (
-          <CompletedDiv>
-            <CompletedDivFlex>
-              <CompletedDivRight>
-                <CompletedDivContent>
-                  <span>You have not completed any sessions! </span>
-                </CompletedDivContent>
-              </CompletedDivRight>
-              <CompletedDivLeft></CompletedDivLeft>
-            </CompletedDivFlex>
-          </CompletedDiv>
+          <CancelledDiv>
+            <CancelledDivFlex>
+              <CancelledDivRight>
+                <CancelledDivContent>
+                  <span>You have not cancelled any appointments yet</span>
+                </CancelledDivContent>
+              </CancelledDivRight>
+              <CancelledDivLeft></CancelledDivLeft>
+            </CancelledDivFlex>
+          </CancelledDiv>
         )}
-      </CompletedUl>
+      </CancelledUl>
     </Div>
   );
 };
 
-export default CompletedSessions;
+export default CancelledSessions;

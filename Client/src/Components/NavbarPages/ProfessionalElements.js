@@ -5,6 +5,7 @@ export const ProfessionalSection = styled.section`
   height: auto;
 `;
 export const ProfessionalDiv = styled.div``;
+
 export const ChronoDiv = styled.div`
   margin: 0 auto !important;
 `;
@@ -135,4 +136,43 @@ export const AboutContentName = styled.h3`
 export const CourseTitle = styled.h1`
   text-align: center;
   font-size: 40px;
+`;
+export const HighlightsTitle = styled.h1`
+  text-align: center;
+  margin: 40px 0;
+  text-transform: capitalize;
+  font-size: 35px;
+  color: #111;
+  opacity: 0.8;
+`;
+export const HighlightsDiv = styled.div`
+  padding: 20px 0;
+  width: 80%;
+  margin: 0 auto;
+`;
+export const HighlightsDivFlex = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+export const HighlightsDivItems = styled.div`
+  flex: 4;
+  margin: 20px;
+`;
+export const HighlightsDivItem = styled.div`
+  width: 100%;
+  box-shadow: rgb(142 151 158 / 35%) 0px 10px 19px;
+  padding: 30px 10px;
+  text-align: center;
+`;
+export const HighlightsImg = styled.img`
+  width: 100px;
+  margin: 0 auto 20px auto;
+`;
+export const HighlightsContent = styled.p`
+  font-size: 19px;
+  margin: 0 auto 20px auto;
+  color: #111;
+  opacity: 0.9;
 `;

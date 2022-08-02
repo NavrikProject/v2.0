@@ -921,7 +921,7 @@ export async function getAllCompletedSessions(req, res, next) {
             });
             return res.send({ details: mentorArray });
           } else {
-            return;
+            return res.send("");
           }
         }
       );
@@ -1244,6 +1244,51 @@ function sentEmailRemainderToTraineeToStart(req, res) {
   } catch (error) {}
 }
 
+function sentEmailRemainderToFillFeedback(req, res) {
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const amountPaidStatus = "Paid";
+      const traineeSessionStatus = "attended";
+      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
+      request.query(
+        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
+        (err, result) => {
+          result.recordset.forEach((res) => {
+            let traineeEmail = res.user_email;
+            let year = new Date(res.booking_mentor_date).getDay();
+            let month = new Date(res.booking_mentor_date).getMonth();
+            let day = new Date(res.booking_mentor_date).getDate();
+            let hour = res.booking_end_time.split(":")[0];
+            console.log(hour);
+            const date = new Date(year, month, day, hour, 0, 0);
+            schedule.scheduleJob(date, function () {
+              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+              const msg = sendRemainderOnTheDay(
+                traineeEmail,
+                "Remainder for to fill the feedback form",
+                "http://localhost:3000/trainee/profile/bookings",
+                "Give feedback"
+              );
+              sgMail
+                .send(msg)
+                .then(() => {
+                  console.log("Sent");
+                })
+                .catch((error) => {
+                  console.log(error.message);
+                });
+            });
+          });
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+sentEmailRemainderToFillFeedback();
 //remainder email will be sent before one day function call
 sentEmailRemainderBeforeOneDayToTrainee();
 
