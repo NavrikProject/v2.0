@@ -1,5 +1,6 @@
 import routers from "express";
 import {
+  cancelAppointmentWithTrainee,
   getAllMentorBookingsInProfile,
   getMentorAllAttendedSessions,
   getMentorAllCancelledSessions,
@@ -16,6 +17,7 @@ import {
 let router = routers.Router();
 
 router.post("/get/all-bookings", getAllMentorBookingsInProfile);
+router.put("/update/cancel/appointment/:id", cancelAppointmentWithTrainee);
 
 router.put("/update/confirm/appointment/:id", updateTheConfirmAppointment);
 

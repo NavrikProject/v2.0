@@ -9,7 +9,7 @@ export const TrainingHighDiv = styled.div`
   padding: 50px;
 `;
 export const TrainingHighWrapper = styled.div`
-  padding: 50px 0px;
+  padding: 0px 0px;
 `;
 export const TrainingHighTitle = styled.h1`
   color: blue;

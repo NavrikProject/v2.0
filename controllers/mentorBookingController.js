@@ -5,6 +5,7 @@ import moment from "moment";
 import dotenv from "dotenv";
 import Razorpay from "razorpay";
 import schedule from "node-schedule";
+import updateEmail from "../middleware/updateEmail.js";
 
 export async function getAllMentorBookingsInProfile(req, res, next) {
   const { mentorEmail } = req.body;
@@ -109,6 +110,235 @@ export async function updateTheConfirmAppointment(req, res, next) {
     });
   } catch (error) {
     if (error) res.send(error.message);
+  }
+}
+
+export async function cancelAppointmentWithTrainee(req, res, next) {
+  const { reason, reasonExp } = req.body;
+  let bookingId = req.params.id;
+  try {
+    sql.connect(config, (err) => {
+      if (err) {
+        return res.send(err.message);
+      }
+      const request = new sql.Request();
+      request.input("bookingId", sql.Int, bookingId);
+      request.query(
+        "select * from booking_appointments_dtls where booking_appt_id = @bookingId",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let amount = result.recordset[0].mentor_amount;
+            let email = result.recordset[0].user_email;
+
+            const paymentId = result.recordset[0].mentor_razorpay_payment_id;
+            var refundAmount = amount;
+
+            const instance = new Razorpay({
+              key_id: process.env.RAZORPAY_KEY_ID,
+              key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
+            });
+            instance.payments
+              .refund(paymentId, {
+                amount: refundAmount * 100,
+                speed: "optimum",
+              })
+              .then((data) => {
+                let refundId = data.id;
+                var newRefundAmount = data.amount;
+                newRefundAmount = newRefundAmount / 100;
+                console.log(data);
+                sql.connect(config, (err) => {
+                  if (err) {
+                    return res.send(err.message);
+                  }
+                  const request = new sql.Request();
+                  request.input("bookingId", sql.Int, bookingId);
+                  request.query(
+                    "select * from modify_and_refund_payment_dtls WHERE booking_appt_id = @bookingId",
+                    (err, result) => {
+                      if (err) return res.send(err.message);
+                      if (result.recordset.length > 0) {
+                        sql.connect(config, (err) => {
+                          if (err) return res.send(err.message);
+                          const request = new sql.Request();
+                          request.input("bookingId", sql.Int, bookingId);
+                          request.input(
+                            "newRefundAmount",
+                            sql.Int,
+                            newRefundAmount
+                          );
+                          request.input("refundId", sql.VarChar, refundId);
+                          let newModifyDate = new Date()
+                            .toISOString()
+                            .substring(0, 10);
+                          request.input(
+                            "newModifyDate",
+                            sql.Date,
+                            newModifyDate
+                          );
+                          request.input("reason", sql.VarChar, reason);
+                          request.input("reasonExp", sql.Text, reasonExp);
+                          const sqlUpdate =
+                            "UPDATE modify_and_refund_payment_dtls SET mentor_reason= @reason, mentor_reason_explain = @reasonExp, refund_date = @newModifyDate,refund_payment_amount = @newRefundAmount, refund_razorpay_payment_id= @refundId WHERE booking_appt_id= @bookingId";
+                          request.query(sqlUpdate, (err, result) => {
+                            if (err) return res.send(err.message);
+                            if (result) {
+                              sql.connect(config, (err) => {
+                                if (err) return res.send(err.message);
+                                let amountPaidStatus = "Refunded";
+                                const sessionStatus = "cancelled";
+                                request.input(
+                                  "amountPaidStatus",
+                                  sql.VarChar,
+                                  amountPaidStatus
+                                );
+                                request.input(
+                                  "sessionStatus",
+                                  sql.VarChar,
+                                  sessionStatus
+                                );
+                                const sqlUpdate =
+                                  "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus,trainee_session_status = @sessionStatus, mentor_session_status = @sessionStatus WHERE booking_appt_id= @bookingId ";
+                                request.query(sqlUpdate, (err, result) => {
+                                  if (err) return res.send(err.message);
+                                  if (result) {
+                                    sgMail.setApiKey(
+                                      process.env.SENDGRID_API_KEY
+                                    );
+                                    const msg = updateEmail(
+                                      email,
+                                      "Refund email",
+                                      "Successfully initiated the refund process"
+                                    );
+                                    sgMail
+                                      .send(msg)
+                                      .then(() => {
+                                        res.send({
+                                          success:
+                                            "Successfully refund is initiated",
+                                        });
+                                      })
+                                      .catch((error) => {
+                                        res.send({
+                                          error:
+                                            "There was an error while booking the appointment",
+                                        });
+                                      });
+                                  } else {
+                                    return res.send({
+                                      error: err.message,
+                                    });
+                                  }
+                                });
+                              });
+                            } else {
+                              res.send({
+                                error: error.message,
+                              });
+                            }
+                          });
+                        });
+                      } else {
+                        sql.connect(config, async (err) => {
+                          if (err) res.send(err.message);
+                          const request = new sql.Request();
+                          request.input("bookingId", sql.Int, bookingId);
+                          request.query(
+                            "insert into modify_and_refund_payment_dtls (booking_appt_id,user_email,mentor_reason,mentor_reason_explain,refund_date,refund_payment_amount,refund_razorpay_payment_id) VALUES('" +
+                              bookingId +
+                              "','" +
+                              email +
+                              "','" +
+                              reason +
+                              "','" +
+                              reasonExp +
+                              "','" +
+                              new Date().toISOString().substring(0, 10) +
+                              "','" +
+                              refundAmount +
+                              "','" +
+                              refundId +
+                              "' )",
+                            (err, success) => {
+                              if (err) {
+                                return res.send({ error: err.message });
+                              }
+                              if (success) {
+                                sql.connect(config, (err) => {
+                                  if (err) return res.send(err.message);
+                                  let amountPaidStatus = "Refunded";
+                                  const sessionStatus = "cancelled";
+                                  request.input(
+                                    "amountPaidStatus",
+                                    sql.VarChar,
+                                    amountPaidStatus
+                                  );
+                                  request.input(
+                                    "sessionStatus",
+                                    sql.VarChar,
+                                    sessionStatus
+                                  );
+                                  const sqlUpdate =
+                                    "UPDATE booking_appointments_dtls SET mentor_amount_paid_status = @amountPaidStatus,trainee_session_status = @sessionStatus, mentor_session_status = @sessionStatus WHERE booking_appt_id= @bookingId ";
+                                  request.query(sqlUpdate, (err, result) => {
+                                    if (err) return res.send(err.message);
+                                    if (result) {
+                                      sgMail.setApiKey(
+                                        process.env.SENDGRID_API_KEY
+                                      );
+                                      const msg = updateEmail(
+                                        email,
+                                        "Refund email",
+                                        "Successfully initiated the refund process"
+                                      );
+                                      sgMail
+                                        .send(msg)
+                                        .then(() => {
+                                          res.send({
+                                            success:
+                                              "Successfully refund is initiated",
+                                          });
+                                        })
+                                        .catch((error) => {
+                                          res.send({
+                                            error:
+                                              "There was an error while booking the appointment",
+                                          });
+                                        });
+                                    } else {
+                                      return res.send({
+                                        error: err.message,
+                                      });
+                                    }
+                                  });
+                                });
+                              }
+                            }
+                          );
+                        });
+                      }
+                    }
+                  );
+                });
+              })
+              .catch((error) => {
+                return res.send({
+                  error: error.message,
+                });
+              });
+          } else {
+            return res.send({
+              error: "There is an error while creating the order",
+            });
+          }
+        }
+      );
+    });
+  } catch (error) {
+    return res.send({
+      error: "There was an error updating",
+    });
   }
 }
 

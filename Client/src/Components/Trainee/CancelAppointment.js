@@ -96,6 +96,7 @@ const LabelTitle = styled.p`
 const TextArea = styled.textarea`
   width: 100%;
   padding-bottom: 10px;
+  font-size: 16px;
   ::placeholder {
     font-size: 18px;
     padding-left: 10px;
@@ -115,7 +116,7 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [selected, setSelected] = useState("");
-  const [questions, setQuestions] = useState("");
+  const [reason, setReason] = useState("");
   const requestForRefundHandler = async (event) => {
     event.preventDefault();
     try {
@@ -124,6 +125,8 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
         "/mentor/profile/update/bookings/issue-refund",
         {
           bookingId: mentor.bookingId,
+          selected: selected,
+          reason: reason,
         }
       );
       if (result.data.success) {
@@ -182,11 +185,11 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
               <LabelTitle>Reason for cancellation :</LabelTitle>
               <TextArea
                 required
-                onChange={(event) => setQuestions(event.target.value)}
+                onChange={(event) => setReason(event.target.value)}
                 name=""
                 id=""
                 cols="30"
-                rows="10"
+                rows="7"
                 placeholder="Explain the reason of cancelling appointment in detail....."
               ></TextArea>
             </MentorBoxDiv>

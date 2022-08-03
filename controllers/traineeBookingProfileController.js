@@ -554,7 +554,7 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
 
 // issue for refund
 export async function issueRefundForBooking(req, res, next) {
-  const { bookingId } = req.body;
+  const { bookingId, reason, selected } = req.body;
   try {
     sql.connect(config, (err) => {
       if (err) {
@@ -582,7 +582,6 @@ export async function issueRefundForBooking(req, res, next) {
               })
               .then((data) => {
                 let refundId = data.id;
-                let status = data.status;
                 var newRefundAmount = data.amount;
                 newRefundAmount = newRefundAmount / 100;
                 sql.connect(config, (err) => {
@@ -614,8 +613,10 @@ export async function issueRefundForBooking(req, res, next) {
                             sql.Date,
                             newModifyDate
                           );
+                          request.input("selected", sql.VarChar, selected);
+                          request.input("reason", sql.Text, reason);
                           const sqlUpdate =
-                            "UPDATE modify_and_refund_payment_dtls SET refund_date = @newModifyDate,refund_payment_amount = @newRefundAmount, refund_razorpay_payment_id= @refundId WHERE booking_appt_id= @bookingId";
+                            "UPDATE modify_and_refund_payment_dtls SET trainee_reason= @selected, trainee_reason_explain = @reason, refund_date = @newModifyDate,refund_payment_amount = @newRefundAmount, refund_razorpay_payment_id= @refundId WHERE booking_appt_id= @bookingId";
                           request.query(sqlUpdate, (err, result) => {
                             if (err) return res.send(err.message);
                             if (result) {
@@ -680,10 +681,14 @@ export async function issueRefundForBooking(req, res, next) {
                           const request = new sql.Request();
                           request.input("bookingId", sql.Int, bookingId);
                           request.query(
-                            "insert into modify_and_refund_payment_dtls (booking_appt_id,user_email,refund_date,refund_payment_amount,refund_razorpay_payment_id) VALUES('" +
+                            "insert into modify_and_refund_payment_dtls (booking_appt_id,user_email,trainee_reason,trainee_reason_explain,refund_date,refund_payment_amount,refund_razorpay_payment_id) VALUES('" +
                               bookingId +
                               "','" +
                               email +
+                              "','" +
+                              selected +
+                              "','" +
+                              reason +
                               "','" +
                               new Date().toISOString().substring(0, 10) +
                               "','" +

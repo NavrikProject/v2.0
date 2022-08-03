@@ -91,7 +91,7 @@ const Navbar = ({ toggleMenuItems }) => {
                 style={{ textDecoration: "none", color: "#062C30" }}
                 to="/professionals"
               >
-                Professionals
+                For Professionals
               </Link>
             </NavItem>
             <NavItem>

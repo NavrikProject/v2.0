@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 
 const ContainerDiv = styled.div`
   position: relative;
+  i {
+    margin-left: 5px;
+  }
 `;
 
 const SubmenuList = styled.ul`

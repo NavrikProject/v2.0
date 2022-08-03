@@ -233,7 +233,7 @@ const Professionals = () => {
             <HighlightsDivItems>
               <HighlightsDivItem>
                 <div>
-                  <HighlightsImg src={CallCenter} alt="call center" />
+                  <HighlightsImg alt="image " />
                   <HighlightsContent>
                     Exclusive course content, co-created by the industrial
                     experts and professors
@@ -244,7 +244,7 @@ const Professionals = () => {
             <HighlightsDivItems>
               <HighlightsDivItem>
                 <div>
-                  <HighlightsImg src={CallCenter} alt="call center" />
+                  <HighlightsImg alt="image" />
                   <HighlightsContent>
                     Live online master classes delivered by industrial faculty
                   </HighlightsContent>
@@ -254,7 +254,7 @@ const Professionals = () => {
             <HighlightsDivItems>
               <HighlightsDivItem>
                 <div>
-                  <HighlightsImg src={CallCenter} alt="call center" />
+                  <HighlightsImg alt="image" />
                   <HighlightsContent>
                     Exclusive course content, co-created by the industrial
                     experts and professors

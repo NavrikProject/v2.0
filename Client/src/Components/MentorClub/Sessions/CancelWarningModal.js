@@ -155,17 +155,24 @@ const ButtonDiv = styled.div`
   justify-content: space-evenly;
 `;
 const CancelWarningModal = (props) => {
-  console.log(props);
   const user = useSelector((state) => state.user.currentUser);
 
-  const [selected, setSelected] = useState("");
-  const [questions, setQuestions] = useState("");
+  const [reasonExp, setReasonExp] = useState("");
+  const [reason, setReason] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const cancelAppointment = async (event) => {
     event.preventDefault();
+    const res = await axios.put(
+      `/mentor/bookings/update/cancel/appointment/${props.sendMentor.bookingId}`,
+      { reasonExp: reasonExp, reason: reason },
+      {
+        headers: { authorization: "Bearer " + user?.accessToken },
+      }
+    );
+    console.log(res);
   };
 
   return (
@@ -203,7 +210,7 @@ const CancelWarningModal = (props) => {
             <LabelTitle>Choose one the Reason:</LabelTitle>
             <FormSelect
               required
-              onChange={(event) => setSelected(event.target.value)}
+              onChange={(event) => setReason(event.target.value)}
               name="selected"
             >
               <FormOption value=""></FormOption>
@@ -218,7 +225,7 @@ const CancelWarningModal = (props) => {
             <LabelTitle>Reason for cancellation :</LabelTitle>
             <TextArea
               required
-              onChange={(event) => setQuestions(event.target.value)}
+              onChange={(event) => setReasonExp(event.target.value)}
               name=""
               id=""
               cols="30"
