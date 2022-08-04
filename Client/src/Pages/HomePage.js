@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import GoToTop from "../Components/GoToTop";
 import ScrollButton from "../Components/ScrollToTop";
 //import Courses from "../Components/Deliver/Courses";
 //import Footer from "../Components/Footer/Footer";
@@ -33,6 +34,7 @@ const HomePage = () => {
       <Suspense fallback={<LoadingSpinner />}>
         <Footer />
       </Suspense>
+      <GoToTop />
       <ScrollButton />
     </>
   );

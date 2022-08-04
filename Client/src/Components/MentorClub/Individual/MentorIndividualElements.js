@@ -137,3 +137,15 @@ export const BookNowButton = styled.button`
     transition: all 0.5s ease-in-out;
   }
 `;
+export const MentorRatingDiv = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  padding: 30px;
+`;
+export const MentorRatingWrapper = styled.div``;
+export const MentorRatingTitles = styled.h1`
+  text-align: center;
+  font-size: 35px;
+  color: #111;
+  opacity: 0.8;
+`;

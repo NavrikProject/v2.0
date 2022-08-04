@@ -70,7 +70,6 @@ const RefundedSessions = () => {
         userEmail: user?.email,
       });
       if (res.data.details) {
-        console.log(res.data.details);
         setLoading(false);
         setRefundedSessions(res.data.details);
       } else {
@@ -79,7 +78,6 @@ const RefundedSessions = () => {
     };
     getAllRefundedSessions();
   }, [token, user]);
-  console.log(refundedSessions);
   const toggleShowDetails = (index) => {
     if (selected === index) {
       return setSelected(null);

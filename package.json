@@ -38,6 +38,8 @@
     "rc-time-picker": "^3.7.3",
     "react-big-calendar": "^0.40.1",
     "react-calendly": "^4.0.1",
-    "request-promise": "^4.2.6"
+    "react-phone-number-input": "^3.2.6",
+    "request-promise": "^4.2.6",
+    "swiper": "^8.3.2"
   }
 }

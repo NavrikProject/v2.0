@@ -11,15 +11,19 @@ export const ChronoDiv = styled.div`
 `;
 export const ChronoTitle = styled.h1`
   text-align: center;
-  margin: 40px 0;
+  margin: 40px 0 0 0;
   text-transform: capitalize;
   font-size: 35px;
   color: #111;
   opacity: 0.8;
 `;
 export const ChronoWrapper = styled.div`
-  width: 80%;
-  margin: 50px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    margin: 0 auto !important;
+  }
 `;
 export const ProfessionalWrapper = styled.div`
   padding: 30px 0;

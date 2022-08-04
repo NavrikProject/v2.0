@@ -5,6 +5,8 @@ import { sendFeedbackEmail } from "../middleware/sendRemainder.js";
 
 export async function insertFeedBackController(req, res) {
   let {
+    userFullName,
+    mentorFullname,
     bookingId,
     userEmail,
     mentorEmail,
@@ -58,8 +60,12 @@ export async function insertFeedBackController(req, res) {
                           if (err) res.send(err.message);
                           const request = new sql.Request();
                           request.query(
-                            "insert into trainee_feedback_dtls (trainee_feedback_booking_id,trainee_feedback_user_email,trainee_feedback_mentor_email,trainee_feedback_useful,trainee_feedback_structure,trainee_feedback_relevant,trainee_feedback_clear,trainee_feedback_teaching,trainee_feedback_material,trainee_feedback_ad_time,trainee_feedback_learn_wp,trainee_feedback_aspects,trainee_feedback_improve_mentor,trainee_feedback_overall_exp,trainee_feedback_cr_date) VALUES('" +
+                            "insert into trainee_feedback_dtls (trainee_feedback_booking_id,trainee_fullname,mentor_fullname,trainee_feedback_user_email,trainee_feedback_mentor_email,trainee_feedback_useful,trainee_feedback_structure,trainee_feedback_relevant,trainee_feedback_clear,trainee_feedback_teaching,trainee_feedback_material,trainee_feedback_ad_time,trainee_feedback_learn_wp,trainee_feedback_aspects,trainee_feedback_improve_mentor,trainee_feedback_overall_exp,trainee_feedback_cr_date) VALUES('" +
                               bookingId +
+                              "','" +
+                              userFullName +
+                              "','" +
+                              mentorFullname +
                               "','" +
                               userEmail +
                               "','" +
@@ -143,6 +149,32 @@ export async function getFeedbackMentorController(req, res, next) {
       request.input("bookingId", sql.Int, bookingId);
       request.query(
         "select * from trainee_feedback_dtls where trainee_feedback_booking_id = @bookingId and trainee_feedback_mentor_email = @userEmail",
+        (err, result) => {
+          if (err) {
+            return res.send(err.message);
+          }
+          if (result.recordset.length > 0) {
+            return res.send({ data: result.recordset });
+          } else {
+            return res.send("");
+          }
+        }
+      );
+    });
+  } catch (error) {}
+}
+
+export async function getFeedbackByMentorName(req, res) {
+  let mentorName = req.query.name;
+  mentorName = mentorName.split("-");
+  mentorName = mentorName[0] + " " + mentorName[1];
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      request.input("mentorName", sql.VarChar, mentorName);
+      request.query(
+        "select * from trainee_feedback_dtls where mentor_fullname = @mentorName ORDER BY trainee_feedback_dtls_id DESC",
         (err, result) => {
           if (err) {
             return res.send(err.message);

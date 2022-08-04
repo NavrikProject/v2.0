@@ -59,8 +59,16 @@ const Navbar = ({ toggleMenuItems }) => {
               </Link>
             </NavItem>
           )}
-          <NavItem> Contact Us</NavItem>
-          {/* <ContactButton>
+          <NavItem>
+            <Link
+              style={{ textDecoration: "none", color: "#062C30" }}
+              to={`/contributers-corner`}
+            >
+              Contribute Corner
+            </Link>
+          </NavItem>
+          {/*<NavItem> Contact Us</NavItem>
+           <ContactButton>
             <i className="fa-solid fa-phone"></i> +91 12345678
           </ContactButton> */}
         </MenuItem>

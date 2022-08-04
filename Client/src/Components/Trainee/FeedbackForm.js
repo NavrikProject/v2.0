@@ -182,7 +182,9 @@ const FeedbackForm = (props) => {
   const question11Handler = (event) => {
     setQuestion11(event.target.value);
   };
+
   const token = user?.accessToken;
+  console.log(props);
   const feedbackSubmitHandler = async (event) => {
     event.preventDefault();
     let data = {
@@ -200,6 +202,8 @@ const FeedbackForm = (props) => {
       bookingId: props.mentor.bookingId,
       userEmail: user?.email,
       mentorEmail: props.mentor.mentorEmail,
+      userFullName: user?.firstname + " " + user?.lastname,
+      mentorFullname: props.mentor.mentorFullName,
     };
     if (
       !question1 ||

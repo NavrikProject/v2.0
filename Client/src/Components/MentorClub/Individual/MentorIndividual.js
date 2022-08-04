@@ -23,6 +23,9 @@ import {
   MentorProfileDivLeft,
   MentorProfileDivRight,
   MentorProfileImg,
+  MentorRatingDiv,
+  MentorRatingTitles,
+  MentorRatingWrapper,
   MentorSectionDiv,
   MentorTimeSlotDiv,
 } from "./MentorIndividualElements";
@@ -42,7 +45,6 @@ const MentorIndividual = () => {
   const [isActive, setIsActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [sendMentor, setSendMentor] = useState();
-
   useEffect(() => {
     try {
       const getIndMentorDetails = async () => {
@@ -56,7 +58,20 @@ const MentorIndividual = () => {
       return;
     }
   }, [path]);
-  console.log(indMentor);
+
+  useEffect(() => {
+    try {
+      const getIndMentorFeedback = async () => {
+        const res = await axios.get(
+          `/feedback/get/mentor-feedback/mentors?name=${path}`
+        );
+        console.log(res.data);
+      };
+      getIndMentorFeedback();
+    } catch (error) {
+      return;
+    }
+  }, [path]);
   useEffect(() => {
     try {
       const getAllMentorDetailsAvailability = async () => {
@@ -130,10 +145,14 @@ const MentorIndividual = () => {
             <MentorDetailsDivFlex>
               <MentorDetailsName>
                 <MentorName>
-                  {mentor.mentor_firstname + " " + mentor.mentor_lastname}
-                </MentorName>
+                  {mentor.mentor_firstname +
+                    " " +
+                    mentor.mentor_lastname +
+                    " " +
+                    " "}
+                </MentorName>{" "}
                 <MentorDesignation>
-                  {mentor.mentor_current_role + " "}
+                  {" " + mentor.mentor_current_role + " "}
                 </MentorDesignation>
                 at
                 <MentorDesignation>
@@ -229,6 +248,11 @@ const MentorIndividual = () => {
           </MentorDetailsDiv>
         </MentorSectionDiv>
       ))}
+      <MentorRatingDiv>
+        <MentorRatingWrapper>
+          <MentorRatingTitles>Testimonials</MentorRatingTitles>
+        </MentorRatingWrapper>
+      </MentorRatingDiv>
       <GoToTop />
     </MentorIndSection>
   );
