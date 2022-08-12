@@ -130,10 +130,9 @@ export async function cancelAppointmentWithTrainee(req, res, next) {
           if (result.recordset.length > 0) {
             let amount = result.recordset[0].mentor_amount;
             let email = result.recordset[0].user_email;
-
             const paymentId = result.recordset[0].mentor_razorpay_payment_id;
             var refundAmount = amount;
-
+            console.log(email);
             const instance = new Razorpay({
               key_id: process.env.RAZORPAY_KEY_ID,
               key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
@@ -147,7 +146,6 @@ export async function cancelAppointmentWithTrainee(req, res, next) {
                 let refundId = data.id;
                 var newRefundAmount = data.amount;
                 newRefundAmount = newRefundAmount / 100;
-                console.log(data);
                 sql.connect(config, (err) => {
                   if (err) {
                     return res.send(err.message);
@@ -256,7 +254,7 @@ export async function cancelAppointmentWithTrainee(req, res, next) {
                               "','" +
                               new Date().toISOString().substring(0, 10) +
                               "','" +
-                              refundAmount +
+                              newRefundAmount +
                               "','" +
                               refundId +
                               "' )",

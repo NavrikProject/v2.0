@@ -5,7 +5,6 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import styled from "styled-components";
-import logo from "../../../images/practi-logo.png";
 import LoadingSpinner from "../../utils/LoadingSpinner";
 
 const Backdrop = styled.div`
@@ -14,7 +13,7 @@ const Backdrop = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 20;
+  z-index: 1200000;
   background-color: rgba(0, 0, 0, 0.75);
 `;
 const Modal = styled.div`
@@ -58,12 +57,7 @@ const CloseButtonDiv = styled.div`
   right: 16px;
   cursor: pointer;
 `;
-const ConfirmBookingTitle = styled.h1`
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 32px;
-  margin-bottom: 0.5rem;
-`;
+
 const MentorBoxDiv = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -165,6 +159,7 @@ const CancelWarningModal = (props) => {
 
   const cancelAppointment = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const res = await axios.put(
       `/mentor/bookings/update/cancel/appointment/${props.sendMentor.bookingId}`,
       { reasonExp: reasonExp, reason: reason },
@@ -172,7 +167,20 @@ const CancelWarningModal = (props) => {
         headers: { authorization: "Bearer " + user?.accessToken },
       }
     );
-    console.log(res);
+    if (res.data.success) {
+      return (
+        setLoading(false),
+        setSuccess(res.data.success),
+        toast.success(res.data.success, { position: "top-center" })
+      );
+    }
+    if (res.data.error) {
+      return (
+        setLoading(false),
+        setError(res.data.error),
+        toast.error(res.data.error, { position: "top-center" })
+      );
+    }
   };
 
   return (

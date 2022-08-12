@@ -76,7 +76,7 @@ const ActivateAccountPage = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `https://navriktrainingserverside.azurewebsites.net/api/auth/email-account-activate/${params.id}`,
+        `http://localhost:1100/api/auth/email-account-activate/${params.id}`,
         { signUpToken: params.id }
       );
       if (res.data.token) {

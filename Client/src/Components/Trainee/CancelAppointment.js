@@ -25,12 +25,7 @@ const FormDiv = styled.div`
   width: 90%;
   margin: 0 auto;
 `;
-const Terms = styled.div`
-  position: absolute;
-  bottom: 14px;
-  left: 14px;
-  cursor: pointer;
-`;
+
 const CancelDescriptor = styled.p`
   font-size: 16px;
 `;

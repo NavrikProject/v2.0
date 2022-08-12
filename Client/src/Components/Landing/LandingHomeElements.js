@@ -30,6 +30,21 @@ export const DisplayDiv = styled.div`
 export const DisplayDivItem1 = styled.div`
   padding: 100px 0px;
   width: 50%;
+  animation: move-right 500ms ease-in-out forwards;
+  animation-delay: 1s;
+  visibility: hidden;
+  @keyframes move-right {
+    0% {
+      transform: translateX(-100px);
+      opacity: 0.5;
+      visibility: hidden;
+    }
+    100% {
+      transform: translateX(0px);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 `;
 export const DisplayDivItem2 = styled.div`
   padding: 80px 0px;
@@ -52,6 +67,7 @@ export const PractiwizButton = styled.button`
 export const DisplayDivItemTitleWhite = styled.h1`
   color: #fff;
   font-size: 45px;
+
   @media only screen and (max-width: 968px) {
     font-size: 40px;
   }
@@ -59,6 +75,7 @@ export const DisplayDivItemTitleWhite = styled.h1`
     font-size: 35px;
   }
 `;
+
 export const DisplayDivItemTitleGold = styled.h1`
   color: gold;
   font-size: 43px;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   BookNowButton,
   MentorBioDesc,
@@ -35,8 +35,9 @@ import "../MentorCardDate.css";
 import DatePicker from "react-datepicker";
 import ConfirmModel from "./ConfirmModel";
 import GoToTop from "../../GoToTop";
+import { useSelector } from "react-redux";
 
-const MentorIndividual = () => {
+const MentorIndividual = ({ socket }) => {
   const location = useLocation();
   let path = location.pathname.split("/")[3];
   const [indMentor, setIndMentor] = useState([]);
@@ -45,6 +46,7 @@ const MentorIndividual = () => {
   const [isActive, setIsActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [sendMentor, setSendMentor] = useState();
+
   useEffect(() => {
     try {
       const getIndMentorDetails = async () => {
@@ -128,11 +130,13 @@ const MentorIndividual = () => {
     setShowModal(!showModal);
     setSendMentor(mentor);
   };
+  const user = useSelector((state) => state.user.currentUser);
 
   return (
     <MentorIndSection>
       {showModal && (
         <ConfirmModel
+          socket={socket}
           showModalHandler={showModalHandler}
           sendMentor={sendMentor}
           date={date}
@@ -238,9 +242,15 @@ const MentorIndividual = () => {
                         </strong>
                       </MentorTimeSlotDiv>
                     </MentorProfileDateDiv>
-                    <BookNowButton onClick={() => showModalHandler(mentor)}>
-                      Book now
-                    </BookNowButton>
+                    {!user ? (
+                      <BookNowButton>
+                        <Link to="/login">Login</Link>
+                      </BookNowButton>
+                    ) : (
+                      <BookNowButton onClick={() => showModalHandler(mentor)}>
+                        Book now
+                      </BookNowButton>
+                    )}
                   </MentorProfileAvailDiv>
                 </MentorProfileDivRight>
               </MentorProfileDivFlex>

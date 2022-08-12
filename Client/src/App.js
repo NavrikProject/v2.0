@@ -24,6 +24,8 @@ import WhyPractiwizPage from "./Pages/WhyPractiwizPage";
 import FeedbackFormPage from "./Pages/FeedbackFormPage";
 import ProfessionalPage from "./Pages/ProfessionalPage";
 import ContributeCornerPage from "./Pages/ContributeCornerPage";
+import "react-phone-number-input/style.css";
+import "animate.css";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -38,7 +40,8 @@ const Terms = React.lazy(() => import("./Pages/T&CPage"));
 const MentorPage = React.lazy(() => import("./Pages/MentorFormPage"));
 const RpaBaPage = React.lazy(() => import("./Pages/RpaBaCoursePage"));
 const App = () => {
-  const user = useSelector((state) => state.user.currentUser);
+  const user = useSelector((state) => state.user?.currentUser);
+
   return (
     <>
       <ToastContainer />

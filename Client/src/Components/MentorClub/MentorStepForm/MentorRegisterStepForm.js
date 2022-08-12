@@ -52,7 +52,7 @@ const MentorRegisterStepForm = () => {
   const [image, setImage] = useState();
 
   const FormTitles = [
-    "Sign Up",
+    "Mentor Sign Up",
     "Personal Info",
     "Experience Details",
     "Availability Details",
@@ -80,7 +80,7 @@ const MentorRegisterStepForm = () => {
           setImage={setImage}
           formData={formData}
           setFormData={setFormData}
-        />
+        /> 
       );
     }
   };

@@ -189,3 +189,52 @@ export async function getFeedbackByMentorName(req, res) {
     });
   } catch (error) {}
 }
+export async function insertContactUsDetails(req, res) {
+  const { fullname, email, query, text, value } = req.body;
+  try {
+    sql.connect(config, async (err) => {
+      if (err) res.send(err.message);
+      const request = new sql.Request();
+      request.query(
+        "insert into contact_us_dtls (contact_us_fullname,contact_us_email,contact_us_phone_number,contact_us_cr_date,contact_us_query,contact_us_text) VALUES('" +
+          fullname +
+          "','" +
+          email +
+          "','" +
+          value +
+          "','" +
+          new Date().toISOString().substring(0, 10) +
+          "','" +
+          query +
+          "','" +
+          text +
+          "' )",
+        (err, success) => {
+          if (err) {
+            return res.send({ error: err.message });
+          }
+          if (success) {
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+            const msg = sendFeedbackEmail(
+              email,
+              "contact us form submitted",
+              "Thanks for contacting the practiwiz"
+            );
+            sgMail
+              .send(msg)
+              .then(() => {
+                return res.send({
+                  success: "Thanks for your submission we will get back to you",
+                });
+              })
+              .catch((error) => {
+                return res.send({
+                  error: "There was an error while submitting the feedback",
+                });
+              });
+          }
+        }
+      );
+    });
+  } catch (error) {}
+}

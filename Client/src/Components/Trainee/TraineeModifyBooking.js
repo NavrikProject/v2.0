@@ -33,9 +33,6 @@ const FormDiv = styled.div`
   margin: 0 auto;
 `;
 const Terms = styled.div`
-  position: absolute;
-  bottom: 14px;
-  left: 16px;
   cursor: pointer;
 `;
 const ModifyBtn = styled.button`

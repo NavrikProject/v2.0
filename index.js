@@ -22,6 +22,9 @@ import mentorBookingRoute from "./routes/MentorBookingRoute.js";
 import FeedbackRoute from "./routes/feedbackRoute.js";
 import Razorpay from "razorpay";
 import jwt from "jsonwebtoken";
+import { Server } from "socket.io";
+import { createServer } from "http";
+
 import config from "./config/dbconfig.js";
 import rp from "request-promise";
 import * as schedule from "node-schedule";
@@ -29,6 +32,7 @@ import * as schedule from "node-schedule";
 const job = schedule.scheduleJob("31 * * * *", function () {});
 
 const app = express();
+const httpServer = createServer(app);
 dotenv.config();
 app.use(express.json());
 app.use(morgan("common"));
@@ -91,89 +95,44 @@ app.use("/api/mentor", mentorRoute);
 app.use("/api/mentor/profile", TraineeBookingProfileRoute);
 app.use("/api/mentor/bookings", mentorBookingRoute);
 app.use("/api/feedback", FeedbackRoute);
-const payload = {
-  iss: process.env.ZOOM_APP_API_KEY,
-  exp: new Date().getTime() + 5000,
-};
-// const instance = new Razorpay({
-//   key_id: process.env.RAZORPAY_KEY_ID,
-//   key_secret: process.env.RAZORPAY_KEY_SECRET_STRING,
-// });
 
-// instance.payments
-//   .all()
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
-const token = jwt.sign(payload, process.env.ZOOM_APP_API_SECRET_KEY);
-
-app.get("/newmeeting", (req, res) => {
-  var email = "b.mahesh311296@gmail.com";
-  var options = {
-    method: "POST",
-    uri: "https://api.zoom.us/v2/users/me/meetings",
-    body: {
-      topic: "test meeting title",
-      type: 1,
-      start_time: new Date("2022-07-29T12:46:02.166Z"),
-      contact_email: email,
-      registrants_email_notification: true,
-      calendar_type: 2,
-      recurrence: {
-        end_date_time: new Date("2022-07-29T12:46:02.166Z"),
-        end_times: 7,
-        monthly_day: 1,
-        monthly_week: 1,
-        monthly_week_day: 1,
-        repeat_interval: 1,
-        type: 1,
-        weekly_days: "1",
-      },
-      settings: {
-        host_video: "true",
-        participant_video: "true",
-      },
-    },
-    auth: {
-      bearer: token,
-    },
-    headers: {
-      "User-Agent": "Zoom-api-Jwt-Request",
-      "content-type": "application/json",
-    },
-    json: true, //Parse the JSON string in the response
-  };
-
-  rp(options)
-    .then(function (response) {
-      console.log("response is: ", response);
-      res.send("create meeting result: " + JSON.stringify(response));
-    })
-    .catch(function (err) {
-      // API call failed...
-      console.log("API call failed, reason ", err.message);
-    });
+const io = new Server(httpServer, {
+  /* options */ cors: {
+    origin: "http://localhost:3000",
+  },
 });
 
-app.listen(port, (req, res) => {
-  console.log("listening on port " + port);
-  sql.connect(config, function (err) {
-    if (err) {
-      res.json(err.message);
-      console.log(err);
-    }
-    var request = new sql.Request();
-    // query to the database
-    request.query("select * from user_dtls", function (err, result) {
-      if (err) {
-        console.log(err.message);
-      } else {
-        console.log(result.recordset);
-        console.log(result.recordset);
-      }
+let allUsers = [];
+const addNewUser = (userEmail, socketId) => {
+  !allUsers.some((user) => user.userEmail === userEmail) &&
+    allUsers.push({ userEmail, socketId });
+};
+const removeUser = (socketId) => {
+  allUsers = allUsers.filter((user) => user.socketId !== socketId);
+};
+const getSpecificUser = (userEmail) => {
+  return allUsers.find((user) => user.userEmail === userEmail);
+};
+io.on("connection", (socket) => {
+  socket.on("newUser", (userEmail) => {
+    addNewUser(userEmail, socket.id);
+  });
+  socket.on("booked", ({ userEmail, mentorEmail }) => {
+    const receiver = getSpecificUser(mentorEmail);
+    io.to(receiver.socketId).emit("getNotification", {
+      userEmail,
     });
   });
+
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+  });
 });
+
+httpServer.listen(port, (req, res) => {
+  console.log("listening on port " + port);
+});
+
+// app.listen(port, (req, res) => {
+//   console.log("listening on port " + port);
+// });

@@ -32,9 +32,13 @@ import {
   ProfessionalWrapper,
   ProfessionCardTitles,
 } from "./ProfessionalElements";
-import CallCenter from "../../images/highlighsImages/call-center.png";
-import roadmap from "../../images/Project2 - Roadmapping.jpg";
+import ScrollAnimation from "react-animate-on-scroll";
 
+import CallCenter from "../../images/highlighsImages/call-center.png";
+import Content from "../../images/highlighsImages/content.png";
+import Online from "../../images/highlighsImages/learning.png";
+import roadmap from "../../images/Project2 - Roadmapping.jpg";
+import Content2 from "../../images/highlighsImages/content (2).png";
 import GoToTop from "../GoToTop";
 
 const Professionals = () => {
@@ -45,6 +49,7 @@ const Professionals = () => {
           <img src={roadmap} alt="roadmap" />
         </ChronoWrapper>
       </ProfessionalDiv>
+      <ScrollAnimation animateIn="fadeIn">Some Text</ScrollAnimation>
       <ProfessionalDiv>
         <ProfessionalWrapper>
           <FlexDiv>
@@ -183,7 +188,7 @@ const Professionals = () => {
             <HighlightsDivItems>
               <HighlightsDivItem>
                 <div>
-                  <HighlightsImg alt="image " />
+                  <HighlightsImg src={Content} alt="image " />
                   <HighlightsContent>
                     Exclusive course content, co-created by the industrial
                     experts and professors
@@ -194,7 +199,7 @@ const Professionals = () => {
             <HighlightsDivItems>
               <HighlightsDivItem>
                 <div>
-                  <HighlightsImg alt="image" />
+                  <HighlightsImg src={Online} alt="image" />
                   <HighlightsContent>
                     Live online master classes delivered by industrial faculty
                   </HighlightsContent>
@@ -204,7 +209,7 @@ const Professionals = () => {
             <HighlightsDivItems>
               <HighlightsDivItem>
                 <div>
-                  <HighlightsImg alt="image" />
+                  <HighlightsImg src={Content2} alt="image" />
                   <HighlightsContent>
                     Exclusive course content, co-created by the industrial
                     experts and professors
@@ -237,7 +242,6 @@ const Professionals = () => {
           </FlexDiv>
         </ProfessionalWrapper>
       </ProfessionalDiv>
-
       <GoToTop />
     </ProfessionalSection>
   );

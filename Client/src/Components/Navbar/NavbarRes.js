@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Dropdown from "./Dropdown";
-const NavbarRes = () => {
+const NavbarRes = ({ socket }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenuItems = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <>
-      <Navbar toggleMenuItems={toggleMenuItems} />
+      <Navbar socket={socket} toggleMenuItems={toggleMenuItems} />
       <Dropdown isOpen={isOpen} toggleMenuItems={toggleMenuItems} />
     </>
   );

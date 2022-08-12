@@ -38,8 +38,12 @@ const SidebarListItem = styled.li`
   width: 100%;
   cursor: pointer;
   border-bottom: 1px solid lightgrey;
+
   :nth-child(5) {
     border-bottom: none;
+  }
+  &:hover {
+    background-color: lightgrey;
   }
 `;
 const Wrapper = styled.div`
@@ -65,6 +69,7 @@ const TraineeSessionDetails = () => {
             <h1>Quick Menu</h1>
             <SidebarListUl>
               <SidebarListItem
+                active
                 onClick={() => {
                   return (
                     setShowUpcomingSessions(!showUpcomingSessions),

@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import {
-  ContactButton,
   Div1,
   LogoContainer,
   LogoImage,
@@ -19,13 +18,14 @@ import CorporateTrainingMenu from "./CorporateTrainingMenu";
 import IndividualTrainingMenu from "./IndividualTrainingMenu";
 import { logOut } from "../../redux/userRedux";
 import NavbarProfile from "./NavbarProfile";
-const Navbar = ({ toggleMenuItems }) => {
+const Navbar = ({ toggleMenuItems, socket }) => {
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const onLogoutHandler = async () => {
     dispatch(logOut());
     Navigate("/");
   };
+
   return (
     <NavSection>
       <Div1>
@@ -127,9 +127,11 @@ const Navbar = ({ toggleMenuItems }) => {
               </Link>
             </NavItem> */}
             {user && (
-              <NavItem>
-                <NavbarProfile onLogoutHandler={onLogoutHandler} />
-              </NavItem>
+              <>
+                <NavItem>
+                  <NavbarProfile onLogoutHandler={onLogoutHandler} />
+                </NavItem>
+              </>
             )}
           </MenuItem>
         </MenuContainer>

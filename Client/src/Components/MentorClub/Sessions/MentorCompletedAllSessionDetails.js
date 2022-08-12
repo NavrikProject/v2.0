@@ -35,6 +35,9 @@ const Feedback = styled.p`
   font-size: 19px;
   color: #111;
   opacity: 0.9;
+  span {
+    font-weight: bold;
+  }
 `;
 
 const CompletedAllSessionDetails = (props) => {
@@ -79,12 +82,14 @@ const CompletedAllSessionDetails = (props) => {
             <Feedback>
               The overall rating of your mentor session with the following
               trainee email
-              {" " +
-                feeds.trainee_feedback_user_email +
-                " is " +
-                feeds.trainee_feedback_overall_exp}
+              <span>
+                {" " +
+                  feeds.trainee_feedback_user_email +
+                  " is " +
+                  feeds.trainee_feedback_overall_exp}
+              </span>
               . <br /> You have to improve in the following
-              {" " + feeds.trainee_feedback_improve_mentor}
+              <span> {" " + feeds.trainee_feedback_improve_mentor} </span>
             </Feedback>
           ))}
         </JoinButtonDiv>

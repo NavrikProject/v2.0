@@ -82,6 +82,7 @@ export async function emailRegister(req, res, next) {
 export async function emailAccountActivation(req, res) {
   const id = req.params.id;
   const signupToken = req.body.signUpToken;
+  console.log(signupToken);
   if (signupToken) {
     jwt.verify(
       signupToken,

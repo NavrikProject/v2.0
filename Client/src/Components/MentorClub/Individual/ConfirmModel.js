@@ -126,7 +126,6 @@ const TextArea = styled.textarea`
 `;
 const ConfirmModel = (props) => {
   const user = useSelector((state) => state.user.currentUser);
-
   const [selected, setSelected] = useState("");
   const [questions, setQuestions] = useState("");
   const [error, setError] = useState("");
