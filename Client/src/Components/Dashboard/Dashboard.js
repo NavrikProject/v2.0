@@ -6,11 +6,13 @@ import AllCourse from "./AllCourse";
 import Allusers from "./Allusers";
 import Logo from "../../images/practiwiz-logo.png";
 import AllMentors from "./AllMentors";
+import AllContributers from "./AllContributers";
 const Dashboard = () => {
   const [showCourses, setShowCourse] = useState(false);
   const [showAllTrainers, setShowAllTrainers] = useState(true);
   const [showAllUsers, setShowAllUsers] = useState(false);
   const [showMentors, setShowAllMentors] = useState(false);
+  const [showContributers, setShowContributers] = useState(false);
   const ShowCourseHandler = (event) => {
     setShowCourse(!showCourses);
     setShowAllTrainers(false);
@@ -28,6 +30,13 @@ const Dashboard = () => {
   };
   const ShowAllMentorsHandler = (event) => {
     setShowAllMentors(!showMentors);
+    setShowAllUsers(false);
+    setShowCourse(false);
+    setShowAllTrainers(false);
+  };
+  const ShowAllContributersHandler = (event) => {
+    setShowContributers(!showContributers);
+    setShowAllMentors(false);
     setShowAllUsers(false);
     setShowCourse(false);
     setShowAllTrainers(false);
@@ -74,14 +83,6 @@ const Dashboard = () => {
                 >
                   <li className="sidebarListItem active">Home</li>
                 </Link>
-                <Link
-                  style={{ textDecoration: "none" }}
-                  to="/user/admin/dashboard/add-new-course"
-                  className="link"
-                >
-                  <li className="sidebarListItem">Add New Course</li>
-                </Link>
-                <li className="sidebarListItem">Timeline</li>
               </ul>
             </div>
             <div className="sidebarMenu">
@@ -93,12 +94,17 @@ const Dashboard = () => {
                 <li className="sidebarListItem" onClick={ShowCourseHandler}>
                   All Courses
                 </li>
-
                 <li className="sidebarListItem" onClick={ShowAllUsersHandler}>
                   All users
                 </li>
                 <li className="sidebarListItem" onClick={ShowAllMentorsHandler}>
                   All Mentors
+                </li>
+                <li
+                  className="sidebarListItem"
+                  onClick={ShowAllContributersHandler}
+                >
+                  All Contributers
                 </li>
               </ul>
             </div>
@@ -124,6 +130,7 @@ const Dashboard = () => {
         {showAllTrainers && <UsersTable />}
         {showAllUsers && <Allusers />}
         {showMentors && <AllMentors />}
+        {showContributers && <AllContributers />}
       </div>
     </>
   );

@@ -13,6 +13,7 @@ import axios from "axios";
 import LoadingSpinner from "../utils/LoadingSpinner";
 import { toast } from "react-toastify";
 import ScrollAnimation from "react-animate-on-scroll";
+import { Link } from "react-router-dom";
 
 const ContributeSection = styled.section`
   width: 100%;
@@ -217,8 +218,12 @@ const ContributeCorner = () => {
                       guides, overviews, specific tools for using a method, or
                       an example of how you've used a certain method. You can
                       submit a resource recommendation via the
-                      <ContactLink href="#form"> Contact Us </ContactLink> form.
-                      ​
+                      <ContactLink>
+                        <Link to={"/contributers-corner/register"}>
+                          Register here
+                        </Link>
+                      </ContactLink>
+                      form. ​
                     </ContributeContentDesc>
                   </ContributeContentLeft>
                 </ContributeContentFlex>
@@ -238,7 +243,12 @@ const ContributeCorner = () => {
                       offer? You can look through the Rainbow Framework to find
                       pages that you could contribute to. Share your experiences
                       or suggestions by commenting on content pages or
-                      <ContactLink href="#form"> Contact Us </ContactLink> here.
+                      <ContactLink>
+                        <Link to={"/contributers-corner/register"}>
+                          Register here
+                        </Link>
+                      </ContactLink>
+                      here.
                     </ContributeContentDesc>
                   </ContributeContentLeft>
                   <ContributeContentRight>
@@ -268,7 +278,7 @@ const ContributeCorner = () => {
                     </ContributeContentDesc>
                   </ContributeContentLeft>
                 </ContributeContentFlex>
-              </ContributeContentDiv>{" "}
+              </ContributeContentDiv>
             </ScrollAnimation>
           </ContributeDiv>
           <ContributeDiv>
@@ -298,7 +308,7 @@ const ContributeCorner = () => {
           <ContributeDiv>
             <ContributeTitle>
               Did you Found a bug ? report to us!
-            </ContributeTitle>{" "}
+            </ContributeTitle>
             <ScrollAnimation animateIn="fadeIn">
               <ContributeContentDiv>
                 <ContributeContentFlex>

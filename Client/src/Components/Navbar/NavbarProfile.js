@@ -82,17 +82,30 @@ const NavbarProfile = (props) => {
                   </Link>
                 </SubmenuListItem>
               )}
-              <SubmenuListItem>
-                <Link
-                  style={{ textDecoration: "none", color: "#062C30" }}
-                  to={`/${user?.type}/profile/bookings`}
-                >
-                  <span>
-                    <i className="fa-solid fa-calendar-check"></i>
-                  </span>
-                  My Bookings
-                </Link>
-              </SubmenuListItem>
+              {user?.type === "trainee" ||
+                (user?.type === "mentor" && (
+                  <SubmenuListItem>
+                    <Link
+                      style={{ textDecoration: "none", color: "#062C30" }}
+                      to={`/${user?.type}/profile/bookings`}
+                    >
+                      <span>
+                        <i className="fa-solid fa-calendar-check"></i>
+                      </span>
+                      My Bookings
+                    </Link>
+                  </SubmenuListItem>
+                ))}
+              {user?.type === "contributer" && (
+                <SubmenuListItem>
+                  <Link
+                    style={{ textDecoration: "none", color: "#062C30" }}
+                    to={`/${user?.type}/apply-for-contribution`}
+                  >
+                    Apply for contribution
+                  </Link>
+                </SubmenuListItem>
+              )}
               <SubmenuListItem>
                 <Link
                   style={{ textDecoration: "none", color: "#062C30" }}

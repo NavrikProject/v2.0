@@ -87,7 +87,6 @@ const MentorRegisterStepForm = () => {
 
   const profileSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formData);
     let data = new FormData();
     data.append("image", image);
     data.append("email", formData.email);

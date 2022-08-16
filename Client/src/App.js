@@ -26,6 +26,9 @@ import ProfessionalPage from "./Pages/ProfessionalPage";
 import ContributeCornerPage from "./Pages/ContributeCornerPage";
 import "react-phone-number-input/style.css";
 import "animate.css";
+import ContributerLoginPage from "./Pages/ContributerLoginPage";
+import ContributerRegisterPage from "./Pages/ContributerRegisterPage";
+import ApplyContributionPage from "./Pages/ApplyContributionpage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -51,15 +54,30 @@ const App = () => {
             <Route path="/" exact element={<HomePage />} />
             <Route path="/faq" exact element={<FaqPage />} />
             <Route path="/professionals" exact element={<ProfessionalPage />} />
+
             <Route path="/login" exact element={<LoginPage />} />
             <Route
               path="/contributers-corner"
               exact
               element={<ContributeCornerPage />}
             />
-
+            <Route
+              path="/contributers-corner/register"
+              exact
+              element={<ContributerRegisterPage />}
+            />
+            <Route
+              path="/contributers-corner/login"
+              exact
+              element={<ContributerLoginPage />}
+            />
+            <Route
+              path="/contributer/apply-for-contribution"
+              exact
+              element={<ApplyContributionPage />}
+            />
             {user ? (
-              <Route path="/" element={<Navigate to="/" />} />
+              <Route element={<Navigate to="/" />} />
             ) : (
               <Route path="/login" exact element={<LoginPage />} />
             )}

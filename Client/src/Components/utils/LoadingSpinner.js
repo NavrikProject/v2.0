@@ -9,6 +9,7 @@ const LoadingSpinner = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        zIndex: 100000,
       }}
     >
       <div
