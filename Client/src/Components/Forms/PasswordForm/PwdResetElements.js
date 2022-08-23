@@ -23,12 +23,14 @@ export const Form = styled.form`
   transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 `;
 export const Field = styled.div`
-  height: 50px;
   width: 100%;
   margin-top: 20px;
 `;
+export const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0 10px 10px !important;
+`;
 export const PwdField = styled.div`
-  height: 50px;
   width: 100%;
   margin-top: 20px;
   position: relative;
@@ -45,8 +47,8 @@ export const PassLinkA = styled.a`
   }
 `;
 export const Input = styled.input`
-  height: 100%;
   width: 100%;
+  padding: 12px 20px;
   outline: none;
   padding-left: 15px;
   font-size: 17px;
@@ -60,7 +62,7 @@ export const Input = styled.input`
 `;
 
 export const InputButton = styled.button`
-  height: 100%;
+  padding: 12px 20px;
   width: 100%;
   outline: none;
   padding-left: 15px;

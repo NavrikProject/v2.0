@@ -25,6 +25,7 @@
     "react-datepicker": "^4.8.0",
     "react-dom": "^17.0.1",
     "react-draft-wysiwyg": "^1.14.7",
+    "react-hook-form": "^7.34.2",
     "react-icons": "^4.3.1",
     "react-is": "^18.0.0",
     "react-phone-number-input": "^3.1.6",

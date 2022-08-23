@@ -29,6 +29,7 @@ import "animate.css";
 import ContributerLoginPage from "./Pages/ContributerLoginPage";
 import ContributerRegisterPage from "./Pages/ContributerRegisterPage";
 import ApplyContributionPage from "./Pages/ApplyContributionpage";
+import MyContributionPage from "./Pages/MyContributionPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -54,7 +55,6 @@ const App = () => {
             <Route path="/" exact element={<HomePage />} />
             <Route path="/faq" exact element={<FaqPage />} />
             <Route path="/professionals" exact element={<ProfessionalPage />} />
-
             <Route path="/login" exact element={<LoginPage />} />
             <Route
               path="/contributers-corner"
@@ -75,6 +75,11 @@ const App = () => {
               path="/contributer/apply-for-contribution"
               exact
               element={<ApplyContributionPage />}
+            />
+            <Route
+              path="/contributer/my-contribution"
+              exact
+              element={<MyContributionPage />}
             />
             {user ? (
               <Route element={<Navigate to="/" />} />

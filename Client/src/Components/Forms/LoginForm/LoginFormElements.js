@@ -247,7 +247,7 @@ export const Field = styled.div`
 export const PwdField = styled.div`
   height: 50px;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 30px;
   position: relative;
 `;
 export const PwdIcons = styled.div`
@@ -271,6 +271,10 @@ export const Input = styled.input`
   &:focus {
     border-color: #fc83bb;
   }
+`;
+export const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0px 0px 10px;
 `;
 
 export const InputButton = styled.button`

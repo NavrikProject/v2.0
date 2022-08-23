@@ -21,7 +21,7 @@ export const NavSection = styled.section`
   @media only screen and (max-width: 768px) {
     padding: 10px 0;
   }
-  padding: 10px 0;
+  padding: 5px 0 0 0;
 `;
 export const Div1 = styled.div`
   display: flex;
@@ -38,7 +38,7 @@ export const NavDiv = styled.div`
   justify-content: space-between;
   align-items: center;
   color: #111;
-  padding: 20px 90px 0 90px;
+  padding: 10px 90px 0 90px;
   @media only screen and (max-width: 1068px) {
     padding: 0px 20px;
   }
@@ -58,7 +58,7 @@ export const LogoContainer = styled.div`
 
 export const LogoImage = styled.img`
   width: 250px;
-  height: 70px;
+  height: 85px;
   cursor: pointer;
 `;
 export const MenuContainer = styled.div`

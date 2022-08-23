@@ -252,7 +252,7 @@ const FeedbackForm = (props) => {
   };
   return (
     <Backdrop>
-      {loading || <LoadingSpinner />}
+      {loading && <LoadingSpinner />}
       <Modal>
         <CloseButtonDiv onClick={props.showFeedBackMentorHandler}>
           <CloseButton></CloseButton>

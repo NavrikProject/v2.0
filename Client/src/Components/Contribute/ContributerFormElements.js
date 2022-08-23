@@ -59,6 +59,10 @@ export const Field = styled.div`
   width: 100%;
   margin-bottom: 15px;
 `;
+export const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0 10px 10px;
+`;
 export const Input = styled.input`
   outline: none;
   font-size: 17px;
@@ -66,7 +70,6 @@ export const Input = styled.input`
   border: 1px solid lightgrey;
   border-bottom-width: 2px;
   transition: all 0.4s ease;
-  margin-bottom: 12px;
   width: 100%;
   padding: 10px 20px;
   &:focus {
@@ -74,7 +77,6 @@ export const Input = styled.input`
   }
 `;
 export const PwdField = styled.div`
-  height: 50px;
   width: 100%;
   margin-top: 20px;
   position: relative;

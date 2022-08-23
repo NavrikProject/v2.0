@@ -9,6 +9,10 @@ export const RegisterFormSect = styled.section`
   background-repeat: no-repeat;
   background-size: cover;
 `;
+export const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0 10px 10px;
+`;
 export const RegisterFormSection = styled.section`
   width: 90%;
   margin: 0 auto;

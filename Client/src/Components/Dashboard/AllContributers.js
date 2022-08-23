@@ -70,7 +70,7 @@ const AllContributers = () => {
               <th>Mobile</th>
               <th>Qualification</th>
               <th>Experience</th>
-              <th>Course Id</th>
+              <th>Course Name</th>
               <th>Course Category</th>
               <th>Approve or Not</th>
               <th>Contributer Status</th>
@@ -86,7 +86,7 @@ const AllContributers = () => {
                   <td>{contributer.contributer_mobile}</td>
                   <td>{contributer.contributer_qualifications}</td>
                   <td>{contributer.contributer_exp_yrs}</td>
-                  <td>{contributer.contributer_course_name_id}</td>
+                  <td>{contributer.contributer_course_name}</td>
                   <td>{contributer.contributer_course_category}</td>
                   <td>
                     {contributer.contributer_approve_status === "yes" ? (

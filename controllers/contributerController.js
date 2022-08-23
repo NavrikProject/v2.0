@@ -5,94 +5,160 @@ import moment from "moment";
 import updateEmail from "../middleware/updateEmail.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import sendEmail from "../middleware/sendEmail.js";
+
 export async function registerForContributer(req, res, next) {
   let { email, password, firstname, lastname } = req.body;
+  const lowEmail = email.toLowerCase();
   firstname = firstname.toLowerCase();
   lastname = lastname.toLowerCase();
-  if (!email && !password && !firstname && !lastname) {
-    return res.send({
-      error: "All details must be required",
+
+  if (!lowEmail && !password && firstname && !firstname) {
+    return res.json({
+      required: "ALl details must be required",
     });
   }
   let saltRounds = await bcrypt.genSalt(12);
   let hashedPassword = await bcrypt.hash(password, saltRounds);
-  const lowEmail = email.toLowerCase();
-
-  try {
-    sql.connect(config, async (err) => {
-      if (err) {
-        return res.send(err.message);
-      }
-      const request = new sql.Request();
-      request.input("email", sql.VarChar, lowEmail);
-      request.query(
-        "select * from users_dtls where user_email = @email",
-        (err, result) => {
-          if (err) return res.send(err.message);
-          if (result.recordset.length > 0) {
-            return res.send({
-              error:
-                "This email address is already in use, Please use another email address",
+  sql.connect(config, async (err) => {
+    if (err) {
+      return res.send(err.message);
+    }
+    const request = new sql.Request();
+    request.input("email", sql.VarChar, lowEmail);
+    request.query(
+      "select * from users_dtls where user_email = @email",
+      (err, result) => {
+        if (err) return res.send(err.message);
+        if (result.recordset.length > 0) {
+          return res.send({
+            exists:
+              "This email address is already in use, Please use another email address",
+          });
+        } else {
+          let type = "contributer";
+          const emailActivationToken = jwt.sign(
+            {
+              email: lowEmail,
+              firstName: firstname,
+              lastName: firstname,
+              type: type,
+              password: hashedPassword,
+            },
+            process.env.JWT_EMAIL_ACTIVATION_KEY,
+            { expiresIn: "30m" }
+          );
+          const url = `${process.env.FRONT_END_LINK}/user/activate/account/${emailActivationToken}`;
+          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+          const msg = sendEmail(
+            lowEmail,
+            url,
+            "Account activation link",
+            "Click to activate account"
+          );
+          sgMail
+            .send(msg)
+            .then(() => {
+              return res.send({
+                success:
+                  "Successfully created the account, Please check your email and activate the account",
+              });
+            })
+            .catch((error) => {
+              return res.send({
+                error:
+                  "There was an error while creating the account please try again later",
+              });
             });
-          } else {
-            sql.connect(config, async (err) => {
-              if (err) res.send(err.message);
-              var timestamp = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
-              const type = "contributer";
-              const request = new sql.Request();
-              request.query(
-                "insert into users_dtls (user_email,user_pwd,user_logindate,user_logintime,user_firstname,user_lastname,user_creation,user_type) VALUES('" +
-                  email +
-                  "','" +
-                  hashedPassword +
-                  "','" +
-                  timestamp +
-                  "','" +
-                  timestamp +
-                  "','" +
-                  firstname +
-                  "','" +
-                  lastname +
-                  "','" +
-                  timestamp +
-                  "','" +
-                  type +
-                  "' )",
-                (err, success) => {
-                  if (err) {
-                    return res.send({ error: err.message });
-                  }
-                  if (success) {
-                    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                    const msg = updateEmail(
-                      email,
-                      "Registration for contributor",
-                      "Successfully submitted the application for a contributor.We will review all your application and get back to you with update,Thanks."
-                    );
-                    sgMail
-                      .send(msg)
-                      .then(() => {
-                        return res.send({
-                          success:
-                            "Successfully submitted the contributor we will get back to you once, We review your application.",
-                        });
-                      })
-                      .catch((error) => {
-                        return res.send({
-                          error: error.message,
-                        });
-                      });
-                  }
-                }
-              );
-            });
-          }
         }
-      );
-    });
-  } catch (error) {
-    console.log(err.message);
-  }
+      }
+    );
+  });
+
+  // if (!email && !password && !firstname && !lastname) {
+  //   return res.send({
+  //     error: "All details must be required",
+  //   });
+  // }
+  // let saltRounds = await bcrypt.genSalt(12);
+  // let hashedPassword = await bcrypt.hash(password, saltRounds);
+  // const lowEmail = email.toLowerCase();
+
+  // try {
+  //   sql.connect(config, async (err) => {
+  //     if (err) {
+  //       return res.send(err.message);
+  //     }
+  //     const request = new sql.Request();
+  //     request.input("email", sql.VarChar, lowEmail);
+  //     request.query(
+  //       "select * from users_dtls where user_email = @email",
+  //       (err, result) => {
+  //         if (err) return res.send(err.message);
+  //         if (result.recordset.length > 0) {
+  //           return res.send({
+  //             error:
+  //               "This email address is already in use, Please use another email address",
+  //           });
+  //         } else {
+  //           sql.connect(config, async (err) => {
+  //             if (err) res.send(err.message);
+  //             var timestamp = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
+  //             const type = "contributer";
+  //             const request = new sql.Request();
+  //             request.query(
+  //               "insert into users_dtls (user_email,user_pwd,user_logindate,user_logintime,user_firstname,user_lastname,user_creation,user_type) VALUES('" +
+  //                 email +
+  //                 "','" +
+  //                 hashedPassword +
+  //                 "','" +
+  //                 timestamp +
+  //                 "','" +
+  //                 timestamp +
+  //                 "','" +
+  //                 firstname +
+  //                 "','" +
+  //                 lastname +
+  //                 "','" +
+  //                 timestamp +
+  //                 "','" +
+  //                 type +
+  //                 "' )",
+  //               (err, success) => {
+  //                 if (err) {
+  //                   return res.send({ error: err.message });
+  //                 }
+  //                 if (success) {
+  //                   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  //                   const msg = updateEmail(
+  //                     email,
+  //                     "Registration for contributor",
+  //                     "Successfully submitted the application for a contributor.We will review all your application and get back to you with update,Thanks."
+  //                   );
+  //                   sgMail
+  //                     .send(msg)
+  //                     .then(() => {
+  //                       return res.send({
+  //                         success:
+  //                           "Successfully submitted the contributor we will get back to you once, We review your application.",
+  //                       });
+  //                     })
+  //                     .catch((error) => {
+  //                       return res.send({
+  //                         error: error.message,
+  //                       });
+  //                     });
+  //                 }
+  //               }
+  //             );
+  //           });
+  //         }
+  //       }
+  //     );
+  //   });
+  // } catch (error) {
+  //   console.log(err.message);
+  // }
 }
 
 export async function loginContributer(req, res) {
@@ -197,6 +263,7 @@ export async function requestForContributerCourses(req, res) {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
             const masterCourseId = result.recordset[0].course_master_name_id;
+            var courseName = result.recordset[0].course_master_course_name;
             sql.connect(config, (err) => {
               const request = new sql.Request();
               request.input("masterCourseId", sql.Int, masterCourseId);
@@ -222,7 +289,7 @@ export async function requestForContributerCourses(req, res) {
                       );
                       const request = new sql.Request();
                       request.query(
-                        "insert into contributer_details_approve (contributer_email,contributer_fullname,contributer_mobile,contributer_qualifications,contributer_exp_yrs,contributer_creation_date,contributer_course_name_id,contributer_course_category,contributer_content_status) VALUES('" +
+                        "insert into contributer_details_approve (contributer_email,contributer_fullname,contributer_mobile,contributer_qualifications,contributer_exp_yrs,contributer_creation_date,contributer_course_name_id,contributer_course_name,contributer_course_category,contributer_content_status) VALUES('" +
                           email +
                           "','" +
                           fullname +
@@ -237,10 +304,12 @@ export async function requestForContributerCourses(req, res) {
                           "','" +
                           masterCourseNameId +
                           "','" +
+                          courseName +
+                          "','" +
                           courseCategory +
                           "','" +
                           contentDer +
-                          "'  )",
+                          "')",
                         (err, success) => {
                           if (err) {
                             return res.send({ error: err.message });
@@ -371,5 +440,83 @@ export async function updateContributerApprove(req, res, next) {
     });
   } catch (error) {
     if (error) res.send(error.message);
+  }
+}
+
+export async function getAddContentCourseList(req, res) {
+  const { email } = req.body;
+  console.log(email);
+  try {
+    sql.connect(config, (err) => {
+      if (err) res.send({ error: err.message });
+      const request = new sql.Request();
+      const approved = "yes";
+      const addContent = "add";
+      request.input("email", sql.VarChar, email);
+      request.input("approved", sql.VarChar, approved);
+      request.input("addContent", sql.VarChar, addContent);
+      request.query(
+        "select * from contributer_details_approve where contributer_email = @email AND contributer_content_status = @addContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
+        (err, result) => {
+          if (result.recordset.length > 0) {
+            res.send({ add: result.recordset });
+          } else {
+            return res.send("");
+          }
+        }
+      );
+    });
+  } catch (error) {}
+}
+export async function getSuggestContentCourseList(req, res) {
+  const { email } = req.body;
+  console.log(email);
+  try {
+    sql.connect(config, (err) => {
+      if (err) res.send({ error: err.message });
+      const request = new sql.Request();
+      const approved = "yes";
+      const suggestContent = "suggest";
+      request.input("email", sql.VarChar, email);
+      request.input("approved", sql.VarChar, approved);
+      request.input("suggestContent", sql.VarChar, suggestContent);
+      request.query(
+        "select * from contributer_details_approve where contributer_email = @email AND contributer_content_status = @suggestContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
+        (err, result) => {
+          if (result.recordset.length > 0) {
+            res.send({ suggest: result.recordset });
+          } else {
+            return res.send("");
+          }
+        }
+      );
+    });
+  } catch (error) {}
+}
+export async function getRemoveContentCourseList(req, res) {
+  const { email } = req.body;
+  console.log(email);
+  try {
+    sql.connect(config, (err) => {
+      if (err) res.send({ error: err.message });
+      const request = new sql.Request();
+      const approved = "yes";
+      const removeContent = "remove";
+      request.input("email", sql.VarChar, email);
+      request.input("approved", sql.VarChar, approved);
+      request.input("removeContent", sql.VarChar, removeContent);
+      request.query(
+        "select * from contributer_details_approve where contributer_email = @email AND contributer_content_status = @removeContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
+        (err, result) => {
+          if (result.recordset.length > 0) {
+            res.send({ remove: result.recordset });
+          } else {
+            return res.send("");
+          }
+        }
+      );
+    });
+  } catch (error) {
+    return res.send({ error: error.message });
   }
 }

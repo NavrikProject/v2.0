@@ -13,7 +13,7 @@ const Backdrop = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 1200000;
+  z-index: 12000000000;
   background-color: rgba(0, 0, 0, 0.75);
 `;
 const Modal = styled.div`

@@ -30,6 +30,7 @@ import {
   LoginWrapper,
   SuccessDiv,
   SlideDiv5,
+  ErrorMessage,
 } from "./LoginFormElements";
 // import StudentImg from "../../../images/student-rm.png";
 // import TraineeImg from "../../../images/trainer-rm.png";
@@ -43,8 +44,18 @@ import {
   loginStart,
   loginSuccess,
 } from "../../../redux/userRedux";
+import { useForm } from "react-hook-form";
+
 import axios from "axios";
 const LoginForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+    trigger,
+  } = useForm();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [type, setType] = useState("trainee");
@@ -54,47 +65,16 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // refresh token function for
-  // const refreshToken = async () => {
-  //   try {
-  //     const res = await axios.post(
-  //       "/auth/login",
-  //       {
-  //         headers: { authorization: "Bearer " + token },
-  //       },
-  //       (err, data) => {
-  //         if (err) {
-  //           console.log(err.message);
-  //         }
-  //       }
-  //     );
-  //     if (res.data) {
-  //       console.log(res.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
-
-  // axios.interceptors.request.use(async (config) => {
-  //   let currentDate = new Date();
-  //   const decodedToken = jwtDecode(user?.accessToken);
-  //   if (decodedToken.exp * 1000 < currentDate.getTime) {
-  //     await refreshToken();
-  //   }
-  // });
 
   // login function handler
-  const loginFormSubmitHandler = async (event) => {
-    event.preventDefault();
+  const loginFormSubmitHandler = async (data) => {
     try {
       dispatch(loginStart());
       setLoading(true);
       const res = await axios.post(
         "/auth/login",
         {
-          username: email,
-          password: password,
+          data: data,
           type: type,
         },
         (err, data) => {
@@ -238,29 +218,44 @@ const LoginForm = () => {
                 </SlideDiv4>
               </SlideControls>
               <FormInner>
-                <Form onSubmit={loginFormSubmitHandler}>
+                <Form onSubmit={handleSubmit(loginFormSubmitHandler)}>
                   <Field>
                     <Input
-                      required
-                      value={email}
                       type="text"
                       placeholder="Enter your email"
-                      onChange={(e) => setEmail(e.target.value)}
+                      {...register("email", {
+                        required: "Enter an email to login",
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: "Invalid email address",
+                        },
+                      })}
+                      onKeyUp={() => {
+                        trigger("email");
+                      }}
                     />
+                    {errors.email && (
+                      <ErrorMessage>{errors.email.message}</ErrorMessage>
+                    )}
                   </Field>
                   <PwdField>
                     <Input
-                      required
-                      value={password}
                       type={showIcon ? "text" : "password"}
                       placeholder="Enter your password"
-                      onChange={(e) => setPassword(e.target.value)}
+                      {...register("password", {
+                        required: "Enter an Password to login",
+                      })}
+                      onKeyUp={() => {
+                        trigger("password");
+                      }}
                     />
-
                     <PwdIcons onClick={(e) => setShowIcon(!showIcon)}>
                       {showIcon ? <ShowIcon /> : <HideIcon />}
                     </PwdIcons>
                   </PwdField>
+                  {errors.password && (
+                    <ErrorMessage>{errors.password.message}</ErrorMessage>
+                  )}
                   <PassLink>
                     <PassLinkA>
                       <Link
@@ -272,12 +267,7 @@ const LoginForm = () => {
                     </PassLinkA>
                   </PassLink>
                   <Field>
-                    <InputButton
-                      type="submit"
-                      disabled={!email || !password || !type}
-                    >
-                      Login
-                    </InputButton>
+                    <InputButton type="submit">Login</InputButton>
                   </Field>
                   <SignUpLink>
                     Not a Member yet ?

@@ -21,43 +21,38 @@ import {
   PwdIcons,
   ShowIcon,
   HideIcon,
-  PasswordDiv,
+  ErrorMessage,
 } from "./ContributerFormElements";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import GoToTop from "../GoToTop";
+import { useForm } from "react-hook-form";
 const ContributerRegister = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+    trigger,
+  } = useForm();
+  const password = watch("password");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
   const [showIcon, setShowIcon] = useState(false);
-  const [confirmShowIcon, setConfirmShowIcon] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  let pwdMinCharLen = password.length >= 8;
-  let pwdHasLowChar = /(.*?[a-z].*)/.test(password);
-  let pwdHasCapChar = /(?=.*?[A-Z].*)/.test(password);
-  let pwdHasSplChar = /(?=.*?[#?!@$%^&*-].*)/.test(password);
-  let pwdHasNumChar = /(?=.*?[0-9].*)/.test(password);
-  let pwdMaxCharLen = password.length <= 16;
-  const contributerRegistrationHandler = async (event) => {
-    event.preventDefault();
+  const [showIcons, setShowIcons] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const contributerRegistrationHandler = async (data) => {
     try {
       setLoading(true);
-      const res = await axios.post(`/contributers/register`, {
-        email: email,
-        firstname: firstName,
-        lastname: lastName,
-        password: password,
-      });
+      const res = await axios.post(`/contributers/register`, data);
       if (res.data.success) {
         setSuccess(res.data.success);
         toast.success(res.data.success, { position: "top-center" });
         setLoading(false);
+        reset();
       }
       if (res.data.error) {
         setError(res.data.error);
@@ -65,6 +60,7 @@ const ContributerRegister = () => {
         setLoading(false);
       }
     } catch (error) {
+      reset();
       return;
     }
   };
@@ -93,125 +89,116 @@ const ContributerRegister = () => {
             <ContributerRegisterLeftDiv>
               <FormDiv>
                 <FormDivFlex>
-                  <Form action="" onSubmit={contributerRegistrationHandler}>
+                  <Form
+                    action=""
+                    onSubmit={handleSubmit(contributerRegistrationHandler)}
+                  >
                     <FormHeading>Contributer registration</FormHeading>
                     <Field>
                       <Input
-                        value={email}
                         type="email"
-                        placeholder="Enter your email....."
-                        onChange={(event) => setEmail(event.target.value)}
-                        required
+                        placeholder="Enter your email"
+                        {...register("email", {
+                          required: "Email must be Required for registration",
+                          pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: "Invalid email address",
+                          },
+                        })}
+                        onKeyUp={() => {
+                          trigger("email");
+                        }}
                       />
+                      {errors.email && (
+                        <ErrorMessage>{errors.email.message}</ErrorMessage>
+                      )}
                     </Field>
                     <Field>
                       <Input
-                        value={firstName}
                         type="text"
-                        placeholder="Enter your Firstname"
-                        onChange={(event) => setFirstName(event.target.value)}
-                        required
+                        placeholder="Enter your First Name"
+                        {...register("firstname", {
+                          required: "firstname is Required",
+                          minLength: {
+                            value: 4,
+                            message: "Must be 4 characters at least",
+                          },
+                        })}
+                        onKeyUp={() => {
+                          trigger("firstname");
+                        }}
                       />
+                      {errors.firstname && (
+                        <ErrorMessage>{errors.firstname.message}</ErrorMessage>
+                      )}
                     </Field>
                     <Field>
                       <Input
-                        value={lastName}
                         type="text"
-                        placeholder="Enter your Lastname"
-                        onChange={(event) => setLastName(event.target.value)}
-                        required
+                        placeholder="Enter your Last Name"
+                        //onChange={(e) => setLastName(e.target.value)}
+                        {...register("lastname", {
+                          required: "last name is Required",
+                          minLength: {
+                            value: 4,
+                            message: "Must be 4 characters at least",
+                          },
+                        })}
+                        onKeyUp={() => {
+                          trigger("lastname");
+                        }}
                       />
+                      {errors.lastname && (
+                        <ErrorMessage>{errors.lastname.message}</ErrorMessage>
+                      )}
                     </Field>
                     <PwdField>
                       <Input
                         type={showIcon ? "text" : "password"}
                         placeholder="Enter your password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        required
-                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$"
+                        {...register("password", {
+                          required: "Password is Required",
+                          pattern: {
+                            value:
+                              /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/,
+                            message:
+                              "A minimum 8 characters password contains a combination of uppercase and lowercase letter and number are required.",
+                          },
+                        })}
+                        onKeyUp={() => {
+                          trigger("password");
+                        }}
                       />
+                      {errors.password && (
+                        <ErrorMessage>{errors.password.message}</ErrorMessage>
+                      )}
                       <PwdIcons onClick={(e) => setShowIcon(!showIcon)}>
                         {showIcon ? <ShowIcon /> : <HideIcon />}
                       </PwdIcons>
                     </PwdField>
-                    {password && (
-                      <PasswordDiv>
-                        {pwdMinCharLen && pwdMaxCharLen ? (
-                          <p style={{ color: "green" }}>
-                            Password is between 8 and 16 characters
-                          </p>
-                        ) : (
-                          <p style={{ color: "red" }}>
-                            Password must more than 8 and less than 16
-                          </p>
-                        )}
-                        {pwdHasLowChar ? (
-                          <p style={{ color: "green" }}>
-                            Password contains small letters
-                          </p>
-                        ) : (
-                          <p style={{ color: "red" }}>
-                            Password must be contain small letters
-                          </p>
-                        )}
-                        {pwdHasCapChar ? (
-                          <p style={{ color: "green" }}>
-                            Password contains capital letters
-                          </p>
-                        ) : (
-                          <p style={{ color: "red" }}>
-                            Password must be contain capital letters
-                          </p>
-                        )}
-
-                        {pwdHasSplChar ? (
-                          <p style={{ color: "green" }}>
-                            Password contains Special characters
-                          </p>
-                        ) : (
-                          <p style={{ color: "red" }}>
-                            Password must be contain Special characters
-                          </p>
-                        )}
-                        {pwdHasNumChar ? (
-                          <p style={{ color: "green" }}>
-                            Password contains Numbers
-                          </p>
-                        ) : (
-                          <p style={{ color: "red" }}>
-                            Password must be at lease one number
-                          </p>
-                        )}
-                      </PasswordDiv>
-                    )}
                     <PwdField>
                       <Input
-                        value={confirmPassword}
-                        onChange={(event) =>
-                          setConfirmPassword(event.target.value)
-                        }
-                        required={true}
-                        type={confirmShowIcon ? "text" : "password"}
+                        type={showIcons ? "text" : "password"}
                         placeholder="Confirm Your Password"
+                        //onChange={(e) => setConfirmPassword(e.target.value)}
+                        {...register("confirmPassword", {
+                          required: "Enter confirm password",
+                          validate: (value) =>
+                            value === password || "Password must be matched",
+                        })}
+                        onKeyUp={() => {
+                          trigger("confirmPassword");
+                        }}
                       />
-                      <PwdIcons
-                        onClick={() => setConfirmShowIcon(!confirmShowIcon)}
-                      >
-                        {confirmShowIcon ? <ShowIcon /> : <HideIcon />}
+                      {errors.confirmPassword && (
+                        <ErrorMessage>
+                          {errors.confirmPassword.message}
+                        </ErrorMessage>
+                      )}
+                      <PwdIcons onClick={() => setShowIcons(!showIcons)}>
+                        {showIcons ? <ShowIcon /> : <HideIcon />}
                       </PwdIcons>
                     </PwdField>
-                    {password && confirmPassword && (
-                      <PasswordDiv>
-                        {password !== confirmPassword ? (
-                          <p style={{ color: "red" }}>
-                            Password does not match
-                          </p>
-                        ) : (
-                          <p style={{ color: "green" }}>Password matched</p>
-                        )}
-                      </PasswordDiv>
-                    )}
                     <ButtonDiv>
                       <JoinButton>Join As a Contributer</JoinButton> All ready
                       have a contributer account
