@@ -120,8 +120,14 @@ const MentorIndividual = ({ socket }) => {
       }
     }
   };
-
   const showModalHandler = (mentor) => {
+    if (
+      new Date().toLocaleDateString() === new Date(date).toLocaleDateString()
+    ) {
+      return toast.error("Today's can not be selected", {
+        position: "top-center",
+      });
+    }
     if (!date) {
       return toast.error("Please choose select date", {
         position: "top-center",
@@ -154,7 +160,7 @@ const MentorIndividual = ({ socket }) => {
                     mentor.mentor_lastname +
                     " " +
                     " "}
-                </MentorName>{" "}
+                </MentorName>
                 <MentorDesignation>
                   {" " + mentor.mentor_current_role + " "}
                 </MentorDesignation>

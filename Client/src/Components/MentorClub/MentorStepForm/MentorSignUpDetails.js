@@ -19,6 +19,7 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
   let pwdHasSplChar = /(?=.*?[#?!@$%^&*-].*)/.test(formData.password);
   let pwdHasNumChar = /(?=.*?[0-9].*)/.test(formData.password);
   let pwdMaxCharLen = formData.password.length <= 16;
+
   return (
     <>
       <Field>
@@ -29,7 +30,6 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
           onChange={(event) =>
             setFormData({ ...formData, email: event.target.value })
           }
-          required
         />
       </Field>
       <PwdField>
@@ -40,7 +40,6 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
           onChange={(event) =>
             setFormData({ ...formData, password: event.target.value })
           }
-          required
           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$"
         />
         <PwdIcons onClick={(e) => setShowIcon(!showIcon)}>
@@ -95,7 +94,6 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
           onChange={(event) =>
             setFormData({ ...formData, confirmPassword: event.target.value })
           }
-          required={true}
           type={confirmShowIcon ? "text" : "password"}
           placeholder="Confirm Your Password"
         />

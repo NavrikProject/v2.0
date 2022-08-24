@@ -25,7 +25,6 @@ import {
   TraineeUl,
   TraineeWrapper,
 } from "./TraineeProfileElements.js";
-import { Link } from "react-router-dom";
 const TraineeProfile = () => {
   const [personalForm, setPersonalForm] = useState(false);
   const [accountForm, setAccountForm] = useState(false);
@@ -89,7 +88,7 @@ const TraineeProfile = () => {
           <TraineeLeftCol>
             <h1>Update Your details Here</h1>
             <TraineeUl>
-              {/* <TraineeLi onClick={showPersonalForm}>Personal Details</TraineeLi> */}
+              <TraineeLi onClick={showPersonalForm}>Personal Details</TraineeLi>
               <TraineeLi onClick={showAccountForm}>Account</TraineeLi>
               <TraineeLi onClick={showImageForm}>
                 Change Profile Picture
@@ -134,11 +133,10 @@ const TraineeProfile = () => {
             </TraineeUl>
           </TraineeLeftCol>
 
-          {/* <TraineeRightCol>
+          <TraineeRightCol>
             {traineeDetails?.length === 0 && (
               <h1>Please fill the profile form in the Home page</h1>
             )}
-
             {traineeDetails?.map((trainee) => (
               <div key={trainee.trainee_id}>
                 <ImgBox>
@@ -190,7 +188,7 @@ const TraineeProfile = () => {
                 </DetailsFlex>
               </div>
             ))}
-          </TraineeRightCol> */}
+          </TraineeRightCol>
         </TraineeFlex>
       </TraineeWrapper>
       <GoToTop />

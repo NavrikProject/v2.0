@@ -1,4 +1,5 @@
 export const mentorSkills = [
+  { id: 0, skills: "All" },
   { id: 1, skills: "Automation Anywhere" },
   { id: 2, skills: "Java" },
   { id: 3, skills: "Python" },
@@ -15,6 +16,7 @@ export const mentorshipAreas = [
 ];
 
 export const mentorAvailabilityTimings = [
+  { id: 0, timings: "All" },
   { id: 1, timings: "weekdays" },
   { id: 2, timings: "weekends" },
   { id: 3, timings: "specific" },

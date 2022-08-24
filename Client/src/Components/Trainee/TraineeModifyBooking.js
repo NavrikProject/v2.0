@@ -49,7 +49,6 @@ const ModifyBtn = styled.button`
 const FormData = styled.div``;
 const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
   const user = useSelector((state) => state.user.currentUser);
-  console.log(user);
   const [date, setDate] = useState();
   const [mentorBookingDate, setMentorBookingDate] = useState([]);
   const [availability, setAvailability] = useState([]);
@@ -126,6 +125,19 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
   };
   const modifyBookingAppointMent = async (event) => {
     event.preventDefault();
+    if (!date) {
+      return (
+        toast.error("Please select the date", { position: "top-center" }),
+        setError("Please select the date")
+      );
+    }
+    if (
+      new Date().toLocaleDateString() === new Date(date).toLocaleDateString()
+    ) {
+      return toast.error("Today's date can not be selected", {
+        position: "top-center",
+      });
+    }
     setLoading(true);
     const res = await axios.put(
       `/mentor/profile/update/bookings/${mentor.bookingId}`,
@@ -150,24 +162,19 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
   const payAndModifyBooking = async (event) => {
     let id = mentor.bookingId;
     event.preventDefault();
-    // setLoading(true);
-    // const res = await axios.put(
-    //   `/mentor/profile/update/bookings/modify-booking/pay`,
-    //   {
-    //     date: date.toLocaleDateString(),
-    //     bookingId: id,
-    //   }
-    // );
-    // if (res.data.success) {
-    //   toast.success(res.data.success, { position: "top-center" });
-    //   setSuccess(res.data.success);
-    //   setLoading(false);
-    // }
-    // if (res.data.error) {
-    //   toast.error(res.data.error, { position: "top-center" });
-    //   setError(res.data.error);
-    //   setLoading(false);
-    // }
+    if (!date) {
+      return (
+        toast.error("Please select the date", { position: "top-center" }),
+        setError("Please select the date")
+      );
+    }
+    if (
+      new Date().toLocaleDateString() === new Date(date).toLocaleDateString()
+    ) {
+      return toast.error("Today's date can not be selected", {
+        position: "top-center",
+      });
+    }
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onerror = () => {
@@ -250,7 +257,11 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
     };
     document.body.appendChild(script);
   };
-
+  setTimeout(() => {
+    setError("");
+    setSuccess("");
+    setDate("");
+  }, 7000);
   return (
     <>
       <Model>
@@ -258,11 +269,12 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
           <CloseButton />
         </CloseButtonDiv>
         {loading && <LoadingSpinner />}
-        {error && <p style={{ color: "red", fontSize: "20px" }}>{error}</p>}
-        {success && (
-          <p style={{ color: "green", fontSize: "20px" }}>{success}</p>
-        )}
+
         <FormDiv>
+          {error && <p style={{ color: "red", fontSize: "20px" }}>{error}</p>}
+          {success && (
+            <p style={{ color: "green", fontSize: "20px" }}>{success}</p>
+          )}
           <FormData>
             <form
               onSubmit={
@@ -274,7 +286,6 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
               Choose the next Date :
               <DatePicker
                 className="form-control"
-                required
                 closeOnScroll={true}
                 selected={date}
                 value={date}

@@ -488,10 +488,9 @@ export async function createMentorAppointment(req, res, next) {
     razorpayOrderId,
     razorpaySignature,
     date,
-    selected,
-    questions,
     mentorName,
   } = req.body;
+  const { selected, questions } = req.body.data;
   const timeSlot = from + " " + "to" + " " + to;
 
   try {

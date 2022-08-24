@@ -46,6 +46,7 @@ const MentorRegisterStepForm = () => {
     mentorAvailability: "",
     startTime: "",
     endTime: "",
+    phoneNumber: "",
     website: "",
     linkedInProfile: "",
   });
@@ -80,7 +81,7 @@ const MentorRegisterStepForm = () => {
           setImage={setImage}
           formData={formData}
           setFormData={setFormData}
-        /> 
+        />
       );
     }
   };
@@ -106,7 +107,7 @@ const MentorRegisterStepForm = () => {
     data.append("mentorshipArea", formData.mentorshipArea);
     data.append("website", formData.website);
     data.append("linkedInProfile", formData.linkedInProfile);
-
+    data.append("phoneNumber", formData.phoneNumber);
     try {
       setLoading(true);
       const res = await axios.post(`/mentor/register/apply-now`, data);
@@ -124,41 +125,107 @@ const MentorRegisterStepForm = () => {
       return;
     }
   };
-  setTimeout(() => {
-    setLoading(false);
-    setError("");
-    setSuccess("");
-  }, 7000);
+  function validateEmail(email) {
+    var re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    return re.test(email);
+  }
+  const setPageCount = (event) => {
+    event.preventDefault();
+    if (page === 0) {
+      if (!formData.email || !formData.password || !formData.confirmPassword) {
+        return setError("Please fill all details");
+      } else {
+        if (formData?.email && validateEmail(formData?.email) !== true) {
+          return setError("Must be an email address ");
+        } else if (formData.password !== formData.confirmPassword) {
+          return setError("Password and confirm password must be matched");
+        } else {
+          setPage((currPage) => currPage + 1);
+          setError("");
+        }
+      }
+    } else if (page === 1) {
+      if (!formData.firstName || !formData.lastName || !formData.bio) {
+        return setError("Please fill all details");
+      } else {
+        if (!formData.firstName) {
+          return setError("Please enter the first name");
+        } else if (!formData.lastName) {
+          return setError("Please enter the last name");
+        } else if (!formData.bio) {
+          return setError("Please enter the bio");
+        } else {
+          setPage((currPage) => currPage + 1);
+          setError("");
+        }
+      }
+    } else if (page === 2) {
+      if (
+        !formData.experience ||
+        !formData.skills ||
+        !formData.currentRole ||
+        !formData.previousRole ||
+        !formData.firm ||
+        !formData.specialty
+      ) {
+        return setError("Please fill all details");
+      } else {
+        setPage((currPage) => currPage + 1);
+        setError("");
+      }
+    } else if (page === 3) {
+      if (
+        !formData.mentorshipArea ||
+        !formData.mentorAvailability ||
+        !formData.startTime ||
+        !formData.endTime
+      ) {
+        return setError("Please fill all details");
+      } else {
+        setPage((currPage) => currPage + 1);
+        setError("");
+      }
+    }
+  };
+
   return (
     <MentorRegisterSection>
       {loading && <Loading />}
-      {error && (
-        <p
-          style={{
-            color: "red",
-            textAlign: "center",
-            fontSize: "20px",
-          }}
-        >
-          {error}
-        </p>
-      )}
-      {success && (
-        <p style={{ color: "green", textAlign: "center", fontSize: "20px" }}>
-          {success}
-        </p>
-      )}
+
       <MentorRegisterDiv>
         <MentorRegisterDiv1>
           <MentorRegisterFlex>
             <MentorRegisterLeftDiv>
               <FormDiv>
                 <FormDivFlex>
-                  <Form action="" onSubmit={profileSubmitHandler}>
+                  <Form action="">
+                    {error && (
+                      <p
+                        style={{
+                          color: "red",
+                          textAlign: "center",
+                          fontSize: "20px",
+                        }}
+                      >
+                        {error}
+                      </p>
+                    )}
+                    {success && (
+                      <p
+                        style={{
+                          color: "green",
+                          textAlign: "center",
+                          fontSize: "20px",
+                        }}
+                      >
+                        {success}
+                      </p>
+                    )}
                     <FormHeading>{FormTitles[page]}</FormHeading>
                     {PageDisplay()}
                     <ButtonDiv>
                       <PrevButton
+                        type="button"
                         disabled={page === 0}
                         onClick={() => {
                           setPage((currPage) => currPage - 1);
@@ -167,13 +234,14 @@ const MentorRegisterStepForm = () => {
                         Prev
                       </PrevButton>
                       {page === FormTitles.length - 1 ? (
-                        <JoinButton>Join As a Mentor</JoinButton>
-                      ) : (
-                        <NextButton
-                          onClick={() => {
-                            setPage((currPage) => currPage + 1);
-                          }}
+                        <JoinButton
+                          type="submit"
+                          onClick={profileSubmitHandler}
                         >
+                          Join As a Mentor
+                        </JoinButton>
+                      ) : (
+                        <NextButton type="button" onClick={setPageCount}>
                           Next
                         </NextButton>
                       )}

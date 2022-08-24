@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../utils/LoadingSpinner";
+import { useForm } from "react-hook-form";
 
 const CloseButton = styled(AiOutlineClose)`
   font-size: 25px;
@@ -105,23 +106,31 @@ const ButtonDiv = styled.div`
   align-items: center;
   justify-content: space-evenly;
 `;
+const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0px 0px 10px;
+`;
 const FormData = styled.div``;
 const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const [selected, setSelected] = useState("");
-  const [reason, setReason] = useState("");
-  const requestForRefundHandler = async (event) => {
-    event.preventDefault();
+
+  const requestForRefundHandler = async (data) => {
     try {
       setLoading(true);
       const result = await axios.post(
         "/mentor/profile/update/bookings/issue-refund",
         {
           bookingId: mentor.bookingId,
-          selected: selected,
-          reason: reason,
+          selected: data.selected,
+          reason: data.reason,
         }
       );
       if (result.data.success) {
@@ -130,7 +139,8 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
             position: "top-center",
           }),
           setSuccess(result.data.success),
-          setLoading(false)
+          setLoading(false),
+          reset()
         );
       }
       if (result.data.error) {
@@ -139,7 +149,8 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
             position: "top-center",
           }),
           setLoading(false),
-          setError(result.data.error)
+          setError(result.data.error),
+          reset()
         );
       }
     } catch (error) {
@@ -155,20 +166,23 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
         <FormData>
           {loading && <LoadingSpinner />}
           {error && (
-            <p style={{ color: "red" }}>
+            <p style={{ color: "red", fontSize: "20px" }}>
               There was an issue while refunding your account
             </p>
           )}
-          {success && <p style={{ color: "green" }}>{success}</p>}
-          <form onSubmit={requestForRefundHandler}>
+          {success && (
+            <p style={{ color: "green", fontSize: "20px" }}>{success}</p>
+          )}
+          <form onSubmit={handleSubmit(requestForRefundHandler)}>
             <MentorBoxDiv>
               <LabelTitle>Choose one the Reason for cancellation:</LabelTitle>
               <FormSelect
-                required
-                onChange={(event) => setSelected(event.target.value)}
                 name="selected"
+                {...register("selected", {
+                  required: "Select from the dropdown",
+                })}
               >
-                <FormOption value=""></FormOption>
+                <FormOption value="">Choose option below</FormOption>
                 <FormOption value="health issues">Health issues</FormOption>
                 <FormOption value="I don't have time for attending the session">
                   I don't have time for attending the session
@@ -177,16 +191,22 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
                   Reason not listed
                 </FormOption>
               </FormSelect>
+              {errors.selected && (
+                <ErrorMessage>{errors.selected.message}</ErrorMessage>
+              )}
               <LabelTitle>Reason for cancellation :</LabelTitle>
               <TextArea
-                required
-                onChange={(event) => setReason(event.target.value)}
-                name=""
-                id=""
+                name="reason"
+                {...register("reason", {
+                  required: "Clearly explain why you are cancelling",
+                })}
                 cols="30"
                 rows="7"
                 placeholder="Explain the reason of cancelling appointment in detail....."
-              ></TextArea>
+              ></TextArea>{" "}
+              {errors.reason && (
+                <ErrorMessage>{errors.reason.message}</ErrorMessage>
+              )}
             </MentorBoxDiv>
             <ButtonDiv>
               <ConfirmButton type="submit">Confirm Cancel</ConfirmButton>

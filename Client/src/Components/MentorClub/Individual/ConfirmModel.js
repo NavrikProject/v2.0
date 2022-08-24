@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -112,6 +113,10 @@ const FormSelect = styled.select`
     border-color: #fc83bb;
   }
 `;
+const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0 10px 10px;
+`;
 const FormOption = styled.option``;
 const LabelTitle = styled.p`
   font-size: 16px;
@@ -125,15 +130,20 @@ const TextArea = styled.textarea`
   }
 `;
 const ConfirmModel = (props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
   const user = useSelector((state) => state.user.currentUser);
-  const [selected, setSelected] = useState("");
-  const [questions, setQuestions] = useState("");
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const bookMentorHandler = async (event) => {
-    event.preventDefault();
+  const bookMentorHandler = async (data) => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onerror = () => {
@@ -187,8 +197,7 @@ const ConfirmModel = (props) => {
                 mentorEmail: props.sendMentor.mentor_email,
                 from: props.sendMentor.mentor_availability_start_time,
                 to: props.sendMentor.mentor_availability_end_time,
-                selected: selected,
-                questions: questions,
+                data: data,
               }
             );
             if (res.data.success) {
@@ -197,6 +206,7 @@ const ConfirmModel = (props) => {
                 position: "top-center",
               });
               setLoading(false);
+              reset();
             }
             if (res.data.error) {
               setError(res.data.error);
@@ -266,12 +276,13 @@ const ConfirmModel = (props) => {
           </MentorBookedDate>
           <hr />
         </MentorBoxDiv>
-        <form onSubmit={bookMentorHandler}>
+        <form onSubmit={handleSubmit(bookMentorHandler)}>
           <MentorBoxDiv>
             <LabelTitle>Choose one of the following :</LabelTitle>
             <FormSelect
-              required
-              onChange={(event) => setSelected(event.target.value)}
+              {...register("selected", {
+                required: "Choose from the dropdown",
+              })}
               name="selected"
             >
               <FormOption value=""></FormOption>
@@ -283,16 +294,20 @@ const ConfirmModel = (props) => {
                 Building the career in IT
               </FormOption>
             </FormSelect>
+            {errors.selected && (
+              <ErrorMessage>{errors.selected.message}</ErrorMessage>
+            )}
             <LabelTitle>Choose one of the following :</LabelTitle>
             <TextArea
-              required
-              onChange={(event) => setQuestions(event.target.value)}
-              name=""
-              id=""
-              cols="30"
-              rows="10"
+              {...register("questions", {
+                required: "Write all your queries",
+              })}
+              name="questions"
               placeholder="Ask your question....."
             ></TextArea>
+            {errors.questions && (
+              <ErrorMessage>{errors.questions.message}</ErrorMessage>
+            )}
           </MentorBoxDiv>
           <MentorBoxDiv>
             <ConfirmButton type="submit">Confirm Booking</ConfirmButton>

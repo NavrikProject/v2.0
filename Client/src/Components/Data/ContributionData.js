@@ -1,4 +1,5 @@
 export const ContributionData = [
+  { id: 0, chapter: "" },
   { id: 1, chapter: "Chapter 1" },
   { id: 2, chapter: "Chapter 2" },
   { id: 3, chapter: "Chapter 3" },
@@ -9,6 +10,7 @@ export const ContributionData = [
   { id: 8, chapter: "Chapter 8" },
 ];
 export const ContributionReasons = [
+  { id: 0, reason: "" },
   { id: 1, reason: "The course is outdated" },
   { id: 2, reason: "I have better explanation this existing" },
   { id: 3, reason: "Easy way to understand this concept" },

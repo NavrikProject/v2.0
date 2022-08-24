@@ -8,7 +8,7 @@ export const TraineeSect = styled.section`
   }
 `;
 export const TraineeWrapper = styled.div`
-  width: 95%;
+  width: 85%;
   height: 100%;
   margin: 0px auto;
 `;

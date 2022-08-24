@@ -52,6 +52,10 @@ export const FormLabel = styled.label`
   width: 100%;
   display: block;
 `;
+export const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0 10px 10px;
+`;
 export const FormSelect = styled.select`
   height: 40px;
   width: 100%;
@@ -78,7 +82,7 @@ export const Input = styled.input`
     border-color: #fc83bb;
   }
 `;
-export const FormAddress = styled.textarea`
+export const FormTextArea = styled.textarea`
   height: 60px;
   width: 100%;
   font-size: 19px;

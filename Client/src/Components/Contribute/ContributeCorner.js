@@ -7,14 +7,15 @@ import removeContent from "../../images/contributers/remove content.png";
 import bug from "../../images/contributers/bug.png";
 import feedback from "../../images/contributers/feedback.png";
 import GoToTop from "../GoToTop";
-import PhoneInput from "react-phone-number-input";
 import "./PhoneNumbers.css";
 import axios from "axios";
 import LoadingSpinner from "../utils/LoadingSpinner";
 import { toast } from "react-toastify";
 import ScrollAnimation from "react-animate-on-scroll";
 import { Link } from "react-router-dom";
-
+import PhoneInput2 from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { useForm } from "react-hook-form";
 const ContributeSection = styled.section`
   width: 100%;
   height: auto;
@@ -87,6 +88,12 @@ const ContactDivRight = styled.div`
     object-fit: cover;
   }
 `;
+const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0 10px 10px;
+  font-size: 14px !important;
+  font-weight: normal !important;
+`;
 const ContactInput = styled.input`
   width: 100%;
   padding: 10px;
@@ -96,6 +103,7 @@ const ContactInput = styled.input`
   border: 1px solid lightgrey;
   border-bottom-width: 2px;
   transition: all 0.4s ease;
+  margin-bottom: 20px;
   &:focus {
     border-color: #fc83bb;
   }
@@ -136,23 +144,28 @@ const SubmitButton = styled.button`
   }
 `;
 const ContributeCorner = () => {
-  const [fullname, setFullname] = useState();
-  const [email, setEmail] = useState();
-  const [query, setQuery] = useState();
-  const [text, setText] = useState();
-  const [value, setValue] = useState();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    reset,
+  } = useForm();
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const contactUsHandler = async () => {
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const contactUsHandler = async (data) => {
     setLoading(true);
     try {
       const result = await axios.post("/feedback/contact-us", {
-        fullname,
-        email,
-        query,
-        text,
-        value,
+        fullname: data.fullname,
+        email: data.email,
+        query: data.query,
+        text: data.text,
+        value: phoneNumber,
       });
       if (result.data.success) {
         return (
@@ -160,7 +173,8 @@ const ContributeCorner = () => {
             position: "top-center",
           }),
           setSuccess(result.data.success),
-          setLoading(false)
+          setLoading(false),
+          reset()
         );
       }
       if (result.data.error) {
@@ -169,7 +183,8 @@ const ContributeCorner = () => {
             position: "top-center",
           }),
           setLoading(false),
-          setError(result.data.error)
+          setError(result.data.error),
+          reset()
         );
       }
     } catch (error) {}
@@ -345,59 +360,74 @@ const ContributeCorner = () => {
               <ContactDivFlex>
                 <ContactDivLeft>
                   <ContactInput
-                    value={fullname}
                     type="text"
-                    placeholder="Enter your full name"
-                    onChange={(event) => setFullname(event.target.value)}
+                    placeholder="Enter your fullname"
+                    {...register("fullname", {
+                      required: "Fullname must be Required for registration",
+                    })}
                   />
-
+                  {errors.fullname && (
+                    <ErrorMessage>{errors.fullname.message}</ErrorMessage>
+                  )}
                   <ContactInput
-                    value={email}
-                    required
-                    onChange={(event) => setEmail(event.target.value)}
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder="Enter your email"
+                    {...register("email", {
+                      required: "Email must be Required for registration",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address",
+                      },
+                    })}
+                    onKeyUp={() => {
+                      trigger("email");
+                    }}
                   />
-                  <PhoneInput
-                    defaultCountry="in"
-                    style={{ border: "none " }}
-                    required
-                    className="phone"
-                    placeholder="Enter phone number"
-                    value={value}
-                    onChange={setValue}
+                  {errors.email && (
+                    <ErrorMessage>{errors.email.message}</ErrorMessage>
+                  )}
+                  <PhoneInput2
+                    country="in"
+                    inputStyle={{
+                      width: "100%",
+                      padding: "5px 10px",
+                      marginTop: "10px",
+                    }}
+                    onChange={(phone) => setPhoneNumber(phone)}
                   />
                   <FormSelect
-                    value={query}
-                    required
-                    onChange={(event) => setQuery(event.target.value)}
+                    {...register("query", {
+                      required: "Choose the query",
+                    })}
                   >
-                    <FormOption>Choose your option</FormOption>
+                    <FormOption value="">Choose your option</FormOption>
                     <FormOption value="write blog post">
                       Write blog post
-                    </FormOption>
-                    <FormOption value="add resource or content">
-                      Add resource or content
                     </FormOption>
                     <FormOption value="partner with us">
                       Partner with us
                     </FormOption>
-                    <FormOption value="improve content">
-                      Improve content
-                    </FormOption>
                     <FormOption value="feedback">Feedback</FormOption>
                     <FormOption value="found a bug">Found a bug</FormOption>
                   </FormSelect>
+                  {errors.query && (
+                    <ErrorMessage>{errors.query.message}</ErrorMessage>
+                  )}
                   <TextArea
-                    value={text}
-                    onChange={(event) => setText(event.target.value)}
-                    name=""
-                    id=""
+                    {...register("text", {
+                      required: "Describe in words",
+                    })}
                     cols="20"
                     rows="10"
                     placeholder="Describe....."
                   ></TextArea>
-                  <SubmitButton type="submit" onClick={contactUsHandler}>
+                  {errors.text && (
+                    <ErrorMessage>{errors.text.message}</ErrorMessage>
+                  )}
+                  <SubmitButton
+                    type="submit"
+                    onClick={handleSubmit(contactUsHandler)}
+                  >
                     Submit
                   </SubmitButton>
                 </ContactDivLeft>

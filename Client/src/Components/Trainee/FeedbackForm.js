@@ -16,13 +16,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../utils/LoadingSpinner";
 import { useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
 const Backdrop = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 20;
+  z-index: 10000020;
   background-color: rgba(0, 0, 0, 0.75);
 `;
 const Modal = styled.div`
@@ -112,6 +113,10 @@ const TextArea = styled.textarea`
     border-color: #fc83bb;
   }
 `;
+const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0 10px 10px;
+`;
 const ButtonDiv = styled.div`
   width: 100%;
   display: flex;
@@ -140,94 +145,40 @@ const SubmitButton = styled.button`
   }
 `;
 const FeedbackForm = (props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
   const user = useSelector((state) => state.user.currentUser);
-  const [question1, setQuestion1] = useState();
-  const [question2, setQuestion2] = useState();
-  const [question3, setQuestion3] = useState();
-  const [question4, setQuestion4] = useState();
-  const [question5, setQuestion5] = useState();
-  const [question6, setQuestion6] = useState();
-  const [question7, setQuestion7] = useState();
-  const [question8, setQuestion8] = useState();
-  const [question9, setQuestion9] = useState();
-  const [question10, setQuestion10] = useState();
-  const [question11, setQuestion11] = useState();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const question1Handler = (event) => {
-    setQuestion1(event.target.value);
-  };
-  const question2Handler = (event) => {
-    setQuestion2(event.target.value);
-  };
-  const question3Handler = (event) => {
-    setQuestion3(event.target.value);
-  };
-  const question4Handler = (event) => {
-    setQuestion4(event.target.value);
-  };
-  const question5Handler = (event) => {
-    setQuestion5(event.target.value);
-  };
-  const question6Handler = (event) => {
-    setQuestion6(event.target.value);
-  };
-  const question7Handler = (event) => {
-    setQuestion7(event.target.value);
-  };
-  const question8Handler = (event) => {
-    setQuestion8(event.target.value);
-  };
-  const question11Handler = (event) => {
-    setQuestion11(event.target.value);
-  };
-
   const token = user?.accessToken;
-  console.log(props);
-  const feedbackSubmitHandler = async (event) => {
-    event.preventDefault();
-    let data = {
-      question1,
-      question2,
-      question3,
-      question4,
-      question5,
-      question6,
-      question7,
-      question8,
-      question9,
-      question10,
-      question11,
+  const feedbackSubmitHandler = async (data) => {
+    let newData = {
+      question1: data.question1,
+      question2: data.question2,
+      question3: data.question3,
+      question4: data.question4,
+      question5: data.question5,
+      question6: data.question6,
+      question7: data.question7,
+      question8: data.question8,
+      question9: data.question9,
+      question10: data.question10,
+      question11: data.question11,
       bookingId: props.mentor.bookingId,
       userEmail: user?.email,
       mentorEmail: props.mentor.mentorEmail,
       userFullName: user?.firstname + " " + user?.lastname,
       mentorFullname: props.mentor.mentorFullName,
     };
-    if (
-      !question1 ||
-      !question2 ||
-      !question3 ||
-      !question4 ||
-      !question5 ||
-      !question6 ||
-      !question7 ||
-      !question8 ||
-      !question9 ||
-      !question10 ||
-      !question11
-    ) {
-      return (
-        toast.error("All details must be required", {
-          position: "top-center",
-        }),
-        setError("All details must be required")
-      );
-    }
+
     try {
       setLoading(true);
-      const result = await axios.post("/feedback", data, {
+      const result = await axios.post("/feedback", newData, {
         headers: { authorization: "Bearer " + token },
       });
       if (result.data.success) {
@@ -236,7 +187,8 @@ const FeedbackForm = (props) => {
             position: "top-center",
           }),
           setSuccess(result.data.success),
-          setLoading(false)
+          setLoading(false),
+          reset()
         );
       }
       if (result.data.error) {
@@ -245,7 +197,8 @@ const FeedbackForm = (props) => {
             position: "top-center",
           }),
           setLoading(false),
-          setError(result.data.error)
+          setError(result.data.error),
+          reset()
         );
       }
     } catch (error) {}
@@ -262,7 +215,7 @@ const FeedbackForm = (props) => {
           {success && (
             <p style={{ color: "green", fontSize: "20px" }}>{success}</p>
           )}
-          <form action="" onSubmit={feedbackSubmitHandler}>
+          <form action="" onSubmit={handleSubmit(feedbackSubmitHandler)}>
             <QuestionDiv>
               {TraineeFeedbackQuestion1.map((question) => (
                 <QuestionDivBox key={question.qnId}>
@@ -273,12 +226,11 @@ const FeedbackForm = (props) => {
                     {question.options.map((option) => (
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
-                          required
                           type="radio"
-                          id={question.qnId}
                           value={option.value}
-                          checked={question1 === option.value}
-                          onChange={question1Handler}
+                          {...register("question1", {
+                            required: "Question one answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -288,6 +240,9 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question1 && (
+                <ErrorMessage>{errors.question1.message}</ErrorMessage>
+              )}
             </QuestionDiv>
             <QuestionDiv>
               {TraineeFeedbackQuestion2.map((question) => (
@@ -299,12 +254,11 @@ const FeedbackForm = (props) => {
                     {question.options.map((option) => (
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
-                          required
                           type="radio"
-                          id={question.qnId}
                           value={option.value}
-                          checked={question2 === option.value}
-                          onChange={question2Handler}
+                          {...register("question2", {
+                            required: "Question two answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -314,6 +268,9 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question2 && (
+                <ErrorMessage>{errors.question2.message}</ErrorMessage>
+              )}
             </QuestionDiv>
             <QuestionDiv>
               {TraineeFeedbackQuestion3.map((question) => (
@@ -325,12 +282,11 @@ const FeedbackForm = (props) => {
                     {question.options.map((option) => (
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
-                          required
                           type="radio"
-                          id={question.qnId}
                           value={option.value}
-                          checked={question3 === option.value}
-                          onChange={question3Handler}
+                          {...register("question3", {
+                            required: "Question three answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -340,6 +296,9 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question3 && (
+                <ErrorMessage>{errors.question3.message}</ErrorMessage>
+              )}
             </QuestionDiv>
             <QuestionDiv>
               {TraineeFeedbackQuestion4.map((question) => (
@@ -351,12 +310,11 @@ const FeedbackForm = (props) => {
                     {question.options.map((option) => (
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
-                          required
                           type="radio"
-                          id={question.qnId}
                           value={option.value}
-                          checked={question4 === option.value}
-                          onChange={question4Handler}
+                          {...register("question4", {
+                            required: "Question four answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -366,6 +324,9 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question4 && (
+                <ErrorMessage>{errors.question4.message}</ErrorMessage>
+              )}
             </QuestionDiv>
             <QuestionDiv>
               {TraineeFeedbackQuestion5.map((question) => (
@@ -378,11 +339,10 @@ const FeedbackForm = (props) => {
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
                           type="radio"
-                          required
-                          id={question.qnId}
                           value={option.value}
-                          checked={question5 === option.value}
-                          onChange={question5Handler}
+                          {...register("question5", {
+                            required: "Question five answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -392,6 +352,9 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question5 && (
+                <ErrorMessage>{errors.question5.message}</ErrorMessage>
+              )}
             </QuestionDiv>
             <QuestionDiv>
               {TraineeFeedbackQuestion6.map((question) => (
@@ -404,11 +367,10 @@ const FeedbackForm = (props) => {
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
                           type="radio"
-                          required
-                          id={question.qnId}
                           value={option.value}
-                          checked={question6 === option.value}
-                          onChange={question6Handler}
+                          {...register("question6", {
+                            required: "Question six answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -418,6 +380,9 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question6 && (
+                <ErrorMessage>{errors.question6.message}</ErrorMessage>
+              )}
             </QuestionDiv>
             <QuestionDiv>
               {TraineeFeedbackQuestion7.map((question) => (
@@ -429,12 +394,11 @@ const FeedbackForm = (props) => {
                     {question.options.map((option) => (
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
-                          required
                           type="radio"
-                          id={question.qnId}
                           value={option.value}
-                          checked={question7 === option.value}
-                          onChange={question7Handler}
+                          {...register("question7", {
+                            required: "Question seven answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -444,6 +408,9 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question7 && (
+                <ErrorMessage>{errors.question7.message}</ErrorMessage>
+              )}
             </QuestionDiv>
             <QuestionDiv>
               {TraineeFeedbackQuestion8.map((question) => (
@@ -456,11 +423,10 @@ const FeedbackForm = (props) => {
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
                           type="radio"
-                          required
-                          id={question.qnId}
                           value={option.value}
-                          checked={question8 === option.value}
-                          onChange={question8Handler}
+                          {...register("question8", {
+                            required: "Question eight answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -470,6 +436,9 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question8 && (
+                <ErrorMessage>{errors.question8.message}</ErrorMessage>
+              )}
             </QuestionDiv>
             <QuestionDiv>
               <QuestionDivBox>
@@ -479,12 +448,15 @@ const FeedbackForm = (props) => {
                 </QuestionDivH3>
                 <RadioWrapper>
                   <TextArea
-                    value={question9}
-                    onChange={(event) => setQuestion9(event.target.value)}
                     placeholder="Describe about yourself in brief words"
-                    required
+                    {...register("question9", {
+                      required: "Must be at least 50 characters",
+                    })}
                   ></TextArea>
                 </RadioWrapper>
+                {errors.question9 && (
+                  <ErrorMessage>{errors.question9.message}</ErrorMessage>
+                )}
               </QuestionDivBox>
             </QuestionDiv>
             <QuestionDiv>
@@ -494,12 +466,15 @@ const FeedbackForm = (props) => {
                 </QuestionDivH3>
                 <RadioWrapper>
                   <TextArea
-                    value={question10}
-                    onChange={(event) => setQuestion10(event.target.value)}
                     placeholder="Describe about yourself in brief words"
-                    required
+                    {...register("question10", {
+                      required: "Must be at least 50 characters",
+                    })}
                   ></TextArea>
                 </RadioWrapper>
+                {errors.question10 && (
+                  <ErrorMessage>{errors.question10.message}</ErrorMessage>
+                )}
               </QuestionDivBox>
             </QuestionDiv>
             <QuestionDiv>
@@ -513,11 +488,10 @@ const FeedbackForm = (props) => {
                       <RadioWrapper key={option.optionId}>
                         <InputRadio
                           type="radio"
-                          required
-                          id={question.qnId}
                           value={option.value}
-                          checked={question11 === option.value}
-                          onChange={question11Handler}
+                          {...register("question11", {
+                            required: "Question four answer is Required",
+                          })}
                         />
                         <InputRadLabel htmlFor={question.qnId}>
                           {option.value}
@@ -527,25 +501,11 @@ const FeedbackForm = (props) => {
                   </RadioWrapper>
                 </QuestionDivBox>
               ))}
+              {errors.question11 && (
+                <ErrorMessage>{errors.question11.message}</ErrorMessage>
+              )}
               <ButtonDiv>
-                <SubmitButton
-                  disabled={
-                    !question1 ||
-                    !question2 ||
-                    !question3 ||
-                    !question4 ||
-                    !question5 ||
-                    !question6 ||
-                    !question7 ||
-                    !question8 ||
-                    !question9 ||
-                    !question10 ||
-                    !question11
-                  }
-                  type="submit"
-                >
-                  Submit
-                </SubmitButton>
+                <SubmitButton type="submit">Submit</SubmitButton>
               </ButtonDiv>
             </QuestionDiv>
           </form>

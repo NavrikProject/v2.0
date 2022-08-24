@@ -16,11 +16,10 @@ export const FormDiv = styled.div`
 
 export const Form = styled.form``;
 export const FormInput = styled.input`
+  padding: 5px 10px;
   display: block;
   width: 90%;
-  height: 40px;
-  margin-bottom: 15px;
-  margin-top: 10px;
+  
   font-size: 19px;
   background: transparent;
   border: none;
@@ -66,9 +65,18 @@ export const FormInputFile = styled.input`
   }
 `;
 export const ImgInput = styled.input`
-  margin: 40px 0 10px 0;
-  height: 40px;
-  padding: 10px 20px;
+  width: 100%;
+  outline: none;
+  font-size: 17px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  border-bottom-width: 2px;
+  transition: all 0.4s ease;
+  padding: 5px;
+
+  &:focus {
+    border-color: #fc83bb;
+  }
 `;
 
 export const FormBtn = styled.button`
@@ -119,7 +127,10 @@ export const FormSelect = styled.select`
   }
 `;
 export const FormOption = styled.option``;
-
+export const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0 10px 10px;
+`;
 export const PwdField = styled.div`
   height: 50px;
   width: 100%;
@@ -127,7 +138,7 @@ export const PwdField = styled.div`
   position: relative;
 `;
 export const PwdIcons = styled.div`
-  top: 13px;
+  top: 0px;
   right: 70px;
   position: absolute;
   width: 20px;

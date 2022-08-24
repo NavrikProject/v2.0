@@ -156,6 +156,9 @@ export const NextButton = styled.button`
   &:hover {
     opacity: 0.9;
   }
+  :disabled {
+    cursor: not-allowed;
+  }
 `;
 export const JoinButton = styled.button`
   margin: 0 auto;

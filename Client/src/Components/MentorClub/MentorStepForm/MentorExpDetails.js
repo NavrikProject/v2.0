@@ -12,6 +12,7 @@ const MentorExpDetails = ({ formData, setFormData }) => {
       <Field>
         <FormSelect
           required
+          value={formData.experience}
           name="experience"
           onChange={(event) =>
             setFormData({ ...formData, experience: event.target.value })
@@ -30,6 +31,7 @@ const MentorExpDetails = ({ formData, setFormData }) => {
         <FormSelect
           required
           name="skills"
+          value={formData.skills}
           onChange={(event) =>
             setFormData({ ...formData, skills: event.target.value })
           }
@@ -45,6 +47,7 @@ const MentorExpDetails = ({ formData, setFormData }) => {
       <Field>
         <FormSelect
           required
+          value={formData.specialty}
           name="specialty"
           onChange={(event) =>
             setFormData({ ...formData, specialty: event.target.value })

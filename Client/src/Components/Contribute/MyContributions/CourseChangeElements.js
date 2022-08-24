@@ -54,6 +54,11 @@ export const ContributionTextArea = styled.textarea`
 export const Field = styled.div`
   width: 100%;
   margin-bottom: 15px;
+  text-align: center;
+  h1 {
+    font-size: 40px;
+    font-weight:500
+  }
 `;
 export const FormLabel = styled.label`
   font-size: 17px;

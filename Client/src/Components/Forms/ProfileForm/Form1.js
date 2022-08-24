@@ -3,12 +3,12 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import {
   CloseButton,
+  ErrorMessage,
   Form,
   FormAddress,
   FormBtn,
   FormDiv,
   FormFlex,
-  FormInput,
   FormInputDate,
   FormLabel,
   FormOption,
@@ -16,34 +16,38 @@ import {
 } from "./FormProfileElements";
 import { toast } from "react-toastify";
 import Loading from "../../utils/Loading";
+import PhoneInput2 from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { useForm } from "react-hook-form";
 
 const Form1 = (props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [dob, setDob] = useState("");
-  const [address, setAddress] = useState("");
-  const [experience, setExperience] = useState("");
-  const [graduate, setGraduate] = useState("");
-  const [profession, setProfession] = useState("");
+
   const [loading, setLoading] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
 
-  const profileAccountHandler = async (event) => {
-    event.preventDefault();
+  const profileAccountHandler = async (data) => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `/trainee/profile/update/${user?.id}`,
+        `/${user?.type}/profile/update/${user?.id}`,
         {
-          mobile: mobile,
-          dob: dob,
-          address: address,
-          experience: experience,
-          graduate: graduate,
-          profession: profession,
+          mobile: phoneNumber,
+          dob: data.date,
+          address: data.address,
+          experience: data.experience,
+          graduate: data.graduate,
+          profession: data.profession,
         },
         { headers: { authorization: "Bearer " + token } }
       );
@@ -53,6 +57,7 @@ const Form1 = (props) => {
           position: "top-center",
         });
         setLoading(false);
+        reset();
       }
       if (res.data.error) {
         setError(res.data.error);
@@ -60,16 +65,12 @@ const Form1 = (props) => {
           position: "top-center",
         });
         setLoading(false);
+        reset();
       }
     } catch (error) {
       return;
     }
-    setProfession("");
-    setDob("");
-    setMobile("");
-    setGraduate("");
-    setExperience("");
-    setAddress("");
+
     setLoading(false);
   };
   setTimeout(() => {
@@ -83,57 +84,71 @@ const Form1 = (props) => {
         {error && <p style={{ color: "red" }}>{error}</p>}
         {success && <p style={{ color: "green" }}>{success}</p>}{" "}
         {loading && <Loading />}
-        <Form onSubmit={profileAccountHandler}>
-          <FormInput
-            required
-            type="number"
-            placeholder="Enter your Mobile Name"
-            minLength="10"
-            onChange={(e) => setMobile(e.target.value)}
+        <Form onSubmit={handleSubmit(profileAccountHandler)}>
+          <FormLabel>Enter your mobile number :</FormLabel>
+          <PhoneInput2
+            country="in"
+            inputStyle={{ width: "100%", padding: "5px 10px" }}
+            onChange={(phone) => setPhoneNumber(phone)}
           />
           <FormFlex>
             <FormLabel htmlFor="">Enter your Dob :</FormLabel>
             <FormInputDate
-              required
               type="date"
-              onChange={(e) => setDob(e.target.value)}
+              name="date"
+              {...register("date", {
+                required: "Choose the Date of birth",
+              })}
             />
           </FormFlex>
+          {errors.date && <ErrorMessage>{errors.date.message}</ErrorMessage>}
           <FormFlex>
             <FormLabel>Education:</FormLabel>
             <FormSelect
-              required
-              onChange={(event) => setGraduate(event.target.value)}
+              name="graduate"
+              {...register("graduate", {
+                required: "Choose your education",
+              })}
             >
-              <FormOption>Choose a below option</FormOption>
+              <FormOption value="">Choose a below option</FormOption>
               <FormOption value="1">Pursing</FormOption>
               <FormOption value="2">Graduate</FormOption>
               <FormOption value="2">Under Graduate</FormOption>
               <FormOption value="4">Post Graduate</FormOption>
             </FormSelect>
           </FormFlex>
+          {errors.graduate && (
+            <ErrorMessage>{errors.graduate.message}</ErrorMessage>
+          )}
           <FormFlex>
             <FormLabel> Profession:</FormLabel>
             <FormSelect
-              required
-              onChange={(event) => setProfession(event.target.value)}
+              name="profession"
+              {...register("profession", {
+                required: "select your profession",
+              })}
             >
-              <FormOption>Choose a below option</FormOption>
+              <FormOption value="">Choose a below option</FormOption>
               <FormOption value="graduation">
                 Completed the graduation
               </FormOption>
               <FormOption value="trainer">Looking for a trainer</FormOption>
               <FormOption value="job">Seeking for a job</FormOption>
-              <FormOption value="skills">Learning a new skills</FormOption>
+              <FormOption value="skills">Learning a new skills</FormOption>{" "}
             </FormSelect>
           </FormFlex>
+          {errors.profession && (
+            <ErrorMessage>{errors.profession.message}</ErrorMessage>
+          )}
           <FormFlex>
             <FormLabel>Experience:</FormLabel>
             <FormSelect
-              required
-              onChange={(event) => setExperience(event.target.value)}
+              name="experience"
+              {...register("experience", {
+                required: "select the experience",
+              })}
             >
-              <FormOption>Choose a below option</FormOption>
+              <FormOption value="">Choose a below option</FormOption>
               <FormOption value="0">0</FormOption>
               <FormOption value="1">1</FormOption>
               <FormOption value="2">2</FormOption>
@@ -142,9 +157,17 @@ const Form1 = (props) => {
               <FormOption value="5">5</FormOption>
             </FormSelect>
           </FormFlex>
-          <FormAddress required onChange={(e) => setAddress(e.target.value)}>
-            Enter your address
-          </FormAddress>
+          {errors.experience && (
+            <ErrorMessage>{errors.experience.message}</ErrorMessage>
+          )}
+          <FormAddress
+            {...register("address", {
+              required: "Please add the address",
+            })}
+          ></FormAddress>
+          {errors.address && (
+            <ErrorMessage>{errors.address.message}</ErrorMessage>
+          )}
           <FormBtn>Update Profile</FormBtn>
         </Form>
       </FormDiv>

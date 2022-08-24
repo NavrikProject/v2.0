@@ -173,78 +173,78 @@ export async function login(req, res) {
   const lowEmail = username.toLowerCase();
   const password = req.body.data.password;
   const type = req.body.type;
-  // if (!username || !password || !type) {
-  //   res
-  //     .status(500)
-  //     .send("Please enter a username, password and user type to login");
-  // }
-  // sql.connect(config, async (err) => {
-  //   if (err) {
-  //     res.send(err.message);
-  //   }
-  //   const request = new sql.Request();
-  //   request.input("email", sql.VarChar, lowEmail);
-  //   request.input("type", sql.VarChar, type);
-  //   request.query(
-  //     `select * from users_dtls where user_email = @email AND user_type = @type`,
-  //     (err, result) => {
-  //       if (result.recordset.length > 0) {
-  //         bcrypt.compare(
-  //           password,
-  //           result.recordset[0].user_pwd,
-  //           (err, response) => {
-  //             if (!response) {
-  //               return res.json({
-  //                 notFound:
-  //                   "You have entered incorrect password,Please try again or re-enter your password",
-  //               });
-  //             }
-  //             if (response) {
-  //               const accessToken = jwt.sign(
-  //                 {
-  //                   id: result.recordset[0].user_dtls_id,
-  //                   email: result.recordset[0].user_email,
-  //                   type: result.recordset[0].user_type,
-  //                   isSuperAdmin: result.recordset[0].user_is_superadmin,
-  //                 },
-  //                 process.env.JWT_LOGIN_SECRET_KEY
-  //               );
-  //               const refreshToken = jwt.sign(
-  //                 {
-  //                   id: result.recordset[0].user_dtls_id,
-  //                   email: result.recordset[0].user_email,
-  //                   type: result.recordset[0].user_type,
-  //                   isSuperAdmin: result.recordset[0].user_is_superadmin,
-  //                 },
-  //                 process.env.JWT_REFRESH_TOKEN
-  //               );
-  //               return res.json({
-  //                 success: {
-  //                   id: result.recordset[0].user_dtls_id,
-  //                   email: result.recordset[0].user_email,
-  //                   firstname: result.recordset[0].user_firstname,
-  //                   lastname: result.recordset[0].user_lastname,
-  //                   type: result.recordset[0].user_type,
-  //                   role: result.recordset[0].user_is_superadmin,
-  //                   accessToken: accessToken,
-  //                   refreshToken: refreshToken,
-  //                 },
-  //               });
-  //             } else {
-  //               return res.json({
-  //                 wrong: "Sorry you entered incorrect password",
-  //               });
-  //             }
-  //           }
-  //         );
-  //       } else {
-  //         return res.json({
-  //           notFound: "There is no account with that email address, user type!",
-  //         });
-  //       }
-  //     }
-  //   );
-  // });
+  if (!username || !password || !type) {
+    res
+      .status(500)
+      .send("Please enter a username, password and user type to login");
+  }
+  sql.connect(config, async (err) => {
+    if (err) {
+      res.send(err.message);
+    }
+    const request = new sql.Request();
+    request.input("email", sql.VarChar, lowEmail);
+    request.input("type", sql.VarChar, type);
+    request.query(
+      `select * from users_dtls where user_email = @email AND user_type = @type`,
+      (err, result) => {
+        if (result.recordset.length > 0) {
+          bcrypt.compare(
+            password,
+            result.recordset[0].user_pwd,
+            (err, response) => {
+              if (!response) {
+                return res.json({
+                  notFound:
+                    "You have entered incorrect password,Please try again or re-enter your password",
+                });
+              }
+              if (response) {
+                const accessToken = jwt.sign(
+                  {
+                    id: result.recordset[0].user_dtls_id,
+                    email: result.recordset[0].user_email,
+                    type: result.recordset[0].user_type,
+                    isSuperAdmin: result.recordset[0].user_is_superadmin,
+                  },
+                  process.env.JWT_LOGIN_SECRET_KEY
+                );
+                const refreshToken = jwt.sign(
+                  {
+                    id: result.recordset[0].user_dtls_id,
+                    email: result.recordset[0].user_email,
+                    type: result.recordset[0].user_type,
+                    isSuperAdmin: result.recordset[0].user_is_superadmin,
+                  },
+                  process.env.JWT_REFRESH_TOKEN
+                );
+                return res.json({
+                  success: {
+                    id: result.recordset[0].user_dtls_id,
+                    email: result.recordset[0].user_email,
+                    firstname: result.recordset[0].user_firstname,
+                    lastname: result.recordset[0].user_lastname,
+                    type: result.recordset[0].user_type,
+                    role: result.recordset[0].user_is_superadmin,
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                  },
+                });
+              } else {
+                return res.json({
+                  wrong: "Sorry you entered incorrect password",
+                });
+              }
+            }
+          );
+        } else {
+          return res.json({
+            notFound: "There is no account with that email address, user type!",
+          });
+        }
+      }
+    );
+  });
 }
 // forgot password
 export async function forgotPassword(req, res) {

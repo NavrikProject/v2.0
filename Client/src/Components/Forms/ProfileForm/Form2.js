@@ -2,31 +2,37 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   CloseButton,
+  ErrorMessage,
   Form,
   FormBtn,
   FormDiv,
   FormInput,
+  PwdField,
 } from "./FormProfileElements";
 import { toast } from "react-toastify";
 
 import axios from "axios";
 import Loading from "../../utils/Loading";
+import { useForm } from "react-hook-form";
 const Form2 = (props) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
 
-  const changePersonalDetails = async (event) => {
-    event.preventDefault();
+  const changePersonalDetails = async (data) => {
     try {
       setLoading(true);
       const result = await axios.put(
-        `/trainee/profile/account/${user?.id}`,
-        { firstName: firstName, lastName: lastName },
+        `/${user?.type}/profile/account/${user?.id}`,
+        { firstName: data.firstName, lastName: data.lastName },
         {
           headers: { authorization: "Bearer " + token },
         }
@@ -37,6 +43,7 @@ const Form2 = (props) => {
           position: "top-center",
         });
         setLoading(false);
+        reset();
       }
       if (result.data.error) {
         setError(result.data.error);
@@ -44,13 +51,11 @@ const Form2 = (props) => {
           position: "top-center",
         });
         setLoading(false);
+        reset();
       }
     } catch (error) {
       return;
     }
-    setFirstName("");
-    setLastName("");
-    setLoading(false);
   };
 
   return (
@@ -60,19 +65,31 @@ const Form2 = (props) => {
         {error && <p style={{ color: "red" }}>{error}</p>}
         {success && <p style={{ color: "green" }}>{success}</p>}
         {loading && <Loading />}
-        <Form onSubmit={changePersonalDetails}>
-          <FormInput
-            required
-            onChange={(event) => setFirstName(event.target.value)}
-            type="text"
-            placeholder="Enter your First Name"
-          />
-          <FormInput
-            required
-            onChange={(event) => setLastName(event.target.value)}
-            type="text"
-            placeholder="Enter your Last Name"
-          />
+        <Form onSubmit={handleSubmit(changePersonalDetails)}>
+          <PwdField>
+            <FormInput
+              type="text"
+              placeholder="Enter your First Name"
+              {...register("firstName", {
+                required: "Please enter your First Name",
+              })}
+            />
+          </PwdField>
+          {errors.firstName && (
+            <ErrorMessage>{errors.firstName.message}</ErrorMessage>
+          )}
+          <PwdField>
+            <FormInput
+              {...register("lastName", {
+                required: "Please enter your Last Name",
+              })}
+              type="text"
+              placeholder="Enter your Last Name"
+            />
+          </PwdField>
+          {errors.lastName && (
+            <ErrorMessage>{errors.lastName.message}</ErrorMessage>
+          )}
           <FormBtn>Update</FormBtn>
         </Form>
       </FormDiv>

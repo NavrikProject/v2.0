@@ -52,12 +52,9 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-    watch,
     trigger,
   } = useForm();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
   const [type, setType] = useState("trainee");
   const [error, setError] = useState("");
   const [wrongPwd, setWrongPwd] = useState("");

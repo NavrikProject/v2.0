@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import {
+  ClearFilter,
   FaSearchIcon,
+  JoinAsMentorButton,
   MentorContainer,
   MentorDivFlex,
-  MentorLabel,
+  MentorJoinDesc,
+  MentorJoinDiv,
+  MentorJoinDivFlex,
+  MentorJoinLeftDiv,
+  MentorJoinRightDiv,
+  MentorLeftImgDiv,
   MentorOptions,
+  MentorRightContentDiv,
   MentorSearchDiv,
   MentorSearchRightDiv,
   MentorSect,
@@ -32,78 +40,129 @@ const MentorClub = () => {
     event.preventDefault();
     setSearchItemWord(searchItem);
   };
-
+  const clearFilterHandler = () => {
+    window.location.reload();
+  };
   return (
-    <MentorSect>
-      <MentorSection>
-        <MentorContainer>
-          {/* <MentorWrapper>
-            <MentorTitle>Meet Our Mentors</MentorTitle>
-            <LineAfter />
-          </MentorWrapper> */}
-          <p>
-            <Link to="/mentor/join">Join as a Mentor</Link>
-          </p>
-          <MentorSearchDiv>
-            <MentorSearchRightDiv>
-              <MentorLabel>Choose the Mentor by Skills :</MentorLabel>
-              <MentorSelect
-                onChange={(event) => setCategoryItem(event.target.value)}
-              >
-                <MentorOptions value="choose">Choose Below</MentorOptions>
-                {mentorSkills.map((skill) => (
-                  <MentorOptions key={skill.id} value={skill.skills}>
-                    {skill.skills}
+    <>
+      <MentorSect>
+        <MentorSection>
+          <MentorContainer>
+            <MentorWrapper>
+              <MentorTitle>Meet Our Mentors</MentorTitle>
+              <LineAfter />
+              {categoryItem && (
+                <ClearFilter>
+                  Showing filters for
+                  <span onClick={clearFilterHandler}>
+                    {categoryItem} <i class="fa-solid fa-xmark"></i>
+                  </span>
+                </ClearFilter>
+              )}
+            </MentorWrapper>
+            <MentorSearchDiv>
+              <MentorSearchRightDiv>
+                <MentorSelect
+                  onChange={(event) => setCategoryItem(event.target.value)}
+                >
+                  <MentorOptions value="">
+                    Choose the Mentor by Skills
                   </MentorOptions>
-                ))}
-              </MentorSelect>
-            </MentorSearchRightDiv>
-            <MentorSearchRightDiv>
-              <MentorLabel>Choose the Mentor by Mentorship Area:</MentorLabel>
-              <MentorSelect
-                onChange={(event) => setCategoryItem(event.target.value)}
-              >
-                <MentorOptions value="choose">Choose Below</MentorOptions>
-                {mentorshipAreas.map((mentorArea) => (
-                  <MentorOptions key={mentorArea.id} value={mentorArea.area}>
-                    {mentorArea.area}
+                  {mentorSkills.map((skill) => (
+                    <MentorOptions key={skill.id} value={skill.skills}>
+                      {skill.skills}
+                    </MentorOptions>
+                  ))}
+                </MentorSelect>
+              </MentorSearchRightDiv>
+              <MentorSearchRightDiv>
+                <MentorSelect
+                  onChange={(event) => setCategoryItem(event.target.value)}
+                >
+                  <MentorOptions value="">
+                    Choose the Mentor by Mentorship Area
                   </MentorOptions>
-                ))}
-              </MentorSelect>
-            </MentorSearchRightDiv>
-            <MentorSearchRightDiv>
-              <MentorLabel>Choose the Mentor by Availability:</MentorLabel>
-              <MentorSelect
-                onChange={(event) => setCategoryItem(event.target.value)}
-              >
-                <MentorOptions value="choose">Choose Below</MentorOptions>
-                {mentorAvailabilityTimings.map((mentorArea) => (
-                  <MentorOptions key={mentorArea.id} value={mentorArea.timings}>
-                    {mentorArea.timings}
+                  {mentorshipAreas.map((mentorArea) => (
+                    <MentorOptions key={mentorArea.id} value={mentorArea.area}>
+                      {mentorArea.area}
+                    </MentorOptions>
+                  ))}
+                </MentorSelect>
+              </MentorSearchRightDiv>
+              <MentorSearchRightDiv>
+                <MentorSelect
+                  onChange={(event) => setCategoryItem(event.target.value)}
+                >
+                  <MentorOptions value="">
+                    Choose the Mentor by Availability
                   </MentorOptions>
-                ))}
-              </MentorSelect>
-            </MentorSearchRightDiv>
-            <SearchForm onSubmit={searchEngineAll}>
-              <SearchBoxInput
-                placeholder="Search any mentor"
-                onChange={(event) => setSearchItem(event.target.value)}
-              ></SearchBoxInput>
-              <FaSearchIcon onClick={searchEngineAll} />
-            </SearchForm>
-          </MentorSearchDiv>
-          <MentorWrapper>
-            <MentorDivFlex>
-              <MentorCourseCard
-                categoryItem={categoryItem}
-                searchItemWord={searchItemWord}
-              />
-            </MentorDivFlex>
-          </MentorWrapper>
-        </MentorContainer>
+                  {mentorAvailabilityTimings.map((mentorArea) => (
+                    <MentorOptions
+                      key={mentorArea.id}
+                      value={mentorArea.timings}
+                    >
+                      {mentorArea.timings}
+                    </MentorOptions>
+                  ))}
+                </MentorSelect>
+              </MentorSearchRightDiv>
+              <MentorSearchRightDiv>
+                <SearchForm onSubmit={searchEngineAll}>
+                  <SearchBoxInput
+                    placeholder="Search any mentor"
+                    onChange={(event) => setSearchItem(event.target.value)}
+                  ></SearchBoxInput>
+                  <FaSearchIcon onClick={searchEngineAll} />
+                </SearchForm>
+              </MentorSearchRightDiv>
+            </MentorSearchDiv>
+            <MentorWrapper>
+              <MentorDivFlex>
+                <MentorCourseCard
+                  categoryItem={categoryItem}
+                  searchItemWord={searchItemWord}
+                />
+              </MentorDivFlex>
+            </MentorWrapper>
+          </MentorContainer>
+        </MentorSection>
+      </MentorSect>
+      <MentorContainer>
+        <MentorWrapper>
+          <MentorJoinDiv>
+            <MentorJoinDivFlex>
+              <MentorJoinRightDiv>
+                <MentorRightContentDiv>
+                  <MentorJoinDesc>
+                    Are you an industry expert or Are you good at Mentoring the
+                    people to achieve there goals.Then join now as mentor in the
+                    practiwiz.com and win exciting prizes
+                  </MentorJoinDesc>
+                  <br />
+                  <JoinAsMentorButton>
+                    <Link
+                      style={{ textDecoration: "none", color: " #fff" }}
+                      to="/mentor/join"
+                    >
+                      Join as a Mentor
+                    </Link>
+                  </JoinAsMentorButton>
+                </MentorRightContentDiv>
+              </MentorJoinRightDiv>
+              <MentorJoinLeftDiv>
+                <MentorLeftImgDiv>
+                  <img
+                    src="https://images.pexels.com/photos/716276/pexels-photo-716276.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    alt="mentor"
+                  />
+                </MentorLeftImgDiv>
+              </MentorJoinLeftDiv>
+            </MentorJoinDivFlex>
+          </MentorJoinDiv>
+        </MentorWrapper>
         <GoToTop />
-      </MentorSection>
-    </MentorSect>
+      </MentorContainer>
+    </>
   );
 };
 

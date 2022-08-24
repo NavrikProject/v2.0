@@ -242,23 +242,24 @@ export async function loginContributer(req, res) {
 }
 
 export async function requestForContributerCourses(req, res) {
+  const { email, fullname, phoneNumber } = req.body;
   const {
-    email,
-    fullname,
-    value,
     courseCategory,
+    courseMasterNameId,
+    courseChapter,
+    courseContentCategory,
+    selectReason,
     qualification,
     experience,
-    masterCourseNameId,
-    contentDer,
-  } = req.body;
+    expReason,
+  } = req.body.data;
 
   try {
     sql.connect(config, (err) => {
       const request = new sql.Request();
-      request.input("masterCourseNameId", sql.VarChar, masterCourseNameId);
+      request.input("courseMasterNameId", sql.VarChar, courseMasterNameId);
       request.query(
-        "select * from course_master WHERE course_master_name_id= @masterCourseNameId",
+        "select * from course_master WHERE course_master_name_id= @courseMasterNameId",
         (err, result) => {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
@@ -289,12 +290,12 @@ export async function requestForContributerCourses(req, res) {
                       );
                       const request = new sql.Request();
                       request.query(
-                        "insert into contributer_details_approve (contributer_email,contributer_fullname,contributer_mobile,contributer_qualifications,contributer_exp_yrs,contributer_creation_date,contributer_course_name_id,contributer_course_name,contributer_course_category,contributer_content_status) VALUES('" +
+                        "insert into contributer_details_approve (contributer_email,contributer_fullname,contributer_mobile,contributer_qualifications,contributer_exp_yrs,contributer_creation_date,contributer_course_name_id,contributer_course_name,contributer_course_category,contributer_course_content_category,contributer_course_chapter,contributer_course_content_reason,contributer_course_content_reason_exp ) VALUES('" +
                           email +
                           "','" +
                           fullname +
                           "','" +
-                          value +
+                          phoneNumber +
                           "','" +
                           qualification +
                           "','" +
@@ -302,13 +303,19 @@ export async function requestForContributerCourses(req, res) {
                           "','" +
                           timestamp +
                           "','" +
-                          masterCourseNameId +
+                          courseMasterNameId +
                           "','" +
                           courseName +
                           "','" +
                           courseCategory +
                           "','" +
-                          contentDer +
+                          courseContentCategory +
+                          "','" +
+                          courseChapter +
+                          "','" +
+                          selectReason +
+                          "','" +
+                          expReason +
                           "')",
                         (err, success) => {
                           if (err) {
@@ -456,7 +463,7 @@ export async function getAddContentCourseList(req, res) {
       request.input("approved", sql.VarChar, approved);
       request.input("addContent", sql.VarChar, addContent);
       request.query(
-        "select * from contributer_details_approve where contributer_email = @email AND contributer_content_status = @addContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
+        "select * from contributer_details_approve where contributer_email = @email AND contributer_course_content_category = @addContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
         (err, result) => {
           if (result.recordset.length > 0) {
             res.send({ add: result.recordset });
@@ -481,7 +488,7 @@ export async function getSuggestContentCourseList(req, res) {
       request.input("approved", sql.VarChar, approved);
       request.input("suggestContent", sql.VarChar, suggestContent);
       request.query(
-        "select * from contributer_details_approve where contributer_email = @email AND contributer_content_status = @suggestContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
+        "select * from contributer_details_approve where contributer_email = @email AND contributer_course_content_category = @suggestContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
         (err, result) => {
           if (result.recordset.length > 0) {
             res.send({ suggest: result.recordset });
@@ -506,7 +513,7 @@ export async function getRemoveContentCourseList(req, res) {
       request.input("approved", sql.VarChar, approved);
       request.input("removeContent", sql.VarChar, removeContent);
       request.query(
-        "select * from contributer_details_approve where contributer_email = @email AND contributer_content_status = @removeContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
+        "select * from contributer_details_approve where contributer_email = @email AND contributer_course_content_category = @removeContent AND contributer_approve_status = @approved ORDER BY contributer_details_id DESC",
         (err, result) => {
           if (result.recordset.length > 0) {
             res.send({ remove: result.recordset });

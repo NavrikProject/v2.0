@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -140,6 +141,10 @@ const TextArea = styled.textarea`
     padding-left: 10px;
   }
 `;
+const ErrorMessage = styled.p`
+  color: red;
+  margin: 0 0px 0px 10px;
+`;
 const ButtonDiv = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -150,19 +155,22 @@ const ButtonDiv = styled.div`
 `;
 const CancelWarningModal = (props) => {
   const user = useSelector((state) => state.user.currentUser);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-  const [reasonExp, setReasonExp] = useState("");
-  const [reason, setReason] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const cancelAppointment = async (event) => {
-    event.preventDefault();
+  const cancelAppointment = async (data) => {
     setLoading(true);
     const res = await axios.put(
       `/mentor/bookings/update/cancel/appointment/${props.sendMentor.bookingId}`,
-      { reasonExp: reasonExp, reason: reason },
+      { reasonExp: data.reasonExp, reason: data.reason },
       {
         headers: { authorization: "Bearer " + user?.accessToken },
       }
@@ -171,7 +179,8 @@ const CancelWarningModal = (props) => {
       return (
         setLoading(false),
         setSuccess(res.data.success),
-        toast.success(res.data.success, { position: "top-center" })
+        toast.success(res.data.success, { position: "top-center" }),
+        reset()
       );
     }
     if (res.data.error) {
@@ -213,13 +222,14 @@ const CancelWarningModal = (props) => {
           </MentorBookedDate>
           <hr />
         </MentorBoxDiv>
-        <form onSubmit={cancelAppointment}>
+        <form onSubmit={handleSubmit(cancelAppointment)}>
           <MentorBoxDiv>
             <LabelTitle>Choose one the Reason:</LabelTitle>
             <FormSelect
-              required
-              onChange={(event) => setReason(event.target.value)}
-              name="selected"
+              name="reason"
+              {...register("reason", {
+                required: "Select from the dropdown",
+              })}
             >
               <FormOption value=""></FormOption>
               <FormOption value="health issues">Health issues</FormOption>
@@ -229,17 +239,24 @@ const CancelWarningModal = (props) => {
               <FormOption value="Reason not listed">
                 Reason not listed
               </FormOption>
-            </FormSelect>
+            </FormSelect>{" "}
+            {errors.reason && (
+              <ErrorMessage>{errors.reason.message}</ErrorMessage>
+            )}
             <LabelTitle>Reason for cancellation :</LabelTitle>
             <TextArea
-              required
-              onChange={(event) => setReasonExp(event.target.value)}
-              name=""
+              name="reasonExp"
+              {...register("reasonExp", {
+                required: "Clearly explain why you are cancelling",
+              })}
               id=""
               cols="30"
               rows="10"
               placeholder="Explain the reason of appointment in detail....."
             ></TextArea>
+            {errors.reasonExp && (
+              <ErrorMessage>{errors.reasonExp.message}</ErrorMessage>
+            )}
           </MentorBoxDiv>
           <ButtonDiv>
             <ConfirmButton type="submit">Confirm Cancel</ConfirmButton>

@@ -35,7 +35,13 @@ export const MentorDownDiv = styled.div`
     rgba(255, 255, 255, 0) 40%
   ); */
 `;
-
+export const MentorNotFoundDiv = styled.div`
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #fff;
+`;
 export const MentorImgDiv = styled.div`
   display: flex;
   align-items: center;
@@ -50,13 +56,15 @@ export const MentorImg = styled.img`
   border: 7px solid light;
 `;
 export const MentorWrapper = styled.div`
-  padding: 50px 0;
+  padding: 20px 0;
 `;
 
 export const MentorContainer = styled.div``;
 export const MentorTitle = styled.h1`
   text-align: center;
-  font-size: 44px;
+  font-size: 32px;
+  color: #111;
+  opacity: 0.8;
 `;
 export const MentorDescription = styled.h4`
   text-align: center;
@@ -87,7 +95,7 @@ export const MentorCourseDivFlex = styled.div`
 
 export const MentorSearchDiv = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 `;
 export const MentorSearchRightDiv = styled.div``;
@@ -99,7 +107,7 @@ export const MentorSelect = styled.select`
   outline: none;
   font-size: 17px;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 8px 10px;
   border: 1px solid lightgrey;
   margin: 5px 0px 15px 15px;
   border-bottom-width: 2px;
@@ -115,28 +123,93 @@ export const SearchForm = styled.form`
   display: inline-block;
 `;
 export const SearchBoxInput = styled.input`
-  padding: 6px;
+  width: 100%;
+  padding: 8px 10px;
+  outline: none;
   font-size: 17px;
-  border: outline;
-  @media only screen and (max-width: 768px) {
-    max-width: 700px;
-    min-width: 500px;
-  }
-  @media only screen and (max-width: 568px) {
-    max-width: 500px;
-    min-width: 300px;
-  }
-  @media only screen and (max-width: 468px) {
-    max-width: 400px;
-    min-width: 300px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  border-bottom-width: 2px;
+  transition: all 0.4s ease;
+  margin-bottom: 10px !important;
+  &:focus {
+    border-color: #fc83bb;
   }
 `;
 export const FaSearchIcon = styled(FaSearch)`
   font-size: 24px;
   color: #111;
   opacity: 0.8;
-  top: 12px;
+  top: 9px;
   right: 5px;
   position: absolute;
   cursor: pointer;
+`;
+
+export const ClearFilter = styled.p`
+  margin: 20px 0 0 20px;
+  span {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: blue;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  i {
+    padding: 5px;
+  }
+`;
+export const MentorJoinDiv = styled.div`
+  width: 70%;
+  margin: 20px auto;
+`;
+export const MentorJoinDivFlex = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+`;
+export const MentorJoinRightDiv = styled.div`
+  width: 100%;
+`;
+export const MentorRightContentDiv = styled.div``;
+export const MentorJoinDesc = styled.p`
+  font-size: 18px;
+  color: #627792;
+`;
+export const MentorJoinLeftDiv = styled.div`
+  width: 100%;
+`;
+export const MentorLeftImgDiv = styled.div`
+  img {
+    object-fit: cover;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin: 0 100px !important;
+  }
+`;
+export const BookNowButtonDiv = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+`;
+export const JoinAsMentorButton = styled.button`
+  margin: 0px auto;
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 17px;
+  border: none;
+  outline: none;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+  background-color: #1363df;
+  color: #fff !important;
+  border-radius: 5px;
+  &:hover {
+    opacity: 0.7;
+    transition: all 0.5s ease-in-out;
+  }
 `;

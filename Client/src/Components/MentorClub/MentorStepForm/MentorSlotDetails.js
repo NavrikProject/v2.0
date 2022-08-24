@@ -44,7 +44,10 @@ const MentorSlotDetails = ({ formData, setFormData }) => {
         </FormSelect>
       </Field>
       <Field>
-        <p>Choose the Time Slots (Minimum 60 minutes)</p>
+        <p>
+          Choose the Time Slots (Minimum 60min Ex: 12:00 to 13:00 OR 12:30 to
+          13:30)
+        </p>
         From:
         <Input
           value={formData.startTime}

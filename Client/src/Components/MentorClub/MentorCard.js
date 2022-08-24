@@ -82,6 +82,7 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
             </MentorDiv>
           ))
         : null}
+
       {categoryItem
         ? mentorDetails
             .filter(

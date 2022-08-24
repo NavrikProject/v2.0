@@ -25,7 +25,6 @@ import {
   TraineeUl,
   TraineeWrapper,
 } from "./MentorBookingProfileElements.js";
-import { Link } from "react-router-dom";
 const TraineeProfile = () => {
   const [personalForm, setPersonalForm] = useState(false);
   const [accountForm, setAccountForm] = useState(false);
@@ -82,7 +81,7 @@ const TraineeProfile = () => {
     };
     onImageGetHandler();
   }, [user.id, token]);
-  
+
   return (
     <TraineeSect>
       <TraineeWrapper>
@@ -135,7 +134,7 @@ const TraineeProfile = () => {
             </TraineeUl>
           </TraineeLeftCol>
 
-          {/* <TraineeRightCol>
+          <TraineeRightCol>
             {traineeDetails?.length === 0 && (
               <h1>Please fill the profile form in the Home page</h1>
             )}
@@ -191,7 +190,7 @@ const TraineeProfile = () => {
                 </DetailsFlex>
               </div>
             ))}
-          </TraineeRightCol> */}
+          </TraineeRightCol>
         </TraineeFlex>
       </TraineeWrapper>
       <GoToTop />
