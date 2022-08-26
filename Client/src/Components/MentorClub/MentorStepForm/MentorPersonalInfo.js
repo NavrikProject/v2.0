@@ -1,10 +1,21 @@
 import React from "react";
-import { Field, Input, TextArea } from "./MentorRegisterStepELements";
-const MentorPersonalInfo = ({ formData, setFormData }) => {
+import {
+  ErrorMessage,
+  Field,
+  Input,
+  TextArea,
+} from "./MentorRegisterStepELements";
+const MentorPersonalInfo = ({
+  formData,
+  setFormData,
+  errorData,
+  setErrorData,
+}) => {
   return (
     <>
       <Field>
         <Input
+          onFocus={() => setErrorData({ ...errorData, firstName: "" })}
           value={formData.firstName}
           type="text"
           placeholder="Enter your Firstname"
@@ -13,9 +24,13 @@ const MentorPersonalInfo = ({ formData, setFormData }) => {
           }
           required
         />
+        <ErrorMessage>
+          {!formData.firstName && errorData.firstName}
+        </ErrorMessage>
       </Field>
       <Field>
         <Input
+          onFocus={() => setErrorData({ ...errorData, lastName: "" })}
           value={formData.lastName}
           type="text"
           placeholder="Enter your Lastname"
@@ -24,9 +39,11 @@ const MentorPersonalInfo = ({ formData, setFormData }) => {
           }
           required
         />
+        <ErrorMessage>{!formData.lastName && errorData.lastName}</ErrorMessage>
       </Field>
       <Field>
         <TextArea
+          onFocus={() => setErrorData({ ...errorData, bio: "" })}
           value={formData.bio}
           onChange={(event) =>
             setFormData({ ...formData, bio: event.target.value })
@@ -34,6 +51,7 @@ const MentorPersonalInfo = ({ formData, setFormData }) => {
           placeholder="Describe about yourself in brief words"
           required
         ></TextArea>
+        <ErrorMessage>{errorData.bio}</ErrorMessage>
       </Field>
     </>
   );

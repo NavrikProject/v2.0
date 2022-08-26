@@ -24,12 +24,15 @@ import {
   RadioWrapper,
   InputRadLabel,
   ErrorMessage,
+  RegisterFormRight,
+  RegistrationImageDiv,
+  RegistrationImage,
 } from "./RegisterFormElements";
 import GoToTop from "../../GoToTop";
 import { toast } from "react-toastify";
 import Loading from "../../utils/Loading";
 import { useForm } from "react-hook-form";
-
+import regImg from "../../../images/reg-img.jpg";
 const RegisterForm = () => {
   const {
     register,
@@ -285,6 +288,11 @@ const RegisterForm = () => {
                 </Form>
               </FormInner>
             </RegisterFormLeft>
+            <RegisterFormRight>
+              <RegistrationImageDiv>
+                <RegistrationImage src={regImg} />
+              </RegistrationImageDiv>
+            </RegisterFormRight>
           </RegisterFormWrapper>
         </RegisterFormSection>
       </RegisterFormSect>

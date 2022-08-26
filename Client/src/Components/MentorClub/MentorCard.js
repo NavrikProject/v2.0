@@ -15,6 +15,7 @@ import {
   MentorDownDiv,
   MentorImg,
   MentorImgDiv,
+  MentorNotFoundDiv,
   MentorUpDiv,
 } from "./MentorClubElements";
 import { Link } from "react-router-dom";
@@ -83,60 +84,65 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
           ))
         : null}
 
-      {categoryItem
-        ? mentorDetails
-            .filter(
-              (course) =>
-                course.mentor_skills === categoryItem ||
-                course.mentor_mentorship_area === categoryItem ||
-                course.mentor_availability === categoryItem
-            )
-            .map((mentor) => (
-              <MentorDiv key={mentor.mentor_dtls_id}>
-                <MentorUpDiv></MentorUpDiv>
-                <MentorDownDiv>
-                  <MentorImgDiv>
-                    <MentorImg
-                      src={mentor.mentor_image}
-                      alt="trainer picture"
-                    />
-                  </MentorImgDiv>
-                  <MentorCourseBox>
-                    <MentorBoxDiv>
-                      <MentorDetailsDiv>
-                        <MentorName>
-                          {mentor.mentor_firstname +
-                            " " +
-                            mentor.mentor_lastname}
-                        </MentorName>
-                        <MentorDescP>
-                          <span>{mentor.mentor_current_role} </span>
-                          at <span> {mentor.mentor_firm}</span>
-                        </MentorDescP>
-                      </MentorDetailsDiv>
-                    </MentorBoxDiv>
-                    <MentorDesc>
-                      {mentor.mentor_bio.slice(0, 100) + "...."}
-                    </MentorDesc>
-                    <BookNowButtonDiv>
-                      <BookNowButton>
-                        <Link
-                          style={{ textDecoration: "none", color: " #fff" }}
-                          to={`individual/${
-                            mentor.mentor_firstname.toLowerCase() +
-                            "-" +
-                            mentor.mentor_lastname.toLowerCase()
-                          }`}
-                        >
-                          Know More
-                        </Link>
-                      </BookNowButton>
-                    </BookNowButtonDiv>
-                  </MentorCourseBox>
-                </MentorDownDiv>
-              </MentorDiv>
-            ))
-        : null}
+      {categoryItem &&
+        mentorDetails
+          .filter(
+            (course) =>
+              course.mentor_skills === categoryItem ||
+              course.mentor_mentorship_area === categoryItem ||
+              course.mentor_availability === categoryItem
+          )
+          .map((mentor) => (
+            <MentorDiv key={mentor.mentor_dtls_id}>
+              <MentorUpDiv></MentorUpDiv>
+              <MentorDownDiv>
+                <MentorImgDiv>
+                  <MentorImg src={mentor.mentor_image} alt="trainer picture" />
+                </MentorImgDiv>
+                <MentorCourseBox>
+                  <MentorBoxDiv>
+                    <MentorDetailsDiv>
+                      <MentorName>
+                        {mentor.mentor_firstname + " " + mentor.mentor_lastname}
+                      </MentorName>
+                      <MentorDescP>
+                        <span>{mentor.mentor_current_role} </span>
+                        at <span> {mentor.mentor_firm}</span>
+                      </MentorDescP>
+                    </MentorDetailsDiv>
+                  </MentorBoxDiv>
+                  <MentorDesc>
+                    {mentor.mentor_bio.slice(0, 100) + "...."}
+                  </MentorDesc>
+                  <BookNowButtonDiv>
+                    <BookNowButton>
+                      <Link
+                        style={{ textDecoration: "none", color: " #fff" }}
+                        to={`individual/${
+                          mentor.mentor_firstname.toLowerCase() +
+                          "-" +
+                          mentor.mentor_lastname.toLowerCase()
+                        }`}
+                      >
+                        Know More
+                      </Link>
+                    </BookNowButton>
+                  </BookNowButtonDiv>
+                </MentorCourseBox>
+              </MentorDownDiv>
+            </MentorDiv>
+          ))}
+      {categoryItem &&
+        mentorDetails.filter(
+          (course) =>
+            course.mentor_skills === categoryItem ||
+            course.mentor_mentorship_area === categoryItem ||
+            course.mentor_availability === categoryItem
+        ).length === 0 && (
+          <MentorNotFoundDiv>
+            Noo mentor found! Try with different names
+          </MentorNotFoundDiv>
+        )}
     </>
   );
 };

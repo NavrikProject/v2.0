@@ -7,9 +7,15 @@ import {
   Field,
   Input,
   PasswordDiv,
+  ErrorMessage,
 } from "./MentorRegisterStepELements";
 
-const MentorSignUpDetails = ({ formData, setFormData }) => {
+const MentorSignUpDetails = ({
+  formData,
+  setFormData,
+  errorData,
+  setErrorData,
+}) => {
   const [showIcon, setShowIcon] = useState(false);
   const [confirmShowIcon, setConfirmShowIcon] = useState(false);
 
@@ -24,6 +30,7 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
     <>
       <Field>
         <Input
+          onFocus={() => setErrorData({ ...errorData, email: "" })}
           value={formData.email}
           type="email"
           placeholder="Enter your email....."
@@ -31,9 +38,11 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
             setFormData({ ...formData, email: event.target.value })
           }
         />
+        <ErrorMessage>{errorData.email}</ErrorMessage>
       </Field>
       <PwdField>
         <Input
+          onFocus={() => setErrorData({ ...errorData, password: "" })}
           type={showIcon ? "text" : "password"}
           placeholder="Enter your password"
           value={formData.password}
@@ -45,6 +54,7 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
         <PwdIcons onClick={(e) => setShowIcon(!showIcon)}>
           {showIcon ? <ShowIcon /> : <HideIcon />}
         </PwdIcons>
+        <ErrorMessage>{!formData.password && errorData.password}</ErrorMessage>
       </PwdField>
       {formData.password && (
         <PasswordDiv>
@@ -87,9 +97,10 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
             <p style={{ color: "red" }}>Password must be at lease one number</p>
           )}
         </PasswordDiv>
-      )}{" "}
+      )}
       <PwdField>
         <Input
+          onFocus={() => setErrorData({ ...errorData, confirmPassword: "" })}
           value={formData.confirmPassword}
           onChange={(event) =>
             setFormData({ ...formData, confirmPassword: event.target.value })
@@ -100,6 +111,9 @@ const MentorSignUpDetails = ({ formData, setFormData }) => {
         <PwdIcons onClick={() => setConfirmShowIcon(!confirmShowIcon)}>
           {confirmShowIcon ? <ShowIcon /> : <HideIcon />}
         </PwdIcons>
+        <ErrorMessage>
+          {errorData.confirmPassword}
+        </ErrorMessage>
       </PwdField>
       {formData.password && formData.confirmPassword && (
         <PasswordDiv>

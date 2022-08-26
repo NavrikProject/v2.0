@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import GoToTop from "../GoToTop";
 import AttendedSessions from "./Sessions/AttendedSessions";
 import CompletedSessions from "./Sessions/CompletedSessions";
 import RefundedSessions from "./Sessions/RefundedSessions";
@@ -132,6 +133,7 @@ const TraineeSessionDetails = () => {
           </Wrapper>
         </LeftDiv>
       </Div>
+      <GoToTop />
     </Section>
   );
 };

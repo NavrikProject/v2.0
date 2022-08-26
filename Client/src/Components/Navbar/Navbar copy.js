@@ -10,7 +10,7 @@ import {
   Nav,
   NavItem,
 } from "./NavbarElements";
-import logo from "../../images/practi-logo.png";
+import logo from "../../images/practiwiz-logo.png";
 import { useSelector } from "react-redux";
 import CorporateTrainingMenu from "./CorporateTrainingMenu";
 import IndividualTrainingMenu from "./IndividualTrainingMenu";

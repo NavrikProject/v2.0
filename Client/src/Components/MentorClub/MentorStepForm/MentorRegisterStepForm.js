@@ -29,6 +29,7 @@ const MentorRegisterStepForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [buttonEnable, setButtonEnable] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -51,7 +52,28 @@ const MentorRegisterStepForm = () => {
     linkedInProfile: "",
   });
   const [image, setImage] = useState();
-
+  const [errorData, setErrorData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    firstName: "",
+    lastName: "",
+    bio: "",
+    experience: "",
+    skills: "",
+    specialty: "",
+    firm: "",
+    currentRole: "",
+    previousRole: "",
+    mentorshipArea: "",
+    mentorAvailability: "",
+    startTime: "",
+    endTime: "",
+    website: "",
+    linkedInProfile: "",
+    image: "",
+  });
+  const [phoneNumber, setPhoneNumber] = useState("");
   const FormTitles = [
     "Mentor Sign Up",
     "Personal Info",
@@ -63,24 +85,50 @@ const MentorRegisterStepForm = () => {
   const PageDisplay = () => {
     if (page === 0) {
       return (
-        <MentorSignUpDetails formData={formData} setFormData={setFormData} />
+        <MentorSignUpDetails
+          errorData={errorData}
+          formData={formData}
+          setFormData={setFormData}
+          setErrorData={setErrorData}
+        />
       );
     } else if (page === 1) {
       return (
-        <MentorPersonalInfo formData={formData} setFormData={setFormData} />
+        <MentorPersonalInfo
+          errorData={errorData}
+          formData={formData}
+          setFormData={setFormData}
+          setErrorData={setErrorData}
+        />
       );
     } else if (page === 2) {
-      return <MentorExpDetails formData={formData} setFormData={setFormData} />;
+      return (
+        <MentorExpDetails
+          errorData={errorData}
+          formData={formData}
+          setFormData={setFormData}
+          setErrorData={setErrorData}
+        />
+      );
     } else if (page === 3) {
       return (
-        <MentorSlotDetails formData={formData} setFormData={setFormData} />
+        <MentorSlotDetails
+          errorData={errorData}
+          formData={formData}
+          setFormData={setFormData}
+          setErrorData={setErrorData}
+        />
       );
     } else {
       return (
         <MentorAddDetails
           setImage={setImage}
+          errorData={errorData}
           formData={formData}
           setFormData={setFormData}
+          setErrorData={setErrorData}
+          phoneNumber={phoneNumber}
+          setPhoneNumber={setPhoneNumber}
         />
       );
     }
@@ -88,6 +136,33 @@ const MentorRegisterStepForm = () => {
 
   const profileSubmitHandler = async (event) => {
     event.preventDefault();
+    if (
+      !phoneNumber &&
+      !formData.website &&
+      !formData.linkedInProfile &&
+      !image
+    ) {
+      return setError("Please fill all details");
+    }
+    if (!phoneNumber) {
+      return setErrorData({
+        ...errorData,
+        phoneNumber: "please enter your last mobile number",
+      });
+    }
+    if (!formData.website) {
+      return setErrorData({
+        ...errorData,
+        website: "please enter your website",
+      });
+    }
+    if (!formData.linkedInProfile) {
+      return setErrorData({
+        ...errorData,
+        linkedInProfile: "please paste your linked in profile",
+      });
+    }
+
     let data = new FormData();
     data.append("image", image);
     data.append("email", formData.email);
@@ -107,7 +182,8 @@ const MentorRegisterStepForm = () => {
     data.append("mentorshipArea", formData.mentorshipArea);
     data.append("website", formData.website);
     data.append("linkedInProfile", formData.linkedInProfile);
-    data.append("phoneNumber", formData.phoneNumber);
+    data.append("phoneNumber", phoneNumber);
+    console.log(data);
     try {
       setLoading(true);
       const res = await axios.post(`/mentor/register/apply-now`, data);
@@ -129,31 +205,79 @@ const MentorRegisterStepForm = () => {
     var re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     return re.test(email);
   }
+  function bioLength(bio) {
+    if (bio.length < 50) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   const setPageCount = (event) => {
     event.preventDefault();
     if (page === 0) {
-      if (!formData.email || !formData.password || !formData.confirmPassword) {
-        return setError("Please fill all details");
+      if (!formData.email && !formData.password && !formData.confirmPassword) {
+        return setError("Please fill all the required details");
       } else {
+        if (!formData.email) {
+          return setErrorData({
+            ...errorData,
+            email: "please enter your email address",
+          });
+        }
+        if (!formData.password) {
+          return setErrorData({
+            ...errorData,
+            password: "please enter the password",
+          });
+        }
+        if (!formData.confirmPassword) {
+          return setErrorData({
+            ...errorData,
+            confirmPassword: "please enter the confirm password",
+          });
+        }
         if (formData?.email && validateEmail(formData?.email) !== true) {
-          return setError("Must be an email address ");
+          return setErrorData({
+            ...errorData,
+            email: "please enter a valid email address",
+          });
         } else if (formData.password !== formData.confirmPassword) {
-          return setError("Password and confirm password must be matched");
+          return setErrorData({
+            ...errorData,
+            confirmPassword: "Password and confirm password must be matched",
+          });
         } else {
           setPage((currPage) => currPage + 1);
           setError("");
         }
       }
     } else if (page === 1) {
-      if (!formData.firstName || !formData.lastName || !formData.bio) {
-        return setError("Please fill all details");
+      if (!formData.firstName && !formData.lastName && !formData.bio) {
+        return setError("Please fill all the required details");
       } else {
         if (!formData.firstName) {
-          return setError("Please enter the first name");
-        } else if (!formData.lastName) {
-          return setError("Please enter the last name");
-        } else if (!formData.bio) {
-          return setError("Please enter the bio");
+          return setErrorData({
+            ...errorData,
+            firstName: "please enter your first name",
+          });
+        }
+        if (!formData.lastName) {
+          return setErrorData({
+            ...errorData,
+            lastName: "please enter your last name",
+          });
+        }
+        if (!formData.bio) {
+          return setErrorData({
+            ...errorData,
+            bio: "please enter your bio",
+          });
+        }
+        if (bioLength(formData.bio) === true) {
+          return setErrorData({
+            ...errorData,
+            bio: "please enter your at lease 50 characters long",
+          });
         } else {
           setPage((currPage) => currPage + 1);
           setError("");
@@ -161,37 +285,97 @@ const MentorRegisterStepForm = () => {
       }
     } else if (page === 2) {
       if (
-        !formData.experience ||
-        !formData.skills ||
-        !formData.currentRole ||
-        !formData.previousRole ||
-        !formData.firm ||
+        !formData.experience &&
+        !formData.skills &&
+        !formData.currentRole &&
+        !formData.previousRole &&
+        !formData.firm &&
         !formData.specialty
       ) {
-        return setError("Please fill all details");
+        return setError("Please fill all the required details");
+      }
+      if (!formData.experience || formData.experience === "") {
+        return setErrorData({
+          ...errorData,
+          experience: "please select your skills",
+        });
+      }
+      if (!formData.skills || formData.skills === "") {
+        return setErrorData({
+          ...errorData,
+          skills: "please select your skills",
+        });
+      }
+      if (!formData.specialty || formData.specialty === "") {
+        return setErrorData({
+          ...errorData,
+          specialty: "please select your specialty",
+        });
+      }
+      if (!formData.firm) {
+        return setErrorData({
+          ...errorData,
+          firm: "please enter your firm name",
+        });
+      }
+      if (!formData.currentRole) {
+        return setErrorData({
+          ...errorData,
+          currentRole: "please enter your current role",
+        });
+      }
+      if (!formData.previousRole) {
+        return setErrorData({
+          ...errorData,
+          previousRole: "please enter your previous role",
+        });
       } else {
         setPage((currPage) => currPage + 1);
         setError("");
       }
     } else if (page === 3) {
       if (
-        !formData.mentorshipArea ||
-        !formData.mentorAvailability ||
-        !formData.startTime ||
+        !formData.mentorshipArea &&
+        !formData.mentorAvailability &&
+        !formData.startTime &&
         !formData.endTime
       ) {
         return setError("Please fill all details");
+      }
+      if (!formData.mentorshipArea || formData.mentorshipArea === "") {
+        return setErrorData({
+          ...errorData,
+          mentorshipArea: "please select your mentorship area",
+        });
+      }
+      if (!formData.mentorAvailability || formData.mentorAvailability === "") {
+        return setErrorData({
+          ...errorData,
+          mentorAvailability: "please select your availability",
+        });
+      }
+      if (!formData.startTime || formData.startTime === "") {
+        return setErrorData({
+          ...errorData,
+          startTime: "please select the start time",
+        });
+      }
+      if (!formData.endTime || formData.endTime === "") {
+        return setErrorData({
+          ...errorData,
+          endTime: "please select the end time",
+        });
       } else {
         setPage((currPage) => currPage + 1);
         setError("");
       }
+    } else {
+      setButtonEnable(true);
     }
   };
-
   return (
     <MentorRegisterSection>
       {loading && <Loading />}
-
       <MentorRegisterDiv>
         <MentorRegisterDiv1>
           <MentorRegisterFlex>

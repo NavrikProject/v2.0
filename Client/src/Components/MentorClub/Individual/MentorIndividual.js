@@ -1,4 +1,7 @@
 import axios from "axios";
+// swiper core styles
+import "swiper/swiper.min.css";
+
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -24,18 +27,28 @@ import {
   MentorProfileDivRight,
   MentorProfileImg,
   MentorRatingDiv,
+  MentorRatingDivSlider,
   MentorRatingTitles,
   MentorRatingWrapper,
   MentorSectionDiv,
   MentorTimeSlotDiv,
+  RatingContent,
+  RatingContentDiv,
+  RatingContentStarDiv,
+  RatingContentText,
+  RatingContentTraineeName,
+  RatingImg,
 } from "./MentorIndividualElements";
 import { toast } from "react-toastify";
 import "react-datepicker/dist/react-datepicker.css";
 import "../MentorCardDate.css";
+
 import DatePicker from "react-datepicker";
 import ConfirmModel from "./ConfirmModel";
 import GoToTop from "../../GoToTop";
 import { useSelector } from "react-redux";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper";
 
 const MentorIndividual = ({ socket }) => {
   const location = useLocation();
@@ -46,7 +59,7 @@ const MentorIndividual = ({ socket }) => {
   const [isActive, setIsActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [sendMentor, setSendMentor] = useState();
-
+  const [mentorFeedback, setMentorFeedback] = useState([]);
   useEffect(() => {
     try {
       const getIndMentorDetails = async () => {
@@ -67,7 +80,7 @@ const MentorIndividual = ({ socket }) => {
         const res = await axios.get(
           `/feedback/get/mentor-feedback/mentors?name=${path}`
         );
-        console.log(res.data);
+        setMentorFeedback(res.data.data);
       };
       getIndMentorFeedback();
     } catch (error) {
@@ -88,7 +101,6 @@ const MentorIndividual = ({ socket }) => {
   const setTimeSlotActive = (e) => {
     setIsActive(!isActive);
   };
-
   // disable the list of custom dates
   function isWorkDay(available, date) {
     const weekDay = new Date(date).getDay();
@@ -267,6 +279,70 @@ const MentorIndividual = ({ socket }) => {
       <MentorRatingDiv>
         <MentorRatingWrapper>
           <MentorRatingTitles>Testimonials</MentorRatingTitles>
+          <Swiper
+            pagination={{
+              clickable: true,
+            }}
+            autoplay={{
+              delay: 5000,
+            }}
+            spaceBetween={50}
+            slidesPerView={1}
+            onSwiper={(swiper) => console.log(swiper)}
+            navigation={true}
+            modules={[Autoplay, Pagination, Navigation]}
+          >
+            {mentorFeedback.map((feedback) => (
+              <SwiperSlide key={feedback.trainee_feedback_dtls_id}>
+                <MentorRatingDivSlider>
+                  <RatingContentDiv>
+                    <RatingContent>
+                      <RatingImg
+                        src={
+                          feedback.trainee_image
+                            ? feedback.trainee_image
+                            : "https://images.pexels.com/photos/13085461/pexels-photo-13085461.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                        }
+                        alt=""
+                      />
+                      <RatingContentText>
+                        {feedback.trainee_feedback_aspects}
+                      </RatingContentText>
+                      <RatingContentStarDiv>
+                        {feedback.trainee_feedback_overall_exp === "5" && (
+                          <>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                          </>
+                        )}
+                        {feedback.trainee_feedback_overall_exp === "4" && (
+                          <>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                          </>
+                        )}
+                        {feedback.trainee_feedback_overall_exp === "3" && (
+                          <>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                            <i className="fa-solid fa-star gold"></i>
+                          </>
+                        )}
+                      </RatingContentStarDiv>
+                      <RatingContentTraineeName>
+                        {feedback.trainee_fullname}
+                      </RatingContentTraineeName>
+                    </RatingContent>
+                  </RatingContentDiv>
+                </MentorRatingDivSlider>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </MentorRatingWrapper>
       </MentorRatingDiv>
       <GoToTop />

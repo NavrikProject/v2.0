@@ -31,7 +31,10 @@ export const MentorRegisterLeftDiv = styled.div`
   width: 100%;
   height: 100%;
 `;
-
+export const ErrorMessage = styled.p`
+  color: red;
+  margin: 10px 0 0 10px;
+`;
 export const FormDiv = styled.div`
   padding-top: 40px;
 `;
@@ -66,7 +69,6 @@ export const Input = styled.input`
   border: 1px solid lightgrey;
   border-bottom-width: 2px;
   transition: all 0.4s ease;
-  margin-bottom: 15px;
   width: 100%;
   padding: 10px 20px;
   &:focus {
@@ -74,7 +76,6 @@ export const Input = styled.input`
   }
 `;
 export const PwdField = styled.div`
-  height: 50px;
   width: 100%;
   margin-top: 20px;
   position: relative;
@@ -109,7 +110,6 @@ export const TextArea = styled.textarea`
   border: 1px solid lightgrey;
   border-bottom-width: 2px;
   transition: all 0.4s ease;
-  margin-bottom: 10px;
   width: 100%;
   padding: 10px 20px;
   &:focus {

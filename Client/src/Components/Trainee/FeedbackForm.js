@@ -450,7 +450,11 @@ const FeedbackForm = (props) => {
                   <TextArea
                     placeholder="Describe about yourself in brief words"
                     {...register("question9", {
-                      required: "Must be at least 50 characters",
+                      required: "Must be required",
+                      minLength: {
+                        value: 50,
+                        message: "More than 50 characters at least",
+                      },
                     })}
                   ></TextArea>
                 </RadioWrapper>
@@ -468,7 +472,7 @@ const FeedbackForm = (props) => {
                   <TextArea
                     placeholder="Describe about yourself in brief words"
                     {...register("question10", {
-                      required: "Must be at least 50 characters",
+                      required: "Must be required",
                     })}
                   ></TextArea>
                 </RadioWrapper>

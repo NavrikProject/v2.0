@@ -149,3 +149,45 @@ export const MentorRatingTitles = styled.h1`
   color: #111;
   opacity: 0.8;
 `;
+export const MentorRatingDivSlider = styled.div`
+  width: 100%;
+  height: auto;
+  padding: 20px 0;
+  text-align: center;
+  margin-bottom: 30px;
+`;
+export const RatingContentDiv = styled.div`
+  width: 80%;
+  background: lightgray;
+  border-bottom-right-radius: 50px;
+  border-top-left-radius: 50px;
+  padding: 30px 50px;
+  margin: 0 auto;
+`;
+export const RatingContent = styled.div`
+  i {
+    font-size: 45px;
+    color: red;
+  }
+`;
+export const RatingImg = styled.img`
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  text-align: center;
+  border: 8px solid #fff;
+  object-fit: cover;
+`;
+export const RatingContentText = styled.p`
+  font-size: 19px;
+  color: #111;
+  font-weight: normal;
+`;
+export const RatingContentStarDiv = styled.div`
+  padding: 20px;
+  i {
+    font-size: 21px;
+    color: gold;
+  }
+`;
+export const RatingContentTraineeName = styled.h4``;

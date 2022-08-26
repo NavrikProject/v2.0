@@ -20,14 +20,16 @@ export const RegisterFormSection = styled.section`
 `;
 export const RegisterFormWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
 `;
-export const RegisterFormLeft = styled.div`
-  flex: 6;
+export const RegisterFormLeft = styled.div``;
+export const RegisterFormRight = styled.div``;
+export const RegistrationImageDiv = styled.div``;
+export const RegistrationImage = styled.img`
+  width: 100% !important;
+  height: 600px !important;
 `;
-export const RegisterFormRight = styled.div`
-  flex: 6;
-`;
+
 // page title
 export const RegisterFormTitle = styled.h1`
   color: blue;
@@ -64,16 +66,16 @@ export const FormInner = styled.div`
 export const Form = styled.form`
   width: 500px;
   transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+  padding: 10px 30px;
 `;
 export const Field = styled.div`
-  height: 50px;
   width: 100%;
   margin-top: 25px;
 `;
 export const PwdField = styled.div`
-  height: 50px;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 25px;
   position: relative;
 `;
 export const PwdIcons = styled.div`
@@ -104,7 +106,7 @@ export const PasswordDiv = styled.div`
   padding-left: 20px;
 `;
 export const Input = styled.input`
-  height: 100%;
+  padding: 10px 20px;
   width: 100%;
   outline: none;
   padding-left: 15px;
@@ -131,7 +133,7 @@ export const InputRadio = styled.input`
 `;
 
 export const InputButton = styled.button`
-  height: 100%;
+  padding: 10px 20px;
   width: 100%;
   outline: none;
   padding-left: 15px;
@@ -164,7 +166,7 @@ export const PassLinkA = styled.a`
 `;
 export const SignUpLink = styled.div`
   text-align: center;
-  margin-top: 30px;
+  margin-top: 10px;
 `;
 export const SignLinkB = styled.a`
   text-decoration: none;
@@ -174,24 +176,15 @@ export const SignLinkB = styled.a`
   }
 `;
 export const FormLabel = styled.label`
-  font-size: 20px;
+  font-size: 17px;
   margin: 10px;
 `;
 export const FormLabelDiv = styled.div`
   display: flex;
   align-items: center;
+  margin: 10px 0 0 10px;
 `;
-export const FormSelect = styled.select`
-  height: 30px;
-  width: 250px;
-  margin-left: 10px;
-  font-size: 18px;
-  border-radius: 5px;
-  &:focus {
-    border-color: #fc83bb;
-  }
-`;
-export const FormOption = styled.option``;
+
 export const FormInput = styled.input`
   width: 18px;
   height: 18px;

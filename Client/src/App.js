@@ -24,7 +24,6 @@ import WhyPractiwizPage from "./Pages/WhyPractiwizPage";
 import FeedbackFormPage from "./Pages/FeedbackFormPage";
 import ProfessionalPage from "./Pages/ProfessionalPage";
 import ContributeCornerPage from "./Pages/ContributeCornerPage";
-import "react-phone-number-input/style.css";
 import "animate.css";
 import ContributerLoginPage from "./Pages/ContributerLoginPage";
 import ContributerRegisterPage from "./Pages/ContributerRegisterPage";
