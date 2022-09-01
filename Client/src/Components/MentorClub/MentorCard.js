@@ -112,7 +112,7 @@ const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
                     </MentorDetailsDiv>
                   </MentorBoxDiv>
                   <MentorDesc>
-                    {mentor.mentor_bio.slice(0, 100) + "...."}
+                    {mentor.mentor_bio.slice(0, 60) + "...."}
                   </MentorDesc>
                   <BookNowButtonDiv>
                     <BookNowButton>

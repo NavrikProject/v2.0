@@ -162,7 +162,7 @@ export async function registerMentor(req, res) {
                           1 +
                           "','" +
                           fileName +
-                          "' )",
+                          "')",
                         (err, success) => {
                           if (err) {
                             return res.send({ error: err.message });

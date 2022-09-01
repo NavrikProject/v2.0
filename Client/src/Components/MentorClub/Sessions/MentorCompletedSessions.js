@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CompletedAllSessionDetails from "./MentorCompletedAllSessionDetails";
 import LoadingSpinner from "../../utils/LoadingSpinner";
-import { Link } from "react-router-dom";
 const Div = styled.div``;
 const CompletedTitle = styled.h1`
   color: #111;

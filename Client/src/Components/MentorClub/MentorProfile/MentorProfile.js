@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Form1 from "../../Forms/ProfileForm/Form1.js";
+//import Form1 from "../../Forms/ProfileForm/Form1.js";
 import Form2 from "../../Forms/ProfileForm/Form2.js";
 import Form3 from "../../Forms/ProfileForm/Form3.js";
 import Form4 from "../../Forms/ProfileForm/Form4.js";
@@ -34,13 +34,13 @@ const TraineeProfile = () => {
   const [traineeDetails, setTraineeDetails] = useState([]);
   const user = useSelector((state) => state.user.currentUser);
 
-  const showPersonalForm = () => {
-    setPersonalForm(!personalForm);
-    setAccountForm(false);
-    setChangePasswordForm(false);
-    setDeleteAccountForm(false);
-    setChangeImageForm(false);
-  };
+  // const showPersonalForm = () => {
+  //   setPersonalForm(!personalForm);
+  //   setAccountForm(false);
+  //   setChangePasswordForm(false);
+  //   setDeleteAccountForm(false);
+  //   setChangeImageForm(false);
+  // };
   const showAccountForm = () => {
     setAccountForm(!accountForm);
     setPersonalForm(false);
@@ -89,20 +89,20 @@ const TraineeProfile = () => {
           <TraineeLeftCol>
             <h1>Update Your details Here</h1>
             <TraineeUl>
-              <TraineeLi onClick={showPersonalForm}>Personal Details</TraineeLi>
+              {/* <TraineeLi onClick={showPersonalForm}>Personal Details</TraineeLi> */}
               <TraineeLi onClick={showAccountForm}>Account</TraineeLi>
               <TraineeLi onClick={showImageForm}>
                 Change Profile Picture
               </TraineeLi>
               <TraineeLi onClick={showPasswordForm}>Change Password</TraineeLi>
               <TraineeLi onClick={showDeleteAccount}>Delete Account</TraineeLi>
-              {personalForm ? (
+              {/* {personalForm ? (
                 <Model>
                   <Form1 personal={showPersonalForm} />
                 </Model>
               ) : (
                 ""
-              )}
+              )} */}
               {accountForm ? (
                 <Model>
                   <Form2 personal={showAccountForm} />

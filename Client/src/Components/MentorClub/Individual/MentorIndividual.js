@@ -269,6 +269,9 @@ const MentorIndividual = ({ socket }) => {
                         Book now
                       </BookNowButton>
                     )}
+                    <p>
+                      Note : You will earn 10 points for each mentor booking.
+                    </p>
                   </MentorProfileAvailDiv>
                 </MentorProfileDivRight>
               </MentorProfileDivFlex>
@@ -292,56 +295,62 @@ const MentorIndividual = ({ socket }) => {
             navigation={true}
             modules={[Autoplay, Pagination, Navigation]}
           >
-            {mentorFeedback.map((feedback) => (
-              <SwiperSlide key={feedback.trainee_feedback_dtls_id}>
-                <MentorRatingDivSlider>
-                  <RatingContentDiv>
-                    <RatingContent>
-                      <RatingImg
-                        src={
-                          feedback.trainee_image
-                            ? feedback.trainee_image
-                            : "https://images.pexels.com/photos/13085461/pexels-photo-13085461.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-                        }
-                        alt=""
-                      />
-                      <RatingContentText>
-                        {feedback.trainee_feedback_aspects}
-                      </RatingContentText>
-                      <RatingContentStarDiv>
-                        {feedback.trainee_feedback_overall_exp === "5" && (
-                          <>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                          </>
-                        )}
-                        {feedback.trainee_feedback_overall_exp === "4" && (
-                          <>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                          </>
-                        )}
-                        {feedback.trainee_feedback_overall_exp === "3" && (
-                          <>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                            <i className="fa-solid fa-star gold"></i>
-                          </>
-                        )}
-                      </RatingContentStarDiv>
-                      <RatingContentTraineeName>
-                        {feedback.trainee_fullname}
-                      </RatingContentTraineeName>
-                    </RatingContent>
-                  </RatingContentDiv>
-                </MentorRatingDivSlider>
-              </SwiperSlide>
-            ))}
+            {mentorFeedback?.length > 0 ? (
+              mentorFeedback?.map((feedback) => (
+                <SwiperSlide key={feedback.trainee_feedback_dtls_id}>
+                  <MentorRatingDivSlider>
+                    <RatingContentDiv>
+                      <RatingContent>
+                        <RatingImg
+                          src={
+                            feedback.trainee_image
+                              ? feedback.trainee_image
+                              : "https://images.pexels.com/photos/13085461/pexels-photo-13085461.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                          }
+                          alt=""
+                        />
+                        <RatingContentText>
+                          {feedback.trainee_feedback_aspects}
+                        </RatingContentText>
+                        <RatingContentStarDiv>
+                          {feedback.trainee_feedback_overall_exp === "5" && (
+                            <>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                            </>
+                          )}
+                          {feedback.trainee_feedback_overall_exp === "4" && (
+                            <>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                            </>
+                          )}
+                          {feedback.trainee_feedback_overall_exp === "3" && (
+                            <>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                              <i className="fa-solid fa-star gold"></i>
+                            </>
+                          )}
+                        </RatingContentStarDiv>
+                        <RatingContentTraineeName>
+                          {feedback.trainee_fullname}
+                        </RatingContentTraineeName>
+                      </RatingContent>
+                    </RatingContentDiv>
+                  </MentorRatingDivSlider>
+                </SwiperSlide>
+              ))
+            ) : (
+              <MentorProfileAvailDiv>
+                Noo testimonials found
+              </MentorProfileAvailDiv>
+            )}
           </Swiper>
         </MentorRatingWrapper>
       </MentorRatingDiv>

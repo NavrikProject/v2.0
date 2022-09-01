@@ -29,6 +29,7 @@ import ContributerLoginPage from "./Pages/ContributerLoginPage";
 import ContributerRegisterPage from "./Pages/ContributerRegisterPage";
 import ApplyContributionPage from "./Pages/ApplyContributionpage";
 import MyContributionPage from "./Pages/MyContributionPage";
+import CookieNotice from "./Components/utils/CookieNotice";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -48,6 +49,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
+      <CookieNotice />
       <Router>
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>

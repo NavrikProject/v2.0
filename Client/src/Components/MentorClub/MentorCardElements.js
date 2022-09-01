@@ -26,6 +26,7 @@ export const MentorDesc = styled.p`
   padding: 10px;
   font-size: 19px;
   color: #627792;
+  overflow: hidden;
 `;
 export const MentorDescP = styled.p`
   padding: 10px;

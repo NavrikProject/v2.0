@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Form1 from "../Forms/ProfileForm/Form1.js";
+//import Form1 from "../Forms/ProfileForm/Form1.js";
 import Form2 from "../Forms/ProfileForm/Form2.js";
 import Form3 from "../Forms/ProfileForm/Form3.js";
 import Form4 from "../Forms/ProfileForm/Form4.js";
@@ -25,6 +25,8 @@ import {
   TraineeUl,
   TraineeWrapper,
 } from "./TraineeProfileElements.js";
+import SingleProfile from "../Forms/ProfileForm/SingleProfile";
+import DefaultImg from "../../images/default.jpg";
 const TraineeProfile = () => {
   const [personalForm, setPersonalForm] = useState(false);
   const [accountForm, setAccountForm] = useState(false);
@@ -97,7 +99,7 @@ const TraineeProfile = () => {
               <TraineeLi onClick={showDeleteAccount}>Delete Account</TraineeLi>
               {personalForm ? (
                 <Model>
-                  <Form1 personal={showPersonalForm} />
+                  <SingleProfile personal={showPersonalForm} />
                 </Model>
               ) : (
                 ""
@@ -135,7 +137,7 @@ const TraineeProfile = () => {
 
           <TraineeRightCol>
             {traineeDetails?.length === 0 && (
-              <h1>Please fill the profile form in the Home page</h1>
+              <h1>Please fill the Personal details.</h1>
             )}
             {traineeDetails?.map((trainee) => (
               <div key={trainee.trainee_id}>
@@ -150,9 +152,7 @@ const TraineeProfile = () => {
                   </div>
                   <Img
                     src={
-                      !trainee.trainee_image
-                        ? `https://navrik.blob.core.windows.net/navrikimage/default.jpg`
-                        : trainee.trainee_image
+                      trainee.trainee_image ? trainee.trainee_image : DefaultImg
                     }
                   />
                 </ImgBox>
@@ -184,6 +184,12 @@ const TraineeProfile = () => {
                   <DetailsFlex1>
                     <DetailsTitles>Address : </DetailsTitles>
                     <DetailsFromDb>{trainee.trainee_address}</DetailsFromDb>
+                  </DetailsFlex1>
+                  <DetailsFlex1>
+                    <DetailsTitles>Your Total Rewards : </DetailsTitles>
+                    <DetailsFromDb>
+                      <span> {trainee.trainee_points}</span> points
+                    </DetailsFromDb>
                   </DetailsFlex1>
                 </DetailsFlex>
               </div>

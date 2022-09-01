@@ -24,7 +24,7 @@ export const TraineeFlex = styled.div`
 export const TraineeRightCol = styled.div`
   flex: 7;
   width: 100%;
-  border-right: 1px solid lightgrey;
+  border-left: 1px solid lightgrey;
   margin-right: 40px;
   @media only screen and (max-width: 968px) {
     border-right: none;
@@ -98,6 +98,7 @@ export const DetailsFlex = styled.div`
 export const DetailsFlex1 = styled.div`
   display: flex;
   padding: 7px 10px;
+  align-items: center;
 `;
 export const DetailsTitles = styled.h4`
   font-weight: 600;
@@ -106,4 +107,8 @@ export const DetailsTitles = styled.h4`
 export const DetailsFromDb = styled.p`
   font-weight: 400;
   margin-left: 5px;
+  span {
+    color: gold;
+    font-size: 23px;
+  }
 `;

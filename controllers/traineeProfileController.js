@@ -12,7 +12,7 @@ dotenv.config();
 const blobService = azureStorage.createBlobService(
   process.env.AZURE_STORAGE_CONNECTION_STRING
 );
-// inserting the data to the trainee details && working accurately
+// inserting the data to the trainee details from profile && working accurately
 export async function createTraineeProfile(req, res, next) {
   const id = req.params.id;
   const mobile = req.body.mobile;
@@ -27,90 +27,108 @@ export async function createTraineeProfile(req, res, next) {
 
   const stream = intoStream(req.files.image.data);
   const streamLength = req.files.image.data.length;
-  blobService.createBlockBlobFromStream(
-    containerName,
-    blobName,
-    stream,
-    streamLength,
-    (err) => {
-      if (err) {
-        res.status(500);
-        res.send({ error: "Error Occurred" });
-        return;
-      }
-      if (!err) {
-        try {
-          sql.connect(config, (err) => {
-            if (err) return res.send(err.message);
-            const request = new sql.Request();
-            request.input("id", sql.Int, id);
-            request.query(
-              "SELECT * FROM users_dtls WHERE user_dtls_id = @id",
-              (err, result) => {
-                if (err) return res.send(err.message);
-                if (result.recordset.length > 0) {
-                  const email = result.recordset[0].user_email;
-                  sql.connect(config, (err) => {
-                    if (err) return res.send({ error: error.message });
-                    const request = new sql.Request();
-                    request.query(
-                      "INSERT INTO trainee_dtls (trainee_email, trainee_mobile, trainee_dob,trainee_image,trainee_address,trainee_experience,trainee_graduate, trainee_profession) VALUES('" +
-                        email +
-                        "','" +
-                        mobile +
-                        "','" +
-                        dob +
-                        "','" +
-                        fileName +
-                        "','" +
-                        address +
-                        "', '" +
-                        experience +
-                        "','" +
-                        graduate +
-                        "', '" +
-                        profession +
-                        "' )",
-                      (err, result) => {
-                        if (err) return res.send(err.message);
-                        if (result) {
-                          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                          const msg = updateEmail(
-                            email,
-                            "Profile details saved successfully",
-                            "updated the Profile details."
-                          );
-                          sgMail
-                            .send(msg)
-                            .then(() => {
-                              return res.send({
-                                success:
-                                  "Profile details are saved successfully",
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      request.input("id", sql.Int, id);
+      request.query(
+        "SELECT * FROM users_dtls WHERE user_dtls_id = @id",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            const email = result.recordset[0].user_email;
+            sql.connect(config, (err) => {
+              if (err) return res.send(err.message);
+              const request = new sql.Request();
+              request.input("email", sql.VarChar, email);
+              request.query(
+                "SELECT * FROM trainee_dtls WHERE trainee_email = @email",
+                (err, result) => {
+                  if (err) return res.send(err.message);
+                  if (result.recordset.length > 0) {
+                    return res.send({
+                      error: "You have already submitted the profile details!",
+                    });
+                  } else {
+                    sql.connect(config, (err) => {
+                      if (err) return res.send({ error: error.message });
+                      const request = new sql.Request();
+                      request.query(
+                        "INSERT INTO trainee_dtls (trainee_email, trainee_mobile, trainee_dob,trainee_image,trainee_address,trainee_experience,trainee_graduate, trainee_profession) VALUES('" +
+                          email +
+                          "','" +
+                          mobile +
+                          "','" +
+                          dob +
+                          "','" +
+                          fileName +
+                          "','" +
+                          address +
+                          "', '" +
+                          experience +
+                          "','" +
+                          graduate +
+                          "', '" +
+                          profession +
+                          "' )",
+                        (err, result) => {
+                          if (err) return res.send(err.message);
+                          if (result) {
+                            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                            const msg = updateEmail(
+                              email,
+                              "Profile details saved successfully",
+                              "updated the Profile details."
+                            );
+                            sgMail
+                              .send(msg)
+                              .then(() => {
+                                return res.send({
+                                  success:
+                                    "Profile details are saved successfully",
+                                });
+                              })
+                              .catch((error) => {
+                                return res.send({
+                                  error: "There is some error while saving",
+                                });
                               });
-                            })
-                            .catch((error) => {
-                              return res.send({
-                                error: "There is some error while saving",
-                              });
+                          } else {
+                            return res.send({
+                              error: "There is some error while saving",
                             });
-                        } else {
-                          return res.send({
-                            error: "There is some error while saving",
-                          });
+                          }
                         }
-                      }
-                    );
-                  });
+                      );
+                    });
+                  }
                 }
-              }
-            );
-          });
-        } catch (error) {
-          res.send(error.message);
+              );
+            });
+          }
         }
-      }
-    }
-  );
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+
+  // blobService.createBlockBlobFromStream(
+  //   containerName,
+  //   blobName,
+  //   stream,
+  //   streamLength,
+  //   (err) => {
+  //     if (err) {
+  //       res.status(500);
+  //       res.send({ error: "Error Occurred" });
+  //       return;
+  //     }
+  //     if (!err) {
+  //     }
+  //   }
+  // );
 }
 
 // showing the form the profile form working && working accurately
@@ -437,30 +455,3 @@ export async function getOnlyUserDetails(req, res, next) {
     return res.send({ error: error.message });
   }
 }
-// if (result) {
-//   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-//   const msg = {
-//     to: "keeprememberall@gmail.com", // Change to your recipient
-//     from: "mahesh@navriksoftware.com", // Change to your verified sender
-//     subject: `Profile details saved successfully`,
-//     text: "and easy to do anywhere, even with Node.js",
-//     html: `<div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px;   font-size: 110%;"> <p>Congratulations! Your Profile details saved successfully</p></div>`,
-//   };
-//   sgMail
-//     .send(msg)
-//     .then(() => {
-//       return res.send({
-//         success:
-//           "Profile details is success fully saved",
-//       });
-//     })
-//     .catch((error) => {
-//       return res.send({
-//         error: "There is some error while saving",
-//       });
-//     });
-// } else {
-//   return res.send({
-//     error: "There is some error while saving",
-//   });
-// }

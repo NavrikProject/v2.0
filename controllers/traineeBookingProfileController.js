@@ -807,6 +807,7 @@ export async function getAllUpcomingSessions(req, res, next) {
                 mentorId: mentor.mentor_dtls_id,
                 traineeJoinUrl: mentor.trainee_join_url,
                 sessionStatus: mentor.trainee_session_status,
+                rewardPoints: mentor.trainee_and_mentor_reward_points,
               };
               mentorArray.push(data);
             });
@@ -883,6 +884,7 @@ export async function getAllAttendedSessions(req, res, next) {
                 mentorId: mentor.mentor_dtls_id,
                 sessionStatus: mentor.trainee_session_status,
                 paymentStatus: mentor.mentor_amount_paid_status,
+                rewardPoints: mentor.trainee_and_mentor_reward_points,
               };
               mentorArray.push(data);
             });
@@ -921,6 +923,7 @@ export async function getAllCompletedSessions(req, res, next) {
                 mentorId: mentor.mentor_dtls_id,
                 mentorFullName: mentor.mentor_name,
                 paymentStatus: mentor.mentor_amount_paid_status,
+                rewardPoints: mentor.trainee_and_mentor_reward_points,
               };
               mentorArray.push(data);
             });

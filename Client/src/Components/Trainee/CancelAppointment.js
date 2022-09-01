@@ -203,7 +203,7 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
                 cols="30"
                 rows="7"
                 placeholder="Explain the reason of cancelling appointment in detail....."
-              ></TextArea>{" "}
+              ></TextArea>
               {errors.reason && (
                 <ErrorMessage>{errors.reason.message}</ErrorMessage>
               )}

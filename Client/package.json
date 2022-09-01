@@ -1,6 +1,7 @@
 {
-  "name": "practilearn-training-programme",
+  "name": "practiwiz-training-programme",
   "version": "0.1.0",
+  "homepage": ".",
   "proxy": "http://localhost:1100/api",
   "private": true,
   "dependencies": {
@@ -21,10 +22,13 @@
     "react-animate-on-scroll": "^2.1.5",
     "react-big-calendar": "^0.40.1",
     "react-chrono": "^1.18.0",
+    "react-cookie-consent": "^8.0.1",
     "react-cookienotice": "^4.3.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "^17.0.1",
     "react-draft-wysiwyg": "^1.14.7",
+    "react-ga": "^3.3.1",
+    "react-ga4": "^1.4.1",
     "react-hook-form": "^7.34.2",
     "react-icons": "^4.3.1",
     "react-is": "^18.0.0",
@@ -43,7 +47,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "CI=false && react-scripts build",
+    "build": "CI=false && react-scripts build && set \"GENERATE_SOURCEMAP=false\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

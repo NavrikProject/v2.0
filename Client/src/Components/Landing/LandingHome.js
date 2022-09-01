@@ -1,11 +1,9 @@
 import React from "react";
 import {
   ButtonDiv,
-  CorporateImage,
   DisplayDiv,
   DisplayDivItem1,
   DisplayDivItem2,
-  DisplayDivItemTitleGold,
   DisplayDivItemTitleWhite,
   DisplayFlexDiv,
   DisplayFlexItems,

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 
 //import FeedbackForm from "../FeedbackForm";
@@ -18,9 +17,7 @@ const JoinButtonDiv = styled.div`
 `;
 
 const AttendedAllSessionDetails = (props) => {
-  const sendRemainderHandler = async (bookingId) => {
-    const res = await axios.post();
-  };
+  const sendRemainderHandler = async (bookingId) => {};
   return (
     <div>
       <div>

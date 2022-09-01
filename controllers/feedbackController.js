@@ -33,6 +33,8 @@ export async function insertFeedBackController(req, res) {
         (err, result) => {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
+            const rewardPoints =
+              result.recordset[0].trainee_and_mentor_reward_points;
             const sessionStatus = "completed";
             const request = new sql.Request();
             request.input("userEmail", sql.VarChar, userEmail);
@@ -46,84 +48,125 @@ export async function insertFeedBackController(req, res) {
                 sql.connect(config, (err) => {
                   if (err) return res.send(err.message);
                   const request = new sql.Request();
+                  request.input("userEmail", sql.VarChar, userEmail);
                   request.input("bookingId", sql.Int, bookingId);
                   request.query(
-                    "select * from trainee_feedback_dtls where trainee_feedback_booking_id = @bookingId",
+                    "select * from trainee_dtls where trainee_email = @userEmail",
                     (err, result) => {
                       if (err) return res.send(err.message);
                       if (result.recordset.length > 0) {
-                        return res.send({
-                          error: "You have all ready submitted the feedback",
-                        });
-                      } else {
-                        sql.connect(config, async (err) => {
-                          if (err) res.send(err.message);
-                          const request = new sql.Request();
-                          request.query(
-                            "insert into trainee_feedback_dtls (trainee_feedback_booking_id,trainee_fullname,mentor_fullname,trainee_feedback_user_email,trainee_feedback_mentor_email,trainee_feedback_useful,trainee_feedback_structure,trainee_feedback_relevant,trainee_feedback_clear,trainee_feedback_teaching,trainee_feedback_material,trainee_feedback_ad_time,trainee_feedback_learn_wp,trainee_feedback_aspects,trainee_feedback_improve_mentor,trainee_feedback_overall_exp,trainee_feedback_cr_date) VALUES('" +
-                              bookingId +
-                              "','" +
-                              userFullName +
-                              "','" +
-                              mentorFullname +
-                              "','" +
-                              userEmail +
-                              "','" +
-                              mentorEmail +
-                              "','" +
-                              question1 +
-                              "','" +
-                              question2 +
-                              "','" +
-                              question3 +
-                              "','" +
-                              question4 +
-                              "','" +
-                              question5 +
-                              "','" +
-                              question6 +
-                              "','" +
-                              question7 +
-                              "','" +
-                              question8 +
-                              "','" +
-                              question9 +
-                              "','" +
-                              question10 +
-                              "','" +
-                              question11 +
-                              "','" +
-                              new Date().toISOString().substring(0, 10) +
-                              "' )",
-                            (err, success) => {
-                              if (err) {
-                                return res.send({ error: err.message });
-                              }
-                              if (success) {
-                                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                                const msg = sendFeedbackEmail(
-                                  userEmail,
-                                  "Feedback submission",
-                                  "submitted the feedback"
-                                );
-                                sgMail
-                                  .send(msg)
-                                  .then(() => {
-                                    return res.send({
-                                      success:
-                                        "Thanks for your valuable feedback",
-                                    });
-                                  })
-                                  .catch((error) => {
+                        const previousRewardPoints =
+                          result.recordset[0].trainee_points;
+                        const totalRewardPoints =
+                          rewardPoints + previousRewardPoints;
+                        const request = new sql.Request();
+                        request.input(
+                          "totalRewardPoints",
+                          sql.Int,
+                          totalRewardPoints
+                        );
+                        request.input("userEmail", sql.VarChar, userEmail);
+                        const sqlUpdate =
+                          "UPDATE trainee_dtls SET trainee_points = @totalRewardPoints WHERE trainee_email = @userEmail";
+                        request.query(sqlUpdate, (err, result) => {
+                          if (err) return res.send(err.message);
+                          if (result) {
+                            sql.connect(config, (err) => {
+                              if (err) return res.send(err.message);
+                              const request = new sql.Request();
+                              request.input("bookingId", sql.Int, bookingId);
+                              request.query(
+                                "select * from trainee_feedback_dtls where trainee_feedback_booking_id = @bookingId",
+                                (err, result) => {
+                                  if (err) return res.send(err.message);
+                                  if (result.recordset.length > 0) {
                                     return res.send({
                                       error:
-                                        "There was an error while submitting the feedback",
+                                        "You have all ready submitted the feedback",
                                     });
-                                  });
-                              }
-                            }
-                          );
+                                  } else {
+                                    sql.connect(config, async (err) => {
+                                      if (err) res.send(err.message);
+                                      const request = new sql.Request();
+                                      request.query(
+                                        "insert into trainee_feedback_dtls (trainee_feedback_booking_id,trainee_fullname,mentor_fullname,trainee_feedback_user_email,trainee_feedback_mentor_email,trainee_feedback_useful,trainee_feedback_structure,trainee_feedback_relevant,trainee_feedback_clear,trainee_feedback_teaching,trainee_feedback_material,trainee_feedback_ad_time,trainee_feedback_learn_wp,trainee_feedback_aspects,trainee_feedback_improve_mentor,trainee_feedback_overall_exp,trainee_feedback_cr_date) VALUES('" +
+                                          bookingId +
+                                          "','" +
+                                          userFullName +
+                                          "','" +
+                                          mentorFullname +
+                                          "','" +
+                                          userEmail +
+                                          "','" +
+                                          mentorEmail +
+                                          "','" +
+                                          question1 +
+                                          "','" +
+                                          question2 +
+                                          "','" +
+                                          question3 +
+                                          "','" +
+                                          question4 +
+                                          "','" +
+                                          question5 +
+                                          "','" +
+                                          question6 +
+                                          "','" +
+                                          question7 +
+                                          "','" +
+                                          question8 +
+                                          "','" +
+                                          question9 +
+                                          "','" +
+                                          question10 +
+                                          "','" +
+                                          question11 +
+                                          "','" +
+                                          new Date()
+                                            .toISOString()
+                                            .substring(0, 10) +
+                                          "' )",
+                                        (err, success) => {
+                                          if (err) {
+                                            return res.send({
+                                              error: err.message,
+                                            });
+                                          }
+                                          if (success) {
+                                            sgMail.setApiKey(
+                                              process.env.SENDGRID_API_KEY
+                                            );
+                                            const msg = sendFeedbackEmail(
+                                              userEmail,
+                                              "Feedback submission",
+                                              "submitted the feedback"
+                                            );
+                                            sgMail
+                                              .send(msg)
+                                              .then(() => {
+                                                return res.send({
+                                                  success:
+                                                    "Thanks for your valuable feedback",
+                                                });
+                                              })
+                                              .catch((error) => {
+                                                return res.send({
+                                                  error:
+                                                    "There was an error while submitting the feedback",
+                                                });
+                                              });
+                                          }
+                                        }
+                                      );
+                                    });
+                                  }
+                                }
+                              );
+                            });
+                          }
                         });
+                      } else {
+                        return;
                       }
                     }
                   );

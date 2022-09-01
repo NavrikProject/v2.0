@@ -93,6 +93,9 @@ export const MentorProfileDivRight = styled.div`
 export const MentorProfileAvailDiv = styled.div`
   padding: 20px;
   box-shadow: rgb(142 151 158 / 15%) 0px 4px 19px;
+  p {
+    margin-top: 10px;
+  }
 `;
 export const MentorProfileDateDiv = styled.div`
   margin: 15px 0;
