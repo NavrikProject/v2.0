@@ -9,6 +9,8 @@ import {
   PasswordDiv,
   ErrorMessage,
 } from "./MentorRegisterStepELements";
+import TimePicker from "rc-time-picker";
+import "rc-time-picker/assets/index.css";
 
 const MentorSignUpDetails = ({
   formData,
@@ -25,9 +27,48 @@ const MentorSignUpDetails = ({
   let pwdHasSplChar = /(?=.*?[#?!@$%^&*-].*)/.test(formData.password);
   let pwdHasNumChar = /(?=.*?[0-9].*)/.test(formData.password);
   let pwdMaxCharLen = formData.password.length <= 16;
+  const showSecond = false;
+  const str = showSecond ? "HH:mm:ss" : "HH:mm";
 
+  function disabledHours() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 23];
+  }
+  function generateOptions(length, excludedOptions) {
+    const arr = [];
+    for (let value = 0; value < length; value++) {
+      if (excludedOptions.indexOf(value) < 0) {
+        arr.push(value);
+      }
+    }
+    return arr;
+  }
+
+  function disabledMinutes(h) {
+    switch (h) {
+      case 9:
+        return generateOptions(60, [30]);
+      case 21:
+        return generateOptions(60, [0]);
+      default:
+        return generateOptions(60, [0, 15, 30, 45]);
+    }
+  }
+  function disabledSeconds(h, m) {
+    return [h + (m % 60)];
+  }
+  function onChangeValue(value) {
+    console.log(value && value.format(str));
+  }
   return (
     <>
+      <TimePicker
+        showSecond={showSecond}
+        className="xxx"
+        onChange={onChangeValue}
+        disabledMinutes={disabledMinutes}
+        disabledSeconds={disabledSeconds}
+        disabledHours={disabledHours}
+      />
       <Field>
         <Input
           onFocus={() => setErrorData({ ...errorData, email: "" })}
@@ -111,9 +152,7 @@ const MentorSignUpDetails = ({
         <PwdIcons onClick={() => setConfirmShowIcon(!confirmShowIcon)}>
           {confirmShowIcon ? <ShowIcon /> : <HideIcon />}
         </PwdIcons>
-        <ErrorMessage>
-          {errorData.confirmPassword}
-        </ErrorMessage>
+        <ErrorMessage>{errorData.confirmPassword}</ErrorMessage>
       </PwdField>
       {formData.password && formData.confirmPassword && (
         <PasswordDiv>

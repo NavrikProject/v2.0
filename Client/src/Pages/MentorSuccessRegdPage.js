@@ -1,19 +1,19 @@
 import React, { Suspense } from "react";
-import MentorRegdForm from "../Components/MentorClub/MentorStepForm/MentorRegdForm";
+import MentorSuccess from "../Components/MentorClub/MentorStepForm/MentorSuccess";
+
 import LoadingSpinner from "../Components/utils/LoadingSpinner";
 const Footer = React.lazy(() => import("../Components/Footer/Footer"));
 
 const NavbarRes = React.lazy(() => import("../Components/Navbar/NavbarRes"));
 
-const MentorFormPage = () => {
+const MentorSuccessRegdPage = () => {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <NavbarRes />
-      <MentorRegdForm />
-      {/* <MentorRegisterStepForm /> */}
+      <MentorSuccess />
       <Footer />
     </Suspense>
   );
 };
 
-export default MentorFormPage;
+export default MentorSuccessRegdPage;

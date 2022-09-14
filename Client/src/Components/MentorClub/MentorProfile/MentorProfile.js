@@ -13,44 +13,37 @@ import {
   DetailsFlex1,
   DetailsFromDb,
   DetailsTitles,
+  DetailsWrapper,
+  Div,
   Img,
   ImgBox,
-  TraineeFlex,
-  TraineeLeftCol,
-  TraineeLi,
-  TraineeRightCol,
+  LeftDiv,
+  QuickMenuTitle,
+  RightDiv,
+  Section,
+  SidebarListItem,
+  SidebarListUl,
+  SocialButton,
   TraineeRole,
-  TraineeSect,
   TraineeTitle,
-  TraineeUl,
-  TraineeWrapper,
+  Wrapper,
 } from "./MentorBookingProfileElements.js";
 const TraineeProfile = () => {
-  const [personalForm, setPersonalForm] = useState(false);
   const [accountForm, setAccountForm] = useState(false);
   const [changePasswordForm, setChangePasswordForm] = useState(false);
   const [deleteAccountForm, setDeleteAccountForm] = useState(false);
   const [changeImageForm, setChangeImageForm] = useState(false);
-  const [traineeDetails, setTraineeDetails] = useState([]);
+  const [mentorDetails, setMentorDetails] = useState([]);
   const user = useSelector((state) => state.user.currentUser);
 
-  // const showPersonalForm = () => {
-  //   setPersonalForm(!personalForm);
-  //   setAccountForm(false);
-  //   setChangePasswordForm(false);
-  //   setDeleteAccountForm(false);
-  //   setChangeImageForm(false);
-  // };
   const showAccountForm = () => {
     setAccountForm(!accountForm);
-    setPersonalForm(false);
     setDeleteAccountForm(false);
     setChangePasswordForm(false);
     setChangeImageForm(false);
   };
   const showPasswordForm = () => {
     setChangePasswordForm(!changePasswordForm);
-    setPersonalForm(false);
     setAccountForm(false);
     setDeleteAccountForm(false);
     setChangeImageForm(false);
@@ -58,7 +51,6 @@ const TraineeProfile = () => {
   const showDeleteAccount = () => {
     setAccountForm(false);
     setDeleteAccountForm(!deleteAccountForm);
-    setPersonalForm(false);
     setChangePasswordForm(false);
     setChangeImageForm(false);
   };
@@ -66,135 +58,175 @@ const TraineeProfile = () => {
     setChangeImageForm(!changeImageForm);
     setAccountForm(false);
     setDeleteAccountForm(false);
-    setPersonalForm(false);
     setChangePasswordForm(false);
   };
 
   const token = user?.accessToken;
 
   useEffect(() => {
-    const onImageGetHandler = async () => {
-      const res = await axios.get(`/trainee/details/get/${user?.id}`, {
+    const getFullMentorDetails = async () => {
+      const res = await axios.get(`/mentor/get/full-details/${user?.email}`, {
         headers: { authorization: "Bearer " + token },
       });
-      setTraineeDetails(res.data);
+      setMentorDetails(res.data.success);
     };
-    onImageGetHandler();
-  }, [user.id, token]);
+    getFullMentorDetails();
+  }, [user?.email, token]);
 
   return (
-    <TraineeSect>
-      <TraineeWrapper>
-        <TraineeFlex>
-          <TraineeLeftCol>
-            <h1>Update Your details Here</h1>
-            <TraineeUl>
-              {/* <TraineeLi onClick={showPersonalForm}>Personal Details</TraineeLi> */}
-              <TraineeLi onClick={showAccountForm}>Account</TraineeLi>
-              <TraineeLi onClick={showImageForm}>
-                Change Profile Picture
-              </TraineeLi>
-              <TraineeLi onClick={showPasswordForm}>Change Password</TraineeLi>
-              <TraineeLi onClick={showDeleteAccount}>Delete Account</TraineeLi>
-              {/* {personalForm ? (
-                <Model>
-                  <Form1 personal={showPersonalForm} />
-                </Model>
-              ) : (
-                ""
-              )} */}
-              {accountForm ? (
-                <Model>
-                  <Form2 personal={showAccountForm} />
-                </Model>
-              ) : (
-                ""
-              )}
-              {changePasswordForm ? (
-                <Model>
-                  <Form3 personal={showPasswordForm} />
-                </Model>
-              ) : (
-                ""
-              )}
-              {deleteAccountForm ? (
-                <Model>
-                  <Form4 personal={showDeleteAccount} />
-                </Model>
-              ) : (
-                ""
-              )}
-              {changeImageForm ? (
-                <Model>
-                  <ImageForm personal={showImageForm} />
-                </Model>
-              ) : (
-                ""
-              )}
-            </TraineeUl>
-          </TraineeLeftCol>
+    <>
+      <Section>
+        <Div>
+          <RightDiv>
+            <Wrapper>
+              <h1>Quick Menu</h1>
+              <SidebarListUl>
+                <SidebarListItem onClick={showAccountForm}>
+                  <QuickMenuTitle>Account </QuickMenuTitle>
+                </SidebarListItem>
+                <SidebarListItem onClick={showPasswordForm}>
+                  <QuickMenuTitle>Password</QuickMenuTitle>
+                </SidebarListItem>
+                <SidebarListItem onClick={showImageForm}>
+                  <QuickMenuTitle>Change Profile picture</QuickMenuTitle>
+                </SidebarListItem>
+                <SidebarListItem onClick={showDeleteAccount}>
+                  <QuickMenuTitle>Delete the account</QuickMenuTitle>
+                </SidebarListItem>
+              </SidebarListUl>
+            </Wrapper>
+          </RightDiv>
+          {accountForm ? (
+            <Model>
+              <Form2 personal={showAccountForm} />
+            </Model>
+          ) : (
+            ""
+          )}
+          {changePasswordForm ? (
+            <Model>
+              <Form3 personal={showPasswordForm} />
+            </Model>
+          ) : (
+            ""
+          )}
+          {deleteAccountForm ? (
+            <Model>
+              <Form4 personal={showDeleteAccount} />
+            </Model>
+          ) : (
+            ""
+          )}
+          {changeImageForm ? (
+            <Model>
+              <ImageForm personal={showImageForm} />
+            </Model>
+          ) : (
+            ""
+          )}
+          <LeftDiv>
+            <Wrapper>
+              <DetailsWrapper>
+                {mentorDetails?.length === 0 && (
+                  <h1>
+                    No details found please fill the additional information
+                  </h1>
+                )}
+                {mentorDetails?.map((mentor) => (
+                  <div key={mentor.trainee_id}>
+                    <ImgBox>
+                      <div>
+                        <TraineeTitle>
+                          {user.firstname + " " + user.lastname}
+                        </TraineeTitle>
+                        <TraineeRole>
+                          <b>Role : </b> {user.type} <br />
+                          <b>Status : </b>{" "}
+                          {mentor.mentor_approved === "yes"
+                            ? "Application approved"
+                            : "Application not approved"}
+                        </TraineeRole>
+                        <br />
+                        <div style={{ marginTop: "20px" }}>
+                          <SocialButton
+                            target="_blank"
+                            href="https://google.com/"
+                          >
+                            website
+                          </SocialButton>
+                          <SocialButton
+                            target="_blank"
+                            href={mentor.mentor_linkedin_profile}
+                          >
+                            linked in
+                          </SocialButton>
+                        </div>
+                      </div>
 
-          <TraineeRightCol>
-            {traineeDetails?.length === 0 && (
-              <h1>Please fill the profile form in the Home page</h1>
-            )}
-
-            {traineeDetails?.map((trainee) => (
-              <div key={trainee.trainee_id}>
-                <ImgBox>
-                  <div>
-                    <TraineeTitle>
-                      {user.firstname + " " + user.lastname}
-                    </TraineeTitle>
-                    <TraineeRole>
-                      <b>Role : </b> {user.type}
-                    </TraineeRole>
+                      <Img
+                        src={
+                          !mentor.trainee_image
+                            ? `https://navrik.blob.core.windows.net/navrikimage/default.jpg`
+                            : mentor.trainee_image
+                        }
+                      />
+                    </ImgBox>
+                    <DetailsFlex>
+                      <DetailsFlex1>
+                        <DetailsTitles>Your Email : </DetailsTitles>
+                        <DetailsFromDb>{mentor.mentor_email}</DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>Your Mobile : </DetailsTitles>
+                        <DetailsFromDb>
+                          {mentor.mentor_phone_number}
+                        </DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>Skills category : </DetailsTitles>
+                        <DetailsFromDb>
+                          {mentor.mentor_speciality}
+                        </DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>Skills : </DetailsTitles>
+                        <DetailsFromDb>
+                          {mentor.mentor_skills} {mentor.mentor_otherSkills}
+                        </DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>Your mentorship timings :</DetailsTitles>
+                        <DetailsFromDb>
+                          {mentor.mentor_availability_start_time} to
+                          {" " + mentor.mentor_availability_end_time}
+                        </DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>Experience : </DetailsTitles>
+                        <DetailsFromDb>
+                          {mentor.mentor_experience} Year's
+                        </DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>Current Role: </DetailsTitles>
+                        <DetailsFromDb>
+                          {mentor.mentor_current_role}
+                        </DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>Current Company: </DetailsTitles>
+                        <DetailsFromDb>{mentor.mentor_firm}</DetailsFromDb>
+                      </DetailsFlex1>
+                    </DetailsFlex>
                   </div>
-                  <Img
-                    src={
-                      !trainee.trainee_image
-                        ? `https://navrik.blob.core.windows.net/navrikimage/default.jpg`
-                        : trainee.trainee_image
-                    }
-                  />
-                </ImgBox>
-                <DetailsFlex>
-                  <DetailsFlex1>
-                    <DetailsTitles>Your Email : </DetailsTitles>
-                    <DetailsFromDb>{trainee.trainee_email}</DetailsFromDb>
-                  </DetailsFlex1>
-                  <DetailsFlex1>
-                    <DetailsTitles>Your Mobile : </DetailsTitles>
-                    <DetailsFromDb>{trainee.trainee_mobile}</DetailsFromDb>
-                  </DetailsFlex1>
-                  <DetailsFlex1>
-                    <DetailsTitles>Date Of Birth : </DetailsTitles>
-                    <DetailsFromDb>
-                      {new Date(trainee.trainee_dob).toLocaleDateString()}
-                    </DetailsFromDb>
-                  </DetailsFlex1>
-                  <DetailsFlex1>
-                    <DetailsTitles>Experience : </DetailsTitles>
-                    <DetailsFromDb>
-                      {trainee.trainee_experience} Year's
-                    </DetailsFromDb>
-                  </DetailsFlex1>
-                  <DetailsFlex1>
-                    <DetailsTitles>Education : </DetailsTitles>
-                    <DetailsFromDb>{trainee.trainee_profession}</DetailsFromDb>
-                  </DetailsFlex1>
-                  <DetailsFlex1>
-                    <DetailsTitles>Address : </DetailsTitles>
-                    <DetailsFromDb>{trainee.trainee_address}</DetailsFromDb>
-                  </DetailsFlex1>
-                </DetailsFlex>
-              </div>
-            ))}
-          </TraineeRightCol>
-        </TraineeFlex>
-      </TraineeWrapper>
-      <GoToTop />
-    </TraineeSect>
+                ))}
+              </DetailsWrapper>
+            </Wrapper>
+          </LeftDiv>
+        </Div>
+        <GoToTop />
+      </Section>
+    </>
   );
 };
 

@@ -1,45 +1,9 @@
 import styled from "styled-components";
-
-export const TraineeSect = styled.section`
-  width: 100%;
-  height: 100vh;
-  @media only screen and (max-width: 968px) {
-    height: auto;
-  }
-`;
-export const TraineeWrapper = styled.div`
-  width: 85%;
-  height: 100%;
-  margin: 0px auto;
-`;
-export const TraineeFlex = styled.div`
-  display: flex;
-  padding: 50px 0;
-  align-items: center;
-  justify-content: center;
-  @media only screen and (max-width: 868px) {
-    display: block;
-  }
-`;
-export const TraineeRightCol = styled.div`
-  flex: 7;
-  width: 100%;
-  border-right: 1px solid lightgrey;
-  margin-right: 40px;
-  @media only screen and (max-width: 968px) {
-    border-right: none;
-    margin-right: none;
-  }
-`;
-export const TraineeLeftCol = styled.div`
-  flex: 5;
-  margin-top: 50px;
-`;
 export const ImgBox = styled.div`
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
 `;
 export const ImgForm = styled.form``;
 
@@ -66,28 +30,24 @@ export const TraineeRole = styled.p`
   display: inline;
   margin-right: 20px;
   text-transform: capitalize;
+  margin-bottom: 20px !important;
 `;
-export const TraineeUl = styled.ul``;
-export const TraineeLi = styled.li`
-  list-style-type: none;
-  border-bottom: 1px solid lightgrey;
-  padding: 5px;
+export const SocialButton = styled.a`
+  margin-top: 20px !important;
+  padding: 10px 20px;
+  border: none;
+  outline: none;
+  box-shadow: rgb(0 0 0 / 10%) 0px 5px 24px;
   cursor: pointer;
-  width: 70%;
-  font-size: 19px;
-  transition: all 0.4s ease-in-out;
-  /* text-align: center; */
-  &:nth-child(1) {
-    background-color: lightgrey;
-  }
-  &:nth-child(6) {
-    border-bottom: none !important;
-  }
+  border-radius: 5px;
+  margin: 15px 15px 0 0;
+  font-size: 16px;
+  transition: all 0.5s ease-in-out;
+  text-decoration: none;
   &:hover {
-    background-color: lightgrey;
+    border: 1px solid #111;
   }
 `;
-
 export const DetailsFlex = styled.div`
   margin-left: 60px;
   text-transform: capitalize;
@@ -106,4 +66,55 @@ export const DetailsTitles = styled.h4`
 export const DetailsFromDb = styled.p`
   font-weight: 400;
   margin-left: 5px;
+`;
+export const Section = styled.section`
+  width: 100%;
+  height: 100vh;
+`;
+export const Div = styled.div`
+  display: flex;
+`;
+export const RightDiv = styled.div`
+  flex: 2.5;
+  position: sticky;
+  top: 120px;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(245, 245, 245, 1) 32%,
+    rgba(224, 251, 252, 1) 100%
+  );
+`;
+export const LeftDiv = styled.div`
+  flex: 9.5;
+  overflow: scroll;
+  height: 100vh;
+`;
+export const SidebarListUl = styled.ul`
+  list-style: none;
+  padding: 10px;
+`;
+export const SidebarListItem = styled.li`
+  width: 100%;
+  cursor: pointer;
+  border-bottom: 1px solid lightgrey;
+  :nth-child(5) {
+    border-bottom: none;
+  }
+`;
+export const Wrapper = styled.div`
+  padding: 30px;
+`;
+export const DetailsWrapper = styled.div`
+  margin: 10px;
+  //box-shadow: rgb(142 151 158 / 15%) 0px 4px 19px;
+  padding: 20px;
+`;
+export const QuickMenuTitle = styled.h3`
+  font-size: 21px;
+  color: black;
+  opacity: 0.9;
+  font-weight: 400;
 `;

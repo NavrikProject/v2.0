@@ -5,15 +5,78 @@ import {
   Field,
   FormOption,
   FormSelect,
-  Input,
+ 
 } from "./MentorRegisterStepELements";
+import TimePicker from "rc-time-picker";
+import "rc-time-picker/assets/index.css";
 
 const MentorSlotDetails = ({
   formData,
   setFormData,
   errorData,
   setErrorData,
+  endTime,
+  setEndTime,
 }) => {
+  const showSecond = false;
+  const str = showSecond ? "HH:mm:ss" : "HH:mm";
+
+  function disabledHours() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 23];
+  }
+
+  function generateOptions(length, excludedOptions) {
+    const arr = [];
+    for (let value = 0; value < length; value++) {
+      if (excludedOptions.indexOf(value) < 0) {
+        arr.push(value);
+      }
+    }
+    return arr;
+  }
+
+  function disabledMinutes(h) {
+    switch (h) {
+      case 9:
+        return generateOptions(60, [30]);
+      case 21:
+        return generateOptions(60, [0]);
+      default:
+        return generateOptions(60, [0, 15, 30, 45]);
+    }
+  }
+  function disabledSeconds(h, m) {
+    return [h + (m % 60)];
+  }
+  function onChangeValue(value) {
+    let startTime = value?.format(str);
+    let minutes = startTime?.split(":")[1];
+    if (minutes === "00" || minutes === "15") {
+      let hour = startTime?.split(":")[0];
+      minutes = parseInt(minutes) + 30;
+      minutes = minutes.toString();
+      let newTime = `${hour}:${minutes.toString()}`;
+      setEndTime(newTime);
+      setFormData({ ...formData, endTime: newTime });
+    } else if (minutes === "30") {
+      let hour = startTime?.split(":")[0];
+      hour = parseInt(hour) + 1;
+      minutes = "00";
+      let endTime = hour + ":" + minutes;
+      let newTime = `${hour}:${minutes.toString()}`;
+      setEndTime(newTime);
+      setFormData({ ...formData, endTime: endTime });
+    } else {
+      let hour = startTime?.split(":")[0];
+      hour = parseInt(hour) + 1;
+      minutes = "15";
+      let endTime = hour + ":" + minutes;
+      let newTime = `${hour}:${minutes.toString()}`;
+      setEndTime(newTime);
+      setFormData({ ...formData, endTime: endTime });
+    }
+    setFormData({ ...formData, startTime: startTime });
+  }
   return (
     <>
       <Field>
@@ -55,24 +118,7 @@ const MentorSlotDetails = ({
         </FormSelect>
         <ErrorMessage>{errorData.mentorAvailability}</ErrorMessage>
       </Field>
-      <Field>
-        <p>
-          Choose the Time Slots (Minimum 60min Ex: 12:00 to 13:00 OR 12:30 to
-          13:30)
-        </p>
-        From:
-        <Input
-          onFocus={() => setErrorData({ ...errorData, startTime: "" })}
-          value={formData.startTime}
-          required
-          type="time"
-          min="1"
-          step="1800"
-          onChange={(event) =>
-            setFormData({ ...formData, startTime: event.target.value })
-          }
-        />
-        <ErrorMessage>{errorData.startTime}</ErrorMessage>
+      {/* <Field>
         <br /> To:
         <Input
           onFocus={() => setErrorData({ ...errorData, endTime: "" })}
@@ -85,6 +131,21 @@ const MentorSlotDetails = ({
           }
         />
         <ErrorMessage>{errorData.endTime}</ErrorMessage>
+      </Field> */}
+      <Field>
+        <p>Choose the Time Slots (Ex: 12:15 OR 12:30 OR 12:45 )</p>
+        From
+        <TimePicker
+          showSecond={showSecond}
+          className="xxx"
+          onChange={onChangeValue}
+          disabledMinutes={disabledMinutes}
+          disabledSeconds={disabledSeconds}
+          disabledHours={disabledHours}
+        />
+        <p>
+          Your slot timings {formData?.startTime} to {endTime}
+        </p>
       </Field>
     </>
   );

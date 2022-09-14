@@ -59,7 +59,7 @@ export const MentorRegisterRightDiv = styled.div`
 `;
 
 export const Field = styled.div`
-  width: 100%;
+  width: 80%;
   margin-bottom: 15px;
 `;
 export const Input = styled.input`
@@ -76,13 +76,13 @@ export const Input = styled.input`
   }
 `;
 export const PwdField = styled.div`
-  width: 100%;
+  width: 80%;
   margin-top: 20px;
   position: relative;
 `;
 export const PwdIcons = styled.div`
-  top: 13px;
-  right: 13px;
+  top: 12px;
+  right: 15px;
   position: absolute;
   width: 20px;
   height: 20px;
@@ -176,6 +176,26 @@ export const JoinButton = styled.button`
   &:hover {
     opacity: 0.9;
   }
+`;
+
+export const SignUpButton = styled.button`
+  padding: 10px 20px;
+  width: 100%;
+  outline: none;
+  padding-left: 15px;
+  font-size: 17px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  color: #fff;
+  border-bottom-width: 2px;
+  transition: all 0.4s ease;
+  font-size: 20px;
+  font-weight: 500;
+  padding-left: 0;
+  border: none;
+  cursor: pointer;
+  background: -webkit-linear-gradient(left, #3e5ce4, #4282fa);
+  margin-top: 20px !important;
 `;
 export const FormSelect = styled.select`
   width: 100%;

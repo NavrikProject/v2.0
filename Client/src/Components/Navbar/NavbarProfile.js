@@ -86,12 +86,12 @@ const NavbarProfile = (props) => {
                 <SubmenuListItem>
                   <Link
                     style={{ textDecoration: "none", color: "#062C30" }}
-                    to={`/${user?.type}/profile/bookings`}
+                    to={`/${user?.type}/profile/my-sessions`}
                   >
                     <span>
                       <i className="fa-solid fa-calendar-check"></i>
                     </span>
-                    My Bookings
+                    My Sessions
                   </Link>
                 </SubmenuListItem>
               )}
@@ -99,12 +99,12 @@ const NavbarProfile = (props) => {
                 <SubmenuListItem>
                   <Link
                     style={{ textDecoration: "none", color: "#062C30" }}
-                    to={`/${user?.type}/profile/bookings`}
+                    to={`/${user?.type}/profile/my-sessions`}
                   >
                     <span>
                       <i className="fa-solid fa-calendar-check"></i>
                     </span>
-                    My Bookings
+                    My Sessions
                   </Link>
                 </SubmenuListItem>
               )}

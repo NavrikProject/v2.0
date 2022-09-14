@@ -37,6 +37,24 @@ export const RegisterFormTitle = styled.h1`
   font-weight: 700;
   text-align: center;
 `;
+export const InputButton = styled.button`
+  padding: 10px 20px;
+  width: 100%;
+  outline: none;
+  padding-left: 15px;
+  font-size: 17px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  color: #fff;
+  border-bottom-width: 2px;
+  transition: all 0.4s ease;
+  font-size: 20px;
+  font-weight: 500;
+  padding-left: 0;
+  border: none;
+  cursor: pointer;
+  background: -webkit-linear-gradient(left, #3e5ce4, #4282fa);
+`;
 export const LineAfter = styled.div`
   &::before {
     content: "";
@@ -132,24 +150,6 @@ export const InputRadio = styled.input`
   }
 `;
 
-export const InputButton = styled.button`
-  padding: 10px 20px;
-  width: 100%;
-  outline: none;
-  padding-left: 15px;
-  font-size: 17px;
-  border-radius: 5px;
-  border: 1px solid lightgrey;
-  color: #fff;
-  border-bottom-width: 2px;
-  transition: all 0.4s ease;
-  font-size: 20px;
-  font-weight: 500;
-  padding-left: 0;
-  border: none;
-  cursor: pointer;
-  background: -webkit-linear-gradient(left, #3e5ce4, #4282fa);
-`;
 export const InputRadLabel = styled.label`
   font-size: 16px;
   margin-left: 7px;

@@ -48,10 +48,12 @@ const RegisterForm = () => {
   const [showIcon, setShowIcon] = useState(false);
   const [showIcons, setShowIcons] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState("");
   const password = watch("password");
 
   const registerSubmitHandler = async (data) => {
     // // http:localhost:5000/api/auth/register
+    console.log(data);
     try {
       setLoading(true);
       const res = await axios.post("/auth/email-register", data);
@@ -85,6 +87,15 @@ const RegisterForm = () => {
   setTimeout(() => {
     setError("");
   }, 7000);
+
+  const UploadFile = async (event) => {
+    event.preventDefault();
+    let data = new FormData();
+    data.append("image", image);
+    try {
+      const res = await axios.post("/feedback/upload", data);
+    } catch (error) {}
+  };
   return (
     <React.Fragment>
       <RegisterFormSect>
@@ -208,7 +219,7 @@ const RegisterForm = () => {
                           type="radio"
                           id="trainee"
                           value="trainee"
-                          {...register("radio", {
+                          {...register("type", {
                             required: "User type  is Required",
                           })}
                         />
@@ -219,7 +230,7 @@ const RegisterForm = () => {
                           type="radio"
                           id="trainer"
                           value="trainer"
-                          {...register("radio", {
+                          {...register("type", {
                             required: "User type  is Required",
                           })}
                         />
@@ -230,7 +241,7 @@ const RegisterForm = () => {
                           type="radio"
                           id="job-seeker"
                           value="job-seeker"
-                          {...register("radio", {
+                          {...register("type", {
                             required: "User type  is Required",
                           })}
                         />
@@ -243,7 +254,7 @@ const RegisterForm = () => {
                           type="radio"
                           id="recruiter"
                           value="recruiter"
-                          {...register("radio", {
+                          {...register("type", {
                             required: "User type  is Required",
                           })}
                         />
@@ -252,8 +263,8 @@ const RegisterForm = () => {
                         </InputRadLabel>
                       </RadioWrapper>
                     </RadioWrapper>
-                    {errors.radio && (
-                      <ErrorMessage>{errors.radio.message}</ErrorMessage>
+                    {errors.type && (
+                      <ErrorMessage>{errors.type.message}</ErrorMessage>
                     )}
                   </Field>
                   <FormLabelDiv>
@@ -290,7 +301,15 @@ const RegisterForm = () => {
             </RegisterFormLeft>
             <RegisterFormRight>
               <RegistrationImageDiv>
-                <RegistrationImage src={regImg} />
+                {/* <RegistrationImage src={regImg} /> */}
+                <input
+                  type="file"
+                  name="image"
+                  onChange={(event) => setImage(event.target.files[0])}
+                />
+                <button type="submit" onClick={UploadFile}>
+                  Upload
+                </button>
               </RegistrationImageDiv>
             </RegisterFormRight>
           </RegisterFormWrapper>

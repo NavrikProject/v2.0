@@ -21,16 +21,20 @@ import TraineeBookingProfileRoute from "./routes/traineeBookingProfileRoute.js";
 import mentorBookingRoute from "./routes/MentorBookingRoute.js";
 import FeedbackRoute from "./routes/feedbackRoute.js";
 import ContributersRoute from "./routes/contributersRoute.js";
+import googleRoute from "./routes/googleRoute.js";
 import Razorpay from "razorpay";
 import jwt from "jsonwebtoken";
 import { Server } from "socket.io";
 import { createServer } from "http";
-
 import config from "./config/dbconfig.js";
 import rp from "request-promise";
 import * as schedule from "node-schedule";
+import fs from "fs";
+import masterRoute from "./routes/masterRoute.js";
+import BlobServiceClient from "@azure/storage-blob";
 
 const job = schedule.scheduleJob("31 * * * *", function () {});
+const __dirname = path.resolve();
 
 const app = express();
 const httpServer = createServer(app);
@@ -40,6 +44,8 @@ app.use(morgan("common"));
 app.use(cookieParser());
 app.use(cors());
 app.use(helmet());
+
+app.use("/images", express.static(path.join(__dirname, "/mnt/testing")));
 
 app.use(
   fileUpload({
@@ -82,7 +88,6 @@ app.get("/hello-world", async (req, res) => {
     }
   });
 });
-
 app.use("/api/auth", authRouter);
 app.use("/api/courses/new", courseRegdRoute);
 app.use("/api/courses", courseRoute);
@@ -97,6 +102,8 @@ app.use("/api/mentor/profile", TraineeBookingProfileRoute);
 app.use("/api/mentor/bookings", mentorBookingRoute);
 app.use("/api/feedback", FeedbackRoute);
 app.use("/api/contributers", ContributersRoute);
+app.use("/api/google", googleRoute);
+app.use("/api", masterRoute);
 const io = new Server(httpServer, {
   /* options */ cors: {
     origin: "http://localhost:3000",
@@ -180,10 +187,19 @@ app.get("/new-meeting", (req, res) => {
       console.log("API call failed, reason ", err.message);
     });
 });
-httpServer.listen(port, (req, res) => {
+httpServer.listen(port, async (req, res) => {
   console.log("listening on port " + port);
 });
 
+let blobServiceClient;
+async function getBlobServiceClient() {
+  if (!blobServiceClient) {
+    blobServiceClient = await BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING
+    );
+  }
+  return blobServiceClient;
+}
 // app.listen(port, (req, res) => {
 //   console.log("listening on port " + port);
 // });

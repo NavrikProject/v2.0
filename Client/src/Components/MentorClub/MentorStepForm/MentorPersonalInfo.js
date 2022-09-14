@@ -5,6 +5,7 @@ import {
   Input,
   TextArea,
 } from "./MentorRegisterStepELements";
+import "rc-time-picker/assets/index.css";
 const MentorPersonalInfo = ({
   formData,
   setFormData,

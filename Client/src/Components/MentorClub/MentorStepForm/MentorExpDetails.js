@@ -1,5 +1,5 @@
-import React from "react";
-import { mentorSkills } from "../../Data/MentorData";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   ErrorMessage,
   Field,
@@ -13,6 +13,26 @@ const MentorExpDetails = ({
   errorData,
   setErrorData,
 }) => {
+  const [skills, setSkills] = useState([]);
+  const [showOthersInput, setShowOthersInput] = useState(false);
+  useEffect(() => {
+    const getSkillsData = async () => {
+      const res = await axios.get(
+        `/get/skills/master?name=${formData?.specialty}`
+      );
+      setSkills(res.data);
+    };
+    getSkillsData();
+  }, [formData.specialty]);
+
+  const formSkillHandler = (event) => {
+    if (event.target.value === "others") {
+      setShowOthersInput(true);
+    } else {
+      setShowOthersInput(false);
+    }
+    setFormData({ ...formData, skills: event.target.value });
+  };
   return (
     <>
       <Field>
@@ -26,33 +46,13 @@ const MentorExpDetails = ({
           }
         >
           <FormOption value="">Choose your experience</FormOption>
-          <FormOption value="0">0</FormOption>
-          <FormOption value="1">1</FormOption>
-          <FormOption value="2">2</FormOption>
-          <FormOption value="3">3</FormOption>
-          <FormOption value="4">4</FormOption>
-          <FormOption value="5">5</FormOption>
+          <FormOption value="0-5">7- 10</FormOption>
+          <FormOption value="5-10">10-15</FormOption>
+          <FormOption value="15-20">15-20</FormOption>
+          <FormOption value="20-25">20-25</FormOption>
+          <FormOption value="25+">25+</FormOption>
         </FormSelect>
         <ErrorMessage>{errorData.experience}</ErrorMessage>
-      </Field>
-      <Field>
-        <FormSelect
-          required
-          name="skills"
-          value={formData.skills}
-          onChange={(event) =>
-            setFormData({ ...formData, skills: event.target.value })
-          }
-          onFocus={() => setErrorData({ ...errorData, skills: "" })}
-        >
-          <FormOption value="">Choose your skill</FormOption>
-          {mentorSkills.map((skill) => (
-            <FormOption key={skill.id} value={skill.skills}>
-              {skill.skills}
-            </FormOption>
-          ))}
-        </FormSelect>
-        <ErrorMessage>{errorData.skills}</ErrorMessage>
       </Field>
       <Field>
         <FormSelect
@@ -64,18 +64,48 @@ const MentorExpDetails = ({
           }
           onFocus={() => setErrorData({ ...errorData, specialty: "" })}
         >
-          <FormOption value="">Choose a below option</FormOption>
-          <FormOption value="software-development">
-            Software Development
-          </FormOption>
-          <FormOption value="business-management">
-            Business Management
-          </FormOption>
-          <FormOption value="rpa">RPA</FormOption>
-          <FormOption value="commerce">Commerce</FormOption>
+          <FormOption value="">Choose a Skills Category</FormOption>
+          <FormOption value="technology">Technology</FormOption>
+          <FormOption value="domain">Domain</FormOption>
+          <FormOption value="business-skills">Business skills</FormOption>
         </FormSelect>
         <ErrorMessage>{errorData.specialty}</ErrorMessage>
       </Field>
+      <Field>
+        <FormSelect
+          required
+          name="skills"
+          value={formData.skills}
+          onChange={(event) => formSkillHandler(event)}
+          onFocus={() => setErrorData({ ...errorData, skills: "" })}
+        >
+          <FormOption value="">Choose your skill</FormOption>
+          {skills?.map((skill) => (
+            <FormOption
+              key={skill.skill_master_id}
+              value={skill.skill_master_skill_name}
+            >
+              {skill.skill_master_skill_name}
+            </FormOption>
+          ))}
+          <FormOption value="others">Others</FormOption>
+        </FormSelect>
+        <ErrorMessage>{errorData.skills}</ErrorMessage>
+      </Field>
+      {showOthersInput && (
+        <Field>
+          <Input
+            value={formData.otherSkills}
+            name="skills"
+            type="text"
+            placeholder="Enter your other skills"
+            onChange={(event) =>
+              setFormData({ ...formData, otherSkills: event.target.value })
+            }
+            required
+          />
+        </Field>
+      )}
       <Field>
         <Input
           value={formData.firm}
