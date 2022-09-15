@@ -191,15 +191,19 @@ httpServer.listen(port, async (req, res) => {
   console.log("listening on port " + port);
 });
 
-let blobServiceClient;
-async function getBlobServiceClient() {
-  if (!blobServiceClient) {
-    blobServiceClient = await BlobServiceClient.fromConnectionString(
-      process.env.AZURE_STORAGE_CONNECTION_STRING
-    );
-  }
-  return blobServiceClient;
-}
+// BlobServiceClient.fromConnectionString(
+//   process.env.AZURE_STORAGE_CONNECTION_STRING
+// );
+// console.log(blobServiceClient);
+// async function getBlobServiceClient() {
+//   if (!blobServiceClient) {
+//     blobServiceClient = await BlobServiceClient.fromConnectionString(
+//       "BlobEndpoint=https://navrikimages.blob.core.windows.net/;QueueEndpoint=https://navrikimages.queue.core.windows.net/;FileEndpoint=https://navrikimages.file.core.windows.net/;TableEndpoint=https://navrikimages.table.core.windows.net/;SharedAccessSignature=sv=2021-06-08&ss=bfqt&srt=c&sp=rwdlacupyx&se=2022-09-15T19:03:20Z&st=2022-09-15T11:03:20Z&spr=https&sig=oun1iznX7Ql2BDj6vsEZhlYUz5QQr3yfbYU714FgXdI%3D"
+//     );
+//   }
+//   return blobServiceClient;
+// }
+// getBlobServiceClient();
 // app.listen(port, (req, res) => {
 //   console.log("listening on port " + port);
 // });

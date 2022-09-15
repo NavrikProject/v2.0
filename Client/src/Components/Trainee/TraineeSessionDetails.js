@@ -1,11 +1,12 @@
 import React from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import GoToTop from "../GoToTop";
 import AttendedSessions from "./Sessions/AttendedSessions";
 import CompletedSessions from "./Sessions/CompletedSessions";
 import RefundedSessions from "./Sessions/RefundedSessions";
-import UpcomingSession from "./UpcomingSession";
+import UpcomingSession from "./Sessions/UpcomingSession";
 const Section = styled.section`
   width: 100%;
   height: 100vh;
@@ -40,7 +41,7 @@ const SidebarListItem = styled.li`
   cursor: pointer;
   border-bottom: 1px solid lightgrey;
 
-  :nth-child(5) {
+  :nth-child(6) {
     border-bottom: none;
   }
   &:hover {
@@ -69,6 +70,20 @@ const TraineeSessionDetails = () => {
           <Wrapper>
             <h1>Quick Menu</h1>
             <SidebarListUl>
+              <SidebarListItem>
+                <QuickMenuTitle>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                      opacity: 0.9,
+                    }}
+                    to={`/trainee/profile`}
+                  >
+                    View Profile
+                  </Link>
+                </QuickMenuTitle>
+              </SidebarListItem>
               <SidebarListItem
                 active
                 onClick={() => {

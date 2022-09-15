@@ -673,9 +673,49 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
                   });
               });
             }
+            if (min === "15") {
+              const date = new Date(year, month, day, hour, 5, 0);
+              schedule.scheduleJob(date, function () {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = sendRemainderOnTheDay(
+                  mentorEmail,
+                  "Remainder for the session will start in 10 minutes",
+                  mentorHostUrl,
+                  "Host Meeting"
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    console.log("Sent");
+                  })
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              });
+            }
             if (min === "30") {
               min = min - 10;
               const date = new Date(year, month, day, hour, min, 0);
+              schedule.scheduleJob(date, function () {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = sendRemainderOnTheDay(
+                  mentorEmail,
+                  "Remainder for the session will start in 10 minutes",
+                  joinUrl,
+                  "Start Meeting"
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    console.log("Sent");
+                  })
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              });
+            }
+            if (min === "45") {
+              const date = new Date(year, month, day, hour, 35, 0);
               schedule.scheduleJob(date, function () {
                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                 const msg = sendRemainderOnTheDay(
@@ -728,9 +768,29 @@ function sentEmailRemainderToMentorBefore5Min(req, res) {
                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                 const msg = sendRemainderOnTheDay(
                   mentorEmail,
-                  "Remainder for the session will start in 5 minutes",
+                  "Remainder for the session will start in 10 minutes",
                   mentorHostUrl,
-                  "Join Meeting"
+                  "Host Meeting"
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    console.log("Sent");
+                  })
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              });
+            }
+            if (min === "15") {
+              const date = new Date(year, month, day, hour, 10, 0);
+              schedule.scheduleJob(date, function () {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = sendRemainderOnTheDay(
+                  mentorEmail,
+                  "Remainder for the session will start in 10 minutes",
+                  mentorHostUrl,
+                  "Host Meeting"
                 );
                 sgMail
                   .send(msg)
@@ -743,15 +803,34 @@ function sentEmailRemainderToMentorBefore5Min(req, res) {
               });
             }
             if (min === "30") {
-              min = min - 5;
-              const date = new Date(year, month, day, hour, min, 0);
+              const date = new Date(year, month, day, hour, 25, 0);
               schedule.scheduleJob(date, function () {
                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                 const msg = sendRemainderOnTheDay(
                   mentorEmail,
-                  "Remainder for the session will start in 5 minutes",
-                  mentorHostUrl,
-                  "Host Meeting"
+                  "Remainder for the session will start in 10 minutes",
+                  joinUrl,
+                  "Start Meeting"
+                );
+                sgMail
+                  .send(msg)
+                  .then(() => {
+                    console.log("Sent");
+                  })
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              });
+            }
+            if (min === "45") {
+              const date = new Date(year, month, day, hour, 40, 0);
+              schedule.scheduleJob(date, function () {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = sendRemainderOnTheDay(
+                  mentorEmail,
+                  "Remainder for the session will start in 10 minutes",
+                  joinUrl,
+                  "Start Meeting"
                 );
                 sgMail
                   .send(msg)

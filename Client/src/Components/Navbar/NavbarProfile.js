@@ -82,7 +82,7 @@ const NavbarProfile = (props) => {
                   </Link>
                 </SubmenuListItem>
               )}
-              {user?.type === "trainee" && (
+              {/* {user?.type === "trainee" && (
                 <SubmenuListItem>
                   <Link
                     style={{ textDecoration: "none", color: "#062C30" }}
@@ -94,8 +94,8 @@ const NavbarProfile = (props) => {
                     My Sessions
                   </Link>
                 </SubmenuListItem>
-              )}
-              {user?.type === "mentor" && (
+              )} */}
+              {/* {user?.type === "mentor" && (
                 <SubmenuListItem>
                   <Link
                     style={{ textDecoration: "none", color: "#062C30" }}
@@ -107,7 +107,7 @@ const NavbarProfile = (props) => {
                     My Sessions
                   </Link>
                 </SubmenuListItem>
-              )}
+              )} */}
               {user?.type === "contributer" && (
                 <>
                   <SubmenuListItem>
@@ -144,6 +144,9 @@ const NavbarProfile = (props) => {
                   style={{ textDecoration: "none", color: "#062C30" }}
                   to={`/login`}
                 >
+                  <span>
+                    <i className="fa-solid fa-right-from-bracket"></i>
+                  </span>{" "}
                   Logout
                 </Link>
               </SubmenuListItem>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import UpcomingAllSessionDetails from "./UpcomingAllSessionDetails";
-import LoadingSpinner from "../utils/LoadingSpinner";
+import LoadingSpinner from "../../utils/LoadingSpinner";
 import { Link } from "react-router-dom";
 const Div = styled.div``;
 const UpcomingTitle = styled.h1`

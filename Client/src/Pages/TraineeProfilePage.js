@@ -4,7 +4,7 @@ import LoadingSpinner from "../Components/utils/LoadingSpinner";
 const Footer = React.lazy(() => import("../Components/Footer/Footer"));
 const NavbarRes = React.lazy(() => import("../Components/Navbar/NavbarRes"));
 const TraineeProfile = React.lazy(() =>
-  import("../Components/Trainee/TraineeProfile")
+  import("../Components/Trainee/Profile/TraineeProfile.js")
 );
 
 const TraineeProfilePage = () => {
@@ -13,6 +13,7 @@ const TraineeProfilePage = () => {
       <Suspense fallback={<LoadingSpinner />}>
         <NavbarRes />
         <TraineeProfile />
+
         <Footer />
       </Suspense>{" "}
     </>

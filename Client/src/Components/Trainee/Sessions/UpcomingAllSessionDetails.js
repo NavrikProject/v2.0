@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import TraineeModifyBooking from "./TraineeModifyBooking";
-import CancelAppointment from "./CancelAppointment";
-import FeedbackForm from "./FeedbackForm";
+import TraineeModifyBooking from "../TraineeModifyBooking";
+import CancelAppointment from "../CancelAppointment";
+import FeedbackForm from "../FeedbackForm";
 import styled from "styled-components";
 import {
   JoinButton,
   ModifyButton,
   RefundedDoneButton,
   UnModifiedButton,
-} from "./ButtonElements";
+} from "../ButtonElements";
 import axios from "axios";
 import { useSelector } from "react-redux";
 

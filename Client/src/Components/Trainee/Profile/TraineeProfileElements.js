@@ -66,6 +66,9 @@ export const DetailsTitles = styled.h4`
 export const DetailsFromDb = styled.p`
   font-weight: 400;
   margin-left: 5px;
+  span {
+    color: gold;
+  }
 `;
 export const Section = styled.section`
   width: 100%;
@@ -100,7 +103,7 @@ export const SidebarListItem = styled.li`
   width: 100%;
   cursor: pointer;
   border-bottom: 1px solid lightgrey;
-  :nth-child(5) {
+  :nth-child(6) {
     border-bottom: none;
   }
 `;

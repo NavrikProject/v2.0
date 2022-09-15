@@ -57,6 +57,9 @@ export const MentorBioDesc = styled.p`
   font-size: 16px;
   line-height: 1.6rem;
   color: #111;
+  width: 100%;
+  overflow: hidden;
+  overflow-wrap: break-word;
 `;
 export const MentorLanguagesDiv = styled.div`
   display: flex;
