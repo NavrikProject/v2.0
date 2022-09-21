@@ -175,7 +175,7 @@ const RegisterForm = () => {
                           value:
                             /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/,
                           message:
-                            "A minimum 8 characters password contains a combination of uppercase and lowercase letter and number are required.",
+                            "A minimum 8 characters password contains a combination of uppercase and lowercase letter and number are required special characters like @ $ ! % * ? &",
                         },
                       })}
                       onKeyUp={() => {

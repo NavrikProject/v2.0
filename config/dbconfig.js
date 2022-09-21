@@ -3,6 +3,10 @@ import sql from "mssql/msnodesqlv8.js";
 
 dotenv.config();
 // Create connection to database
+// user: process.env.SQL_AZURE_USERNAME,
+//   password: process.env.SQL_AZURE_PWD,
+//   database: process.env.SQL_AZURE_DATABASE,
+//   server: process.env.SQL_AZURE_SERVER,
 // const config = {
 //   authentication: {
 //     options: {
@@ -20,7 +24,11 @@ dotenv.config();
 // };
 
 const config = {
-  database: "practilearnDb",
+  // user: process.env.SQL_AZURE_USERNAME,
+  // password: process.env.SQL_AZURE_PWD,
+  // database: process.env.SQL_AZURE_DATABASE,
+  // server: process.env.SQL_AZURE_SERVER,
+  database: "practiwiz",
   server: "MAHESH\\SQLEXPRESS",
   driver: "msnodesqlv8",
   user: "sa",
@@ -32,5 +40,3 @@ const config = {
 };
 
 export default config;
-
-// Server=tcp:navrikdbserver.database.windows.net,1433;Initial Catalog=navrik;Persist Security Info=False;User ID=navrik;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;

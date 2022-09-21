@@ -1,4 +1,4 @@
-import sql from "mssql";
+import sql from "mssql/msnodesqlv8.js";
 import config from "../config/dbconfig.js";
 
 export async function getMasterSkills(req, res, next) {
@@ -6,8 +6,7 @@ export async function getMasterSkills(req, res, next) {
 
   try {
     sql.connect(config, (err) => {
-      if (err)
-        return res.send({ error: "there was some problem connecting to db" });
+      if (err) return res.send({ error: err.message });
       const request = new sql.Request();
       request.input("category", sql.VarChar, category);
       request.query(
@@ -15,7 +14,7 @@ export async function getMasterSkills(req, res, next) {
         (err, result) => {
           if (err)
             return res.send({
-              error: "There are not courses",
+              error: err.message,
             });
           if (result.recordset.length > 0) {
             res.send(result.recordset);

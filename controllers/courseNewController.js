@@ -1,4 +1,4 @@
-import sql from "mssql";
+import sql from "mssql/msnodesqlv8.js";
 import config from "../config/dbconfig.js";
 import azureStorage from "azure-storage";
 import intoStream from "into-stream";

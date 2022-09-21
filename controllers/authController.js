@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import sql from "mssql";
+import sql from "mssql/msnodesqlv8.js";
 import config from "../config/dbconfig.js";
 import sgMail from "@sendgrid/mail";
 import sendEmail from "../middleware/sendEmail.js";
@@ -188,7 +188,7 @@ export async function login(req, res) {
     request.query(
       `select * from users_dtls where user_email = @email AND user_type = @type`,
       (err, result) => {
-        if (result.recordset.length > 0) {
+        if (result?.recordset.length > 0) {
           bcrypt.compare(
             password,
             result.recordset[0].user_pwd,

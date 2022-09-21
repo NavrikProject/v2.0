@@ -9,7 +9,7 @@ import {
   FaqTitle,
   FaqWrapper,
 } from "./FaqElements";
-import { faqData } from "../Data/FaqData";
+import { mentorFaqData } from "../Data/MentorData";
 const Faq = () => {
   const [selected, setSelected] = useState(null);
   const toggleAccordion = (index) => {
@@ -24,7 +24,7 @@ const Faq = () => {
         <FaqWrapper>
           <FaqContainer>
             <FaqTitle>Here some Faq</FaqTitle>
-            {faqData.map((faq, index) => (
+            {mentorFaqData.map((faq, index) => (
               <FaqBox key={index}>
                 <FaqQuestion onClick={() => toggleAccordion(index)}>
                   {faq.question}

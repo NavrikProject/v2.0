@@ -1,4 +1,4 @@
-import sql from "mssql";
+import sql from "mssql/msnodesqlv8.js";
 import config from "../config/dbconfig.js";
 import sgMail from "@sendgrid/mail";
 import moment from "moment";
@@ -978,415 +978,415 @@ export async function getAllRefundedSessions(req, res, next) {
   }
 }
 
-//remainder email will be sent before one day to trainee
-function sentEmailRemainderBeforeOneDayToTrainee(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      const amountPaidStatus = "Paid";
-      const traineeSessionStatus = "upcoming";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let traineeEmail = res.user_email;
-            let traineeJoinUrl = res.trainee_join_url;
-            let year = new Date(res.booking_mentor_date).getDay();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            var day = new Date(res.booking_mentor_date).getDate();
-            day = day - 1;
-            const date = new Date(year, month, day, 0, 0, 0);
-            schedule.scheduleJob(date, function () {
-              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-              const msg = sendRemainderOnTheDay(
-                traineeEmail,
-                "Remainder for the session",
-                traineeJoinUrl,
-                "Join Meeting"
-              );
-              sgMail
-                .send(msg)
-                .then(() => {
-                  console.log("Sent");
-                })
-                .catch((error) => {
-                  console.log(error.message);
-                });
-            });
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
+// //remainder email will be sent before one day to trainee
+// function sentEmailRemainderBeforeOneDayToTrainee(req, res) {
+//   try {
+//     sql.connect(config, (err) => {
+//       if (err) return res.send(err.message);
+//       const request = new sql.Request();
+//       const amountPaidStatus = "Paid";
+//       const traineeSessionStatus = "upcoming";
+//       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+//       request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
+//       request.query(
+//         "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
+//         (err, result) => {
+//           result?.recordset.forEach((res) => {
+//             let traineeEmail = res.user_email;
+//             let traineeJoinUrl = res.trainee_join_url;
+//             let year = new Date(res.booking_mentor_date).getDay();
+//             let month = new Date(res.booking_mentor_date).getMonth();
+//             var day = new Date(res.booking_mentor_date).getDate();
+//             day = day - 1;
+//             const date = new Date(year, month, day, 0, 0, 0);
+//             schedule.scheduleJob(date, function () {
+//               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//               const msg = sendRemainderOnTheDay(
+//                 traineeEmail,
+//                 "Remainder for the session",
+//                 traineeJoinUrl,
+//                 "Join Meeting"
+//               );
+//               sgMail
+//                 .send(msg)
+//                 .then(() => {
+//                   console.log("Sent");
+//                 })
+//                 .catch((error) => {
+//                   console.log(error.message);
+//                 });
+//             });
+//           });
+//         }
+//       );
+//     });
+//   } catch (error) {}
+// }
 
-// remainder will be sent on the day to trainee
-function sentEmailRemainderOnTheDayToTrainee(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      const amountPaidStatus = "Paid";
-      const traineeSessionStatus = "upcoming";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let traineeEmail = res.user_email;
-            let traineeJoinUrl = res.trainee_join_url;
-            let year = new Date(res.booking_mentor_date).getFullYear();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            var day = new Date(res.booking_mentor_date).getDate();
-            const date = new Date(year, month, day, 0, 0, 0);
-            schedule.scheduleJob(date, function () {
-              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-              const msg = sendRemainderOnTheDay(
-                traineeEmail,
-                "Remainder for the session",
-                traineeJoinUrl,
-                "Join Meeting"
-              );
-              sgMail
-                .send(msg)
-                .then(() => {
-                  console.log("Sent");
-                })
-                .catch((error) => {
-                  console.log(error.message);
-                });
-            });
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
+// // remainder will be sent on the day to trainee
+// function sentEmailRemainderOnTheDayToTrainee(req, res) {
+//   try {
+//     sql.connect(config, (err) => {
+//       if (err) return res.send(err.message);
+//       const request = new sql.Request();
+//       const amountPaidStatus = "Paid";
+//       const traineeSessionStatus = "upcoming";
+//       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+//       request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
+//       request.query(
+//         "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
+//         (err, result) => {
+//           result?.recordset.forEach((res) => {
+//             let traineeEmail = res.user_email;
+//             let traineeJoinUrl = res.trainee_join_url;
+//             let year = new Date(res.booking_mentor_date).getFullYear();
+//             let month = new Date(res.booking_mentor_date).getMonth();
+//             var day = new Date(res.booking_mentor_date).getDate();
+//             const date = new Date(year, month, day, 0, 0, 0);
+//             schedule.scheduleJob(date, function () {
+//               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//               const msg = sendRemainderOnTheDay(
+//                 traineeEmail,
+//                 "Remainder for the session",
+//                 traineeJoinUrl,
+//                 "Join Meeting"
+//               );
+//               sgMail
+//                 .send(msg)
+//                 .then(() => {
+//                   console.log("Sent");
+//                 })
+//                 .catch((error) => {
+//                   console.log(error.message);
+//                 });
+//             });
+//           });
+//         }
+//       );
+//     });
+//   } catch (error) {}
+// }
 
-// remainder will be sent on before 10 minutes to trainee
-function sentEmailRemainderToTraineeBefore10Min(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      const amountPaidStatus = "Paid";
-      const traineeSessionStatus = "upcoming";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let traineeEmail = res.user_email;
-            let traineeJoinUrl = res.trainee_join_url;
-            let year = new Date(res.booking_mentor_date).getDay();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            let day = new Date(res.booking_mentor_date).getDate();
-            let hour = res.booking_starts_time.split(":")[0];
-            let min = res.booking_starts_time.split(":")[1];
-            if (min === "00") {
-              hour = hour - 1;
-              const date = new Date(year, month, day, hour, 50, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  traineeEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  traineeJoinUrl,
-                  "Join Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-            if (min === "15") {
-              const date = new Date(year, month, day, hour, 5, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  traineeEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  traineeJoinUrl,
-                  "Join Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-            if (min === "30") {
-              min = min - 10;
-              const date = new Date(year, month, day, hour, min, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  traineeEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  traineeJoinUrl,
-                  "Join Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-            if (min === "45") {
-              const date = new Date(year, month, day, hour, 35, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  traineeEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  traineeJoinUrl,
-                  "Join Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
+// // remainder will be sent on before 10 minutes to trainee
+// function sentEmailRemainderToTraineeBefore10Min(req, res) {
+//   try {
+//     sql.connect(config, (err) => {
+//       if (err) return res.send(err.message);
+//       const request = new sql.Request();
+//       const amountPaidStatus = "Paid";
+//       const traineeSessionStatus = "upcoming";
+//       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+//       request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
+//       request.query(
+//         "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
+//         (err, result) => {
+//           result?.recordset.forEach((res) => {
+//             let traineeEmail = res.user_email;
+//             let traineeJoinUrl = res.trainee_join_url;
+//             let year = new Date(res.booking_mentor_date).getDay();
+//             let month = new Date(res.booking_mentor_date).getMonth();
+//             let day = new Date(res.booking_mentor_date).getDate();
+//             let hour = res.booking_starts_time.split(":")[0];
+//             let min = res.booking_starts_time.split(":")[1];
+//             if (min === "00") {
+//               hour = hour - 1;
+//               const date = new Date(year, month, day, hour, 50, 0);
+//               schedule.scheduleJob(date, function () {
+//                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//                 const msg = sendRemainderOnTheDay(
+//                   traineeEmail,
+//                   "Remainder for the session will start in 10 minutes",
+//                   traineeJoinUrl,
+//                   "Join Meeting"
+//                 );
+//                 sgMail
+//                   .send(msg)
+//                   .then(() => {
+//                     console.log("Sent");
+//                   })
+//                   .catch((error) => {
+//                     console.log(error.message);
+//                   });
+//               });
+//             }
+//             if (min === "15") {
+//               const date = new Date(year, month, day, hour, 5, 0);
+//               schedule.scheduleJob(date, function () {
+//                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//                 const msg = sendRemainderOnTheDay(
+//                   traineeEmail,
+//                   "Remainder for the session will start in 10 minutes",
+//                   traineeJoinUrl,
+//                   "Join Meeting"
+//                 );
+//                 sgMail
+//                   .send(msg)
+//                   .then(() => {
+//                     console.log("Sent");
+//                   })
+//                   .catch((error) => {
+//                     console.log(error.message);
+//                   });
+//               });
+//             }
+//             if (min === "30") {
+//               min = min - 10;
+//               const date = new Date(year, month, day, hour, min, 0);
+//               schedule.scheduleJob(date, function () {
+//                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//                 const msg = sendRemainderOnTheDay(
+//                   traineeEmail,
+//                   "Remainder for the session will start in 10 minutes",
+//                   traineeJoinUrl,
+//                   "Join Meeting"
+//                 );
+//                 sgMail
+//                   .send(msg)
+//                   .then(() => {
+//                     console.log("Sent");
+//                   })
+//                   .catch((error) => {
+//                     console.log(error.message);
+//                   });
+//               });
+//             }
+//             if (min === "45") {
+//               const date = new Date(year, month, day, hour, 35, 0);
+//               schedule.scheduleJob(date, function () {
+//                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//                 const msg = sendRemainderOnTheDay(
+//                   traineeEmail,
+//                   "Remainder for the session will start in 10 minutes",
+//                   traineeJoinUrl,
+//                   "Join Meeting"
+//                 );
+//                 sgMail
+//                   .send(msg)
+//                   .then(() => {
+//                     console.log("Sent");
+//                   })
+//                   .catch((error) => {
+//                     console.log(error.message);
+//                   });
+//               });
+//             }
+//           });
+//         }
+//       );
+//     });
+//   } catch (error) {}
+// }
 
-// remainder will be sent on before 5 minutes to trainee
-function sentEmailRemainderToTraineeBefore5Min(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      const amountPaidStatus = "Paid";
-      const traineeSessionStatus = "upcoming";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let traineeEmail = res.user_email;
-            let traineeJoinUrl = res.trainee_join_url;
-            let year = new Date(res.booking_mentor_date).getDay();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            let day = new Date(res.booking_mentor_date).getDate();
-            let hour = res.booking_starts_time.split(":")[0];
-            let min = res.booking_starts_time.split(":")[1];
-            if (min === "00") {
-              hour = hour - 1;
-              const date = new Date(year, month, day, hour, 55, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  traineeEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  traineeJoinUrl,
-                  "Join Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-            if (min === "15") {
-              const date = new Date(year, month, day, hour, 10, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  traineeEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  traineeJoinUrl,
-                  "Join Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-            if (min === "30") {
-              const date = new Date(year, month, day, hour, 25, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  traineeEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  traineeJoinUrl,
-                  "Join Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-            if (min === "45") {
-              const date = new Date(year, month, day, hour, 40, 0);
-              schedule.scheduleJob(date, function () {
-                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                const msg = sendRemainderOnTheDay(
-                  traineeEmail,
-                  "Remainder for the session will start in 10 minutes",
-                  traineeJoinUrl,
-                  "Join Meeting"
-                );
-                sgMail
-                  .send(msg)
-                  .then(() => {
-                    console.log("Sent");
-                  })
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
-              });
-            }
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
+// // remainder will be sent on before 5 minutes to trainee
+// function sentEmailRemainderToTraineeBefore5Min(req, res) {
+//   try {
+//     sql.connect(config, (err) => {
+//       if (err) return res.send(err.message);
+//       const request = new sql.Request();
+//       const amountPaidStatus = "Paid";
+//       const traineeSessionStatus = "upcoming";
+//       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+//       request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
+//       request.query(
+//         "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
+//         (err, result) => {
+//           result?.recordset.forEach((res) => {
+//             let traineeEmail = res.user_email;
+//             let traineeJoinUrl = res.trainee_join_url;
+//             let year = new Date(res.booking_mentor_date).getDay();
+//             let month = new Date(res.booking_mentor_date).getMonth();
+//             let day = new Date(res.booking_mentor_date).getDate();
+//             let hour = res.booking_starts_time.split(":")[0];
+//             let min = res.booking_starts_time.split(":")[1];
+//             if (min === "00") {
+//               hour = hour - 1;
+//               const date = new Date(year, month, day, hour, 55, 0);
+//               schedule.scheduleJob(date, function () {
+//                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//                 const msg = sendRemainderOnTheDay(
+//                   traineeEmail,
+//                   "Remainder for the session will start in 10 minutes",
+//                   traineeJoinUrl,
+//                   "Join Meeting"
+//                 );
+//                 sgMail
+//                   .send(msg)
+//                   .then(() => {
+//                     console.log("Sent");
+//                   })
+//                   .catch((error) => {
+//                     console.log(error.message);
+//                   });
+//               });
+//             }
+//             if (min === "15") {
+//               const date = new Date(year, month, day, hour, 10, 0);
+//               schedule.scheduleJob(date, function () {
+//                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//                 const msg = sendRemainderOnTheDay(
+//                   traineeEmail,
+//                   "Remainder for the session will start in 10 minutes",
+//                   traineeJoinUrl,
+//                   "Join Meeting"
+//                 );
+//                 sgMail
+//                   .send(msg)
+//                   .then(() => {
+//                     console.log("Sent");
+//                   })
+//                   .catch((error) => {
+//                     console.log(error.message);
+//                   });
+//               });
+//             }
+//             if (min === "30") {
+//               const date = new Date(year, month, day, hour, 25, 0);
+//               schedule.scheduleJob(date, function () {
+//                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//                 const msg = sendRemainderOnTheDay(
+//                   traineeEmail,
+//                   "Remainder for the session will start in 10 minutes",
+//                   traineeJoinUrl,
+//                   "Join Meeting"
+//                 );
+//                 sgMail
+//                   .send(msg)
+//                   .then(() => {
+//                     console.log("Sent");
+//                   })
+//                   .catch((error) => {
+//                     console.log(error.message);
+//                   });
+//               });
+//             }
+//             if (min === "45") {
+//               const date = new Date(year, month, day, hour, 40, 0);
+//               schedule.scheduleJob(date, function () {
+//                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//                 const msg = sendRemainderOnTheDay(
+//                   traineeEmail,
+//                   "Remainder for the session will start in 10 minutes",
+//                   traineeJoinUrl,
+//                   "Join Meeting"
+//                 );
+//                 sgMail
+//                   .send(msg)
+//                   .then(() => {
+//                     console.log("Sent");
+//                   })
+//                   .catch((error) => {
+//                     console.log(error.message);
+//                   });
+//               });
+//             }
+//           });
+//         }
+//       );
+//     });
+//   } catch (error) {}
+// }
 
-function sentEmailRemainderToTraineeToStart(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      const amountPaidStatus = "Paid";
-      const traineeSessionStatus = "upcoming";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let traineeEmail = res.user_email;
-            let traineeJoinUrl = res.trainee_join_url;
-            let year = new Date(res.booking_mentor_date).getDay();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            let day = new Date(res.booking_mentor_date).getDate();
-            let hour = res.booking_starts_time.split(":")[0];
-            let min = res.booking_starts_time.split(":")[1];
-            const date = new Date(year, month, day, hour, min, 0);
-            schedule.scheduleJob(date, function () {
-              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-              const msg = sendRemainderOnTheDay(
-                traineeEmail,
-                "Remainder for the session is stared",
-                traineeJoinUrl,
-                "Join Meeting"
-              );
-              sgMail
-                .send(msg)
-                .then(() => {
-                  console.log("Sent");
-                })
-                .catch((error) => {
-                  console.log(error.message);
-                });
-            });
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
+// function sentEmailRemainderToTraineeToStart(req, res) {
+//   try {
+//     sql.connect(config, (err) => {
+//       if (err) return res.send(err.message);
+//       const request = new sql.Request();
+//       const amountPaidStatus = "Paid";
+//       const traineeSessionStatus = "upcoming";
+//       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+//       request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
+//       request.query(
+//         "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
+//         (err, result) => {
+//           result?.recordset.forEach((res) => {
+//             let traineeEmail = res.user_email;
+//             let traineeJoinUrl = res.trainee_join_url;
+//             let year = new Date(res.booking_mentor_date).getDay();
+//             let month = new Date(res.booking_mentor_date).getMonth();
+//             let day = new Date(res.booking_mentor_date).getDate();
+//             let hour = res.booking_starts_time.split(":")[0];
+//             let min = res.booking_starts_time.split(":")[1];
+//             const date = new Date(year, month, day, hour, min, 0);
+//             schedule.scheduleJob(date, function () {
+//               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//               const msg = sendRemainderOnTheDay(
+//                 traineeEmail,
+//                 "Remainder for the session is stared",
+//                 traineeJoinUrl,
+//                 "Join Meeting"
+//               );
+//               sgMail
+//                 .send(msg)
+//                 .then(() => {
+//                   console.log("Sent");
+//                 })
+//                 .catch((error) => {
+//                   console.log(error.message);
+//                 });
+//             });
+//           });
+//         }
+//       );
+//     });
+//   } catch (error) {}
+// }
 
-function sentEmailRemainderToFillFeedback(req, res) {
-  try {
-    sql.connect(config, (err) => {
-      if (err) return res.send(err.message);
-      const request = new sql.Request();
-      const amountPaidStatus = "Paid";
-      const traineeSessionStatus = "attended";
-      request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
-      request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
-      request.query(
-        "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
-        (err, result) => {
-          result.recordset.forEach((res) => {
-            let traineeEmail = res.user_email;
-            let year = new Date(res.booking_mentor_date).getDay();
-            let month = new Date(res.booking_mentor_date).getMonth();
-            let day = new Date(res.booking_mentor_date).getDate();
-            let hour = res.booking_end_time.split(":")[0];
-            let min = res.booking_end_time.split(":")[1];
-            const date = new Date(year, month, day, hour, min, 0);
-            schedule.scheduleJob(date, function () {
-              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-              const msg = sendRemainderOnTheDay(
-                traineeEmail,
-                "Remainder for to fill the feedback form",
-                "http://localhost:3000/trainee/profile/bookings",
-                "Give feedback"
-              );
-              sgMail
-                .send(msg)
-                .then(() => {
-                  console.log("Sent");
-                })
-                .catch((error) => {
-                  console.log(error.message);
-                });
-            });
-          });
-        }
-      );
-    });
-  } catch (error) {}
-}
+// function sentEmailRemainderToFillFeedback(req, res) {
+//   try {
+//     sql.connect(config, (err) => {
+//       if (err) return res?.send(err.message);
+//       const request = new sql.Request();
+//       const amountPaidStatus = "Paid";
+//       const traineeSessionStatus = "attended";
+//       request.input("amountPaidStatus", sql.VarChar, amountPaidStatus);
+//       request.input("traineeSessionStatus", sql.VarChar, traineeSessionStatus);
+//       request.query(
+//         "select * from booking_appointments_dtls where mentor_amount_paid_status = @amountPaidStatus AND trainee_session_status = @traineeSessionStatus",
+//         (err, result) => {
+//           result?.recordset.forEach((res) => {
+//             let traineeEmail = res.user_email;
+//             let year = new Date(res.booking_mentor_date).getDay();
+//             let month = new Date(res.booking_mentor_date).getMonth();
+//             let day = new Date(res.booking_mentor_date).getDate();
+//             let hour = res.booking_end_time.split(":")[0];
+//             let min = res.booking_end_time.split(":")[1];
+//             const date = new Date(year, month, day, hour, min, 0);
+//             schedule.scheduleJob(date, function () {
+//               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//               const msg = sendRemainderOnTheDay(
+//                 traineeEmail,
+//                 "Remainder for to fill the feedback form",
+//                 "http://localhost:3000/trainee/profile/bookings",
+//                 "Give feedback"
+//               );
+//               sgMail
+//                 .send(msg)
+//                 .then(() => {
+//                   console.log("Sent");
+//                 })
+//                 .catch((error) => {
+//                   console.log(error.message);
+//                 });
+//             });
+//           });
+//         }
+//       );
+//     });
+//   } catch (error) {}
+// }
 
-sentEmailRemainderToFillFeedback();
-//remainder email will be sent before one day function call
-sentEmailRemainderBeforeOneDayToTrainee();
+// sentEmailRemainderToFillFeedback();
+// //remainder email will be sent before one day function call
+// sentEmailRemainderBeforeOneDayToTrainee();
 
-// remainder will be sent on the day function call
-sentEmailRemainderOnTheDayToTrainee();
+// // remainder will be sent on the day function call
+// sentEmailRemainderOnTheDayToTrainee();
 
-// remainder will be sent on before 10 minutes function call
-sentEmailRemainderToTraineeBefore10Min();
+// // remainder will be sent on before 10 minutes function call
+// sentEmailRemainderToTraineeBefore10Min();
 
-// remainder will be sent on before 5 minutes function call
-sentEmailRemainderToTraineeBefore5Min();
+// // remainder will be sent on before 5 minutes function call
+// sentEmailRemainderToTraineeBefore5Min();
 
-// remainder will be sent to start or join meeting function call
-sentEmailRemainderToTraineeToStart();
+// // remainder will be sent to start or join meeting function call
+// sentEmailRemainderToTraineeToStart();

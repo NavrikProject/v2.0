@@ -107,6 +107,28 @@ export const SidebarListItem = styled.li`
 export const Wrapper = styled.div`
   padding: 30px;
 `;
+export const NotFoundTitle = styled.h1`
+  color: black;
+  opacity: 0.8;
+  font-size: 27px;
+`;
+export const MentorRegButton = styled.button`
+  padding: 10px 20px;
+  outline: none;
+  font-size: 17px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  color: #fff;
+  border-bottom-width: 2px;
+  transition: all 0.4s ease;
+  font-size: 20px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  margin: 0 auto;
+  background: -webkit-linear-gradient(left, #3e5ce4, #4282fa);
+  margin-top: 20px !important;
+`;
 export const DetailsWrapper = styled.div`
   margin: 10px;
   //box-shadow: rgb(142 151 158 / 15%) 0px 4px 19px;

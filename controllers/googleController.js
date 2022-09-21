@@ -2,16 +2,14 @@ import { OAuth2Client } from "google-auth-library";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import sql from "mssql";
+import sql from "mssql/msnodesqlv8.js";
 import config from "../config/dbconfig.js";
 import sgMail from "@sendgrid/mail";
 import dotenv from "dotenv";
 import updateEmail from "../middleware/updateEmail.js";
 dotenv.config();
 
-const client = new OAuth2Client(
-  "891191045055-s1oqh8ebas7ul36fh4lvvm4ejg1m8fb5.apps.googleusercontent.com"
-);
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export async function googleSignUp(req, res, next) {
   try {
     let tokenId = req.body.tokenId;

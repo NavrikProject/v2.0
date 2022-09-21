@@ -18,6 +18,7 @@ import CorporateTrainingMenu from "./CorporateTrainingMenu";
 import IndividualTrainingMenu from "./IndividualTrainingMenu";
 import { logOut } from "../../redux/userRedux";
 import NavbarProfile from "./NavbarProfile";
+import MentorMenu from "./MentorMenu";
 const Navbar = ({ toggleMenuItems, socket }) => {
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
@@ -103,12 +104,13 @@ const Navbar = ({ toggleMenuItems, socket }) => {
               </Link>
             </NavItem>
             <NavItem>
-              <Link
+              <MentorMenu />
+              {/* <Link
                 style={{ textDecoration: "none", color: "#062C30" }}
                 to={`/mentors-club`}
               >
                 Mentors Club
-              </Link>
+              </Link> */}
             </NavItem>
             <NavItem>
               <Link

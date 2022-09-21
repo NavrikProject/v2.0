@@ -2,7 +2,7 @@
   "name": "practiwiz-training-programme",
   "version": "0.1.0",
   "homepage": ".",
-  "proxy": "http://localhost:1100/api",
+  "proxy": "http://localhost:1337/api",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.8.2",

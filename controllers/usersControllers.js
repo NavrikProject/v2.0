@@ -1,4 +1,4 @@
-import sql from "mssql";
+import sql from "mssql/msnodesqlv8.js";
 import config from "../config/dbconfig.js";
 import sgMail from "@sendgrid/mail";
 
@@ -89,7 +89,6 @@ export async function updateAdminApprove(req, res, next) {
     if (error) res.send(error.message);
   }
 }
-
 
 //disapproved
 export async function updateAdminDisapprove(req, res, next) {

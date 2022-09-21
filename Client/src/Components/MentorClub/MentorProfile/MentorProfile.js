@@ -18,6 +18,8 @@ import {
   Img,
   ImgBox,
   LeftDiv,
+  MentorRegButton,
+  NotFoundTitle,
   QuickMenuTitle,
   RightDiv,
   Section,
@@ -162,9 +164,20 @@ const TraineeProfile = () => {
             <Wrapper>
               <DetailsWrapper>
                 {mentorDetails?.length === 0 && (
-                  <h1>
-                    No details found please fill the additional information
-                  </h1>
+                  <>
+                    <NotFoundTitle>
+                      You have not applied for the mentor.Please fill the mentor
+                      application
+                    </NotFoundTitle>
+                    <MentorRegButton>
+                      <Link
+                        style={{ textDecoration: "none", color: "#fff" }}
+                        to={"/mentor/registration-success"}
+                      >
+                        Apply now
+                      </Link>
+                    </MentorRegButton>
+                  </>
                 )}
                 {mentorDetails?.map((mentor) => (
                   <div key={mentor.trainee_id}>

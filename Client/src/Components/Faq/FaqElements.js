@@ -32,11 +32,14 @@ export const FaqTitle = styled.h1`
   font-size: 37px;
   font-weight: 700;
   text-align: center;
+  color: black;
+  opacity: 0.8;
 `;
 export const FaqBox = styled.div`
   background-color: lightgray;
   padding: 10px 20px;
   margin-bottom: 5px;
+  border-radius: 10px;
   transition: all 1s cubic-bezier(0.39, 0.575, 0.565, 1);
 `;
 
@@ -46,10 +49,13 @@ export const FaqQuestion = styled.h3`
   justify-content: space-between;
   cursor: pointer;
   transition: all 1s cubic-bezier(0.39, 0.575, 0.565, 1);
+  font-size: 22px;
+  font-weight: 500;
 `;
 export const FaqAnswer = styled.p`
-  padding: 15px 20px;
+  padding: 10px 20px;
   transition: all 1s cubic-bezier(0.39, 0.575, 0.565, 1);
+  font-size: 17px;
 `;
 
 export const CourseAfterTitle = styled.h1`

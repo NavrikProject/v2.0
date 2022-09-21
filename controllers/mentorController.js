@@ -1,4 +1,4 @@
-import sql from "mssql";
+import sql from "mssql/msnodesqlv8.js";
 import config from "../config/dbconfig.js";
 import sgMail from "@sendgrid/mail";
 import moment from "moment";
@@ -207,9 +207,9 @@ export async function getMentorBySearch(req, res) {
       request.query(searchQuery, (err, result) => {
         if (err) return res.send(err.message);
         if (result.recordset.length > 0) {
-          return res.send(result.recordset);
+          return res.send({ mentors: result.recordset });
         } else {
-          res.send("Not found");
+          res.send({ error: "Not found" });
         }
       });
     });

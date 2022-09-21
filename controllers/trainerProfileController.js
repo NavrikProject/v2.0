@@ -1,5 +1,5 @@
 import moment from "moment";
-import sql from "mssql";
+import sql from "mssql/msnodesqlv8.js";
 import config from "../config/dbconfig.js";
 import sgMail from "@sendgrid/mail";
 import azureStorage from "azure-storage";
