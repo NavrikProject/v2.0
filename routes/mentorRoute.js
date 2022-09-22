@@ -12,6 +12,7 @@ import {
   getIndividualMentorDetails,
   fillAdditionalMentorDetails,
   getMentorProfileDetails,
+  addBankAccountDetailsOfMentor,
 } from "../controllers/mentorController.js";
 import { verifyTokenAndAuthorization } from "../middleware/verifyToken.js";
 let router = routers.Router();
@@ -55,4 +56,6 @@ router.post("/create/appointment/create-order", createMentorRazorPayOrder);
 // to get only appointment dates in booking table
 router.get("/get/booking", getBookingDates);
 
+// to add bank details
+router.post("/profile/bank/details/add/:id", addBankAccountDetailsOfMentor);
 export default router;

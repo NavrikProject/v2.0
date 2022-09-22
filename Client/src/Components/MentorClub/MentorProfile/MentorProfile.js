@@ -31,12 +31,14 @@ import {
   Wrapper,
 } from "./MentorBookingProfileElements.js";
 import { Link } from "react-router-dom";
+import MentorBankDetails from "./MentorBankDetails.js";
 const TraineeProfile = () => {
   const [accountForm, setAccountForm] = useState(false);
   const [changePasswordForm, setChangePasswordForm] = useState(false);
   const [deleteAccountForm, setDeleteAccountForm] = useState(false);
   const [changeImageForm, setChangeImageForm] = useState(false);
   const [mentorDetails, setMentorDetails] = useState([]);
+  const [showBankAccountForm, setShowBankAccountForm] = useState(false);
   const user = useSelector((state) => state.user.currentUser);
 
   const showAccountForm = () => {
@@ -44,26 +46,36 @@ const TraineeProfile = () => {
     setDeleteAccountForm(false);
     setChangePasswordForm(false);
     setChangeImageForm(false);
+    setShowBankAccountForm(false);
   };
   const showPasswordForm = () => {
     setChangePasswordForm(!changePasswordForm);
     setAccountForm(false);
     setDeleteAccountForm(false);
     setChangeImageForm(false);
+    setShowBankAccountForm(false);
   };
   const showDeleteAccount = () => {
     setAccountForm(false);
     setDeleteAccountForm(!deleteAccountForm);
     setChangePasswordForm(false);
     setChangeImageForm(false);
+    setShowBankAccountForm(false);
   };
   const showImageForm = () => {
     setChangeImageForm(!changeImageForm);
     setAccountForm(false);
     setDeleteAccountForm(false);
     setChangePasswordForm(false);
+    setShowBankAccountForm(false);
   };
-
+  const showBankAccountFormHandler = () => {
+    setShowBankAccountForm(!showBankAccountForm);
+    setChangeImageForm(false);
+    setAccountForm(false);
+    setDeleteAccountForm(false);
+    setChangePasswordForm(false);
+  };
   const token = user?.accessToken;
 
   useEffect(() => {
@@ -113,6 +125,14 @@ const TraineeProfile = () => {
                     Password
                   </QuickMenuTitle>
                 </SidebarListItem>
+                <SidebarListItem onClick={showBankAccountFormHandler}>
+                  <QuickMenuTitle>
+                    <span>
+                      <i className="fa-regular fa-image"></i>
+                    </span>
+                    Add Bank account
+                  </QuickMenuTitle>
+                </SidebarListItem>
                 <SidebarListItem onClick={showImageForm}>
                   <QuickMenuTitle>
                     <span>
@@ -156,6 +176,13 @@ const TraineeProfile = () => {
           {changeImageForm ? (
             <Model>
               <ImageForm personal={showImageForm} />
+            </Model>
+          ) : (
+            ""
+          )}
+          {showBankAccountForm ? (
+            <Model>
+              <MentorBankDetails personal={showBankAccountFormHandler} />
             </Model>
           ) : (
             ""
@@ -263,6 +290,14 @@ const TraineeProfile = () => {
                       <DetailsFlex1>
                         <DetailsTitles>Current Company: </DetailsTitles>
                         <DetailsFromDb>{mentor.mentor_firm}</DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>
+                          Mentor Sessions Conducted:
+                        </DetailsTitles>
+                        <DetailsFromDb>
+                          {mentor.mentor_sessions_conducted}
+                        </DetailsFromDb>
                       </DetailsFlex1>
                       <DetailsFlex1>
                         <DetailsTitles>Mentor Points: </DetailsTitles>
