@@ -26,12 +26,13 @@ const MentorExpDetails = ({
   }, [formData.specialty]);
 
   const formSkillHandler = (event) => {
-    if (event.target.value === "others") {
+    if (event.target.value === "Others") {
       setShowOthersInput(true);
+      setFormData({ ...formData, skills: event.target.value });
     } else {
+      setFormData({ ...formData, skills: event.target.value });
       setShowOthersInput(false);
     }
-    setFormData({ ...formData, skills: event.target.value });
   };
   return (
     <>
@@ -88,7 +89,6 @@ const MentorExpDetails = ({
               {skill.skill_master_skill_name}
             </FormOption>
           ))}
-          <FormOption value="others">Others</FormOption>
         </FormSelect>
         <ErrorMessage>{errorData.skills}</ErrorMessage>
       </Field>

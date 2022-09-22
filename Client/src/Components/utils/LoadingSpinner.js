@@ -14,12 +14,14 @@ const LoadingSpinner = () => {
     >
       <div
         style={{
-          fontSize: "32px",
+          fontSize: "16px",
+          textAlign: "center",
         }}
       >
         <div className="spinner-container">
           <div className="loading-spinner"></div>
         </div>
+        loading .... Please wait
       </div>
     </div>
   );

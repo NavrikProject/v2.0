@@ -49,6 +49,7 @@ const MentorAddDetails = ({
         <ErrorMessage>{errorData.linkedInProfile}</ErrorMessage>
       </Field>
       <Field>
+        Choose the Profile Picture
         <Input
           onFocus={() => setErrorData({ ...errorData, linkedInProfile: "" })}
           required

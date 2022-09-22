@@ -22,7 +22,7 @@ import MentorAddDetails from "./MentorAddDetails";
 import signupImg from "../../../images/default-removebg-preview.png";
 import axios from "axios";
 import { useSelector } from "react-redux";
-
+import GoToTop from "../../GoToTop";
 import { toast } from "react-toastify";
 import Loading from "../../utils/LoadingSpinner";
 const MentorRegisterStepForm = () => {
@@ -181,6 +181,27 @@ const MentorRegisterStepForm = () => {
         setSuccess(res.data.success);
         toast.success(res.data.success, { position: "top-center" });
         setLoading(false);
+        setErrorData({
+          email: " ",
+          password: " ",
+          confirmPassword: " ",
+          firstName: " ",
+          lastName: " ",
+          bio: " ",
+          experience: " ",
+          skills: " ",
+          specialty: " ",
+          firm: " ",
+          currentRole: " ",
+          previousRole: " ",
+          mentorshipArea: " ",
+          mentorAvailability: " ",
+          startTime: " ",
+          endTime: " ",
+          website: " ",
+          linkedInProfile: " ",
+          image: " ",
+        });
       }
       if (res.data.error) {
         setError(res.data.error);
@@ -308,71 +329,75 @@ const MentorRegisterStepForm = () => {
   };
   return (
     <MentorRegisterSection>
-      {loading && <Loading />}
-      <MentorRegisterDiv>
-        <MentorRegisterDiv1>
-          <MentorRegisterFlex>
-            <MentorRegisterLeftDiv>
-              <FormDiv>
-                <FormDivFlex>
-                  <Form action="">
-                    {error && (
-                      <p
-                        style={{
-                          color: "red",
-                          textAlign: "center",
-                          fontSize: "20px",
-                        }}
-                      >
-                        {error}
-                      </p>
-                    )}
-                    {success && (
-                      <p
-                        style={{
-                          color: "green",
-                          textAlign: "center",
-                          fontSize: "20px",
-                        }}
-                      >
-                        {success}
-                      </p>
-                    )}
-                    <FormHeading>{FormTitles[page]}</FormHeading>
-                    {PageDisplay()}
-                    <ButtonDiv>
-                      <PrevButton
-                        type="button"
-                        disabled={page === 0}
-                        onClick={() => {
-                          setPage((currPage) => currPage - 1);
-                        }}
-                      >
-                        Prev
-                      </PrevButton>
-                      {page === FormTitles.length - 1 ? (
-                        <JoinButton
-                          type="submit"
-                          onClick={profileSubmitHandler}
+      {loading ? (
+        <Loading />
+      ) : (
+        <MentorRegisterDiv>
+          <MentorRegisterDiv1>
+            <MentorRegisterFlex>
+              <MentorRegisterLeftDiv>
+                <FormDiv>
+                  <FormDivFlex>
+                    <Form action="">
+                      {error && (
+                        <p
+                          style={{
+                            color: "red",
+                            textAlign: "center",
+                            fontSize: "20px",
+                          }}
                         >
-                          Join As a Mentor
-                        </JoinButton>
-                      ) : (
-                        <NextButton type="button" onClick={setPageCount}>
-                          Next
-                        </NextButton>
+                          {error}
+                        </p>
                       )}
-                    </ButtonDiv>
-                  </Form>
-                </FormDivFlex>
-              </FormDiv>
-            </MentorRegisterLeftDiv>
-            <MentorRegisterRightDiv>
-              <img src={signupImg} alt="" />
-            </MentorRegisterRightDiv>
-          </MentorRegisterFlex>
-        </MentorRegisterDiv1>
-      </MentorRegisterDiv>
+                      {success && (
+                        <p
+                          style={{
+                            color: "green",
+                            textAlign: "center",
+                            fontSize: "20px",
+                          }}
+                        >
+                          {success}
+                        </p>
+                      )}
+                      <FormHeading>{FormTitles[page]}</FormHeading>
+                      {PageDisplay()}
+                      <ButtonDiv>
+                        <PrevButton
+                          type="button"
+                          disabled={page === 0}
+                          onClick={() => {
+                            setPage((currPage) => currPage - 1);
+                          }}
+                        >
+                          Prev
+                        </PrevButton>
+                        {page === FormTitles.length - 1 ? (
+                          <JoinButton
+                            type="submit"
+                            onClick={profileSubmitHandler}
+                          >
+                            Join As a Mentor
+                          </JoinButton>
+                        ) : (
+                          <NextButton type="button" onClick={setPageCount}>
+                            Next
+                          </NextButton>
+                        )}
+                      </ButtonDiv>
+                    </Form>
+                  </FormDivFlex>
+                </FormDiv>
+              </MentorRegisterLeftDiv>
+              <MentorRegisterRightDiv>
+                <img src={signupImg} alt="" />
+              </MentorRegisterRightDiv>
+            </MentorRegisterFlex>
+          </MentorRegisterDiv1>
+        </MentorRegisterDiv>
+      )}
+      <GoToTop />
     </MentorRegisterSection>
   );
 };

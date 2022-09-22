@@ -5,7 +5,6 @@ import {
   Field,
   FormOption,
   FormSelect,
- 
 } from "./MentorRegisterStepELements";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
@@ -58,6 +57,10 @@ const MentorSlotDetails = ({
       let newTime = `${hour}:${minutes.toString()}`;
       setEndTime(newTime);
       setFormData({ ...formData, endTime: newTime });
+      setErrorData({
+        ...errorData,
+        startTime: " ",
+      });
     } else if (minutes === "30") {
       let hour = startTime?.split(":")[0];
       hour = parseInt(hour) + 1;
@@ -66,7 +69,11 @@ const MentorSlotDetails = ({
       let newTime = `${hour}:${minutes.toString()}`;
       setEndTime(newTime);
       setFormData({ ...formData, endTime: endTime });
-    } else {
+      setErrorData({
+        ...errorData,
+        startTime: " ",
+      });
+    } else if (minutes === "45") {
       let hour = startTime?.split(":")[0];
       hour = parseInt(hour) + 1;
       minutes = "15";
@@ -74,6 +81,15 @@ const MentorSlotDetails = ({
       let newTime = `${hour}:${minutes.toString()}`;
       setEndTime(newTime);
       setFormData({ ...formData, endTime: endTime });
+      setErrorData({
+        ...errorData,
+        startTime: " ",
+      });
+    } else {
+      setErrorData({
+        ...errorData,
+        startTime: "Choose the proper timing from the above",
+      });
     }
     setFormData({ ...formData, startTime: startTime });
   }
@@ -100,7 +116,7 @@ const MentorSlotDetails = ({
       </Field>
       <Field>
         <FormSelect
-          value={FormData.mentorAvailability}
+          value={formData.mentorAvailability}
           onFocus={() => setErrorData({ ...errorData, mentorAvailability: "" })}
           name="availability"
           required
@@ -136,6 +152,7 @@ const MentorSlotDetails = ({
         <p>Choose the Time Slots (Ex: 12:15 OR 12:30 OR 12:45 )</p>
         From
         <TimePicker
+          onFocus={() => setErrorData({ ...errorData, startTime: "" })}
           showSecond={showSecond}
           className="xxx"
           onChange={onChangeValue}
@@ -146,6 +163,7 @@ const MentorSlotDetails = ({
         <p>
           Your slot timings {formData?.startTime} to {endTime}
         </p>
+        <ErrorMessage>{errorData.startTime}</ErrorMessage>
       </Field>
     </>
   );

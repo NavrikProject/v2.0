@@ -129,7 +129,7 @@ export const PrevButton = styled.button`
   cursor: pointer;
   -webkit-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
-  background-color: #136;
+  background-color: #3df;
   color: #fff;
   border-radius: 5px;
   margin-right: 20px;
@@ -150,7 +150,7 @@ export const NextButton = styled.button`
   -webkit-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
   cursor: pointer;
-  background-color: #3df;
+  background-color: #136;
   color: #fff;
   border-radius: 5px;
   &:hover {

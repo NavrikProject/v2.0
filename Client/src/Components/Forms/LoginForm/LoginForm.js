@@ -47,6 +47,7 @@ import {
 import { useForm } from "react-hook-form";
 
 import axios from "axios";
+import LoadingSpinner from "../../utils/LoadingSpinner";
 const LoginForm = () => {
   const {
     register,
@@ -65,6 +66,7 @@ const LoginForm = () => {
 
   // login function handler
   const loginFormSubmitHandler = async (data) => {
+    setLoading(true);
     try {
       dispatch(loginStart());
       setLoading(true);
@@ -164,6 +166,7 @@ const LoginForm = () => {
   };
   return (
     <HomeSectionComponent>
+      {loading && <LoadingSpinner />}
       <LoginWrapper>
         <Wrapper>
           <WrapperRight>
