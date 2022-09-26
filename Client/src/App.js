@@ -32,6 +32,7 @@ import MyContributionPage from "./Pages/MyContributionPage";
 import CookieNotice from "./Components/utils/CookieNotice";
 import MentorAddRegdFormPage from "./Pages/MentorAddRegdFormPage";
 import MentorSuccessRegdPage from "./Pages/MentorSuccessRegdPage";
+import NotificationPage from "./Pages/NotificationPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -79,6 +80,12 @@ const App = () => {
               exact
               element={<ApplyContributionPage />}
             />
+            {user ? (
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            ) : (
+              <Route path="/notifications" element={<NotificationPage />} />
+            )}
+            <Route path="*" element={<Navigate to="/" replace />} />
             <Route
               path="/contributer/my-contribution"
               exact
@@ -98,7 +105,6 @@ const App = () => {
               path="/mentor/registration-success"
               element={<MentorSuccessRegdPage />}
             />
-
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/mentor/join" element={<MentorPage />} />
             {/* {!user ? (

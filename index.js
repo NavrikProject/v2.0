@@ -22,6 +22,7 @@ import mentorBookingRoute from "./routes/MentorBookingRoute.js";
 import FeedbackRoute from "./routes/feedbackRoute.js";
 import ContributersRoute from "./routes/contributersRoute.js";
 import googleRoute from "./routes/googleRoute.js";
+import notificationRoute from "./routes/notificationRoute.js";
 //import config from "./config/dbconfig.js";
 import fs from "fs";
 import masterRoute from "./routes/masterRoute.js";
@@ -89,7 +90,7 @@ app.use("/api/feedback", FeedbackRoute);
 app.use("/api/contributers", ContributersRoute);
 app.use("/api/google", googleRoute);
 app.use("/api", masterRoute);
-
+app.use("/api/notifications", notificationRoute);
 // BlobServiceClient.fromConnectionString(
 //   process.env.AZURE_STORAGE_CONNECTION_STRING
 // );
