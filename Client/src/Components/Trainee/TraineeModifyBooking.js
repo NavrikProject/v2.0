@@ -47,7 +47,11 @@ const ModifyBtn = styled.button`
   margin: 20px 10px 20px 0;
 `;
 const FormData = styled.div``;
-const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
+const TraineeModifyBooking = ({
+  mentor,
+  modifyMentorAppointMent,
+  bookingStatus,
+}) => {
   const user = useSelector((state) => state.user.currentUser);
   const [date, setDate] = useState();
   const [mentorBookingDate, setMentorBookingDate] = useState([]);
@@ -55,6 +59,7 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     try {
       const getAllMentorDetailsAvailability = async () => {
@@ -140,7 +145,9 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
     }
     setLoading(true);
     const res = await axios.put(
-      `/mentor/profile/update/bookings/${mentor.bookingId}`,
+      !bookingStatus
+        ? `/mentor/profile/update/bookings/${mentor.bookingId}`
+        : `/mentor/profile/reschedule/bookings/${mentor.bookingId}`,
       {
         date: date.toLocaleDateString(),
         bookingId: mentor.bookingId,
@@ -260,8 +267,7 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
   setTimeout(() => {
     setError("");
     setSuccess("");
-    setDate("");
-  }, 7000);
+  }, 10000);
   return (
     <>
       <Model>
@@ -269,7 +275,6 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
           <CloseButton />
         </CloseButtonDiv>
         {loading && <LoadingSpinner />}
-
         <FormDiv>
           {error && <p style={{ color: "red", fontSize: "20px" }}>{error}</p>}
           {success && (
@@ -278,7 +283,9 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
           <FormData>
             <form
               onSubmit={
-                mentor.changes === 0
+                bookingStatus === "reschedule"
+                  ? modifyBookingAppointMent
+                  : mentor.changes === 0
                   ? modifyBookingAppointMent
                   : payAndModifyBooking
               }
@@ -296,7 +303,9 @@ const TraineeModifyBooking = ({ mentor, modifyMentorAppointMent }) => {
                 filterDate={(date) => isWorkDay(date)}
               />
               <ModifyBtn type="submit">
-                {mentor.changes === 0
+                {bookingStatus === "reschedule"
+                  ? "Reschedule Appointment"
+                  : mentor.changes === 0
                   ? "Change appointment Date"
                   : "Pay and Modify Date"}
               </ModifyBtn>

@@ -23,13 +23,23 @@ import FeedbackRoute from "./routes/feedbackRoute.js";
 import ContributersRoute from "./routes/contributersRoute.js";
 import googleRoute from "./routes/googleRoute.js";
 import notificationRoute from "./routes/notificationRoute.js";
+import rescheduleRoute from "./routes/rescheduleRoute.js";
 //import config from "./config/dbconfig.js";
 import fs from "fs";
 import masterRoute from "./routes/masterRoute.js";
 import BlobServiceClient from "@azure/storage-blob";
 import config from "./config/dbconfig.js";
+import Vonage from "@vonage/server-sdk";
 
 const __dirname = path.resolve();
+
+const KEY_PATH = fs.readFileSync(`${__dirname}/middleware/private.key`, "utf8");
+const vonage = new Vonage({
+  apiKey: "5c1f377e",
+  apiSecret: "c0QXia5GPkpyAyYF",
+  applicationId: "715adc2f-3411-4896-8024-c0c7c6f83b2c",
+  privateKey: KEY_PATH,
+});
 
 const app = express();
 dotenv.config();
@@ -91,6 +101,7 @@ app.use("/api/contributers", ContributersRoute);
 app.use("/api/google", googleRoute);
 app.use("/api", masterRoute);
 app.use("/api/notifications", notificationRoute);
+app.use("/api/reschedule", rescheduleRoute);
 // BlobServiceClient.fromConnectionString(
 //   process.env.AZURE_STORAGE_CONNECTION_STRING
 // );

@@ -189,7 +189,7 @@ export async function modifyBookingDate(req, res) {
                 request.input("changes", sql.Int, changes);
                 request.input("bookingId", sql.Int, bookingId);
                 request.input("date", sql.Date, date);
-                request.input("mentorHostUrl", sql.Text, mentorHostUrl);
+                request.input("mentorHostUrl", sql.VarChar, mentorHostUrl);
                 request.input("traineeJoinUrl", sql.VarChar, traineeJoinUrl);
                 const newDate = new Date();
                 request.input("newDate", sql.Date, newDate);
@@ -252,15 +252,133 @@ export async function modifyBookingDate(req, res) {
   } catch (error) {
     console.log(err.message);
   }
+}
+// update booking date for one time
+export async function rescheduleBookingDate(req, res) {
+  let bookingId = req.params.id;
+  let date = req.body.date;
+  let userEmail = req.body.userEmail;
+  date = new Date(new Date(date).setDate(new Date(date).getDate() + 1));
 
   try {
+    var options = {
+      method: "POST",
+      uri: "https://api.zoom.us/v2/users/me/meetings",
+      body: {
+        topic: "Appointment rescheduling booking",
+        type: 1,
+        start_time: new Date(date),
+        contact_email: userEmail,
+        registrants_email_notification: true,
+        calendar_type: 2,
+        recurrence: {
+          end_date_time: new Date(date),
+          end_times: 7,
+          monthly_day: 1,
+          monthly_week: 1,
+          monthly_week_day: 1,
+          repeat_interval: 1,
+          type: 1,
+          weekly_days: "1",
+        },
+        settings: {
+          host_video: "true",
+          participant_video: "true",
+        },
+      },
+      auth: {
+        bearer: token,
+      },
+      headers: {
+        "User-Agent": "Zoom-api-Jwt-Request",
+        "content-type": "application/json",
+      },
+      json: true, //Parse the JSON string in the response
+    };
+    rp(options)
+      .then(function (response) {
+        let mentorHostUrl = response.start_url;
+        let traineeJoinUrl = response.join_url;
+        sql.connect(config, (err) => {
+          if (err) return res.send(err.message);
+          const request = new sql.Request();
+          request.input("bookingId", sql.Int, bookingId);
+          request.query(
+            "select * from booking_appointments_dtls where booking_appt_id = @bookingId",
+            (err, result) => {
+              if (err) return res.send(err.message);
+              if (result.recordset.length > 0) {
+                const bookingId = result.recordset[0].booking_appt_id;
+                let mentorEmail = result.recordset[0].mentor_email;
+                const bookingChanges = 1;
+                const request = new sql.Request();
+                request.input("bookingChanges", sql.Int, bookingChanges);
+                request.input("bookingId", sql.Int, bookingId);
+                request.input("date", sql.Date, date);
+                request.input("mentorHostUrl", sql.VarChar, mentorHostUrl);
+                request.input("traineeJoinUrl", sql.VarChar, traineeJoinUrl);
+                const newDate = new Date();
+                request.input("newDate", sql.Date, newDate);
+                const sqlUpdate =
+                  "UPDATE booking_appointments_dtls SET booking_mentor_date = @date, booking_date = @newDate,trainee_session_status = 'upcoming', trainee_rescheduled_times = @bookingChanges, mentor_host_url = @mentorHostUrl, trainee_join_url = @traineeJoinUrl WHERE booking_appt_id= @bookingId";
+                request.query(sqlUpdate, (err, result) => {
+                  if (err) return res.send(err.message);
+                  if (result) {
+                    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                    const msg = updateEmail(
+                      userEmail,
+                      "Reschedule appointment",
+                      "Successfully appointment booking date is changed, "
+                    );
+                    sgMail
+                      .send(msg)
+                      .then(() => {
+                        const msg = updateEmail(
+                          mentorEmail,
+                          "Reschedule appointment",
+                          "Some one has booked changed the booking date "
+                        );
+                        sgMail
+                          .send(msg)
+                          .then(() => {
+                            res.send({
+                              success:
+                                "Successfully appointment booking date is changed",
+                            });
+                          })
+                          .catch((error) => {
+                            res.send({
+                              error:
+                                "There was an error while booking the appointment",
+                            });
+                          });
+                      })
+                      .catch((error) => {
+                        res.send({
+                          error:
+                            "There was an error while booking the appointment",
+                        });
+                      });
+                  } else {
+                    res.send({
+                      error: error.message,
+                    });
+                  }
+                });
+              } else {
+                return res.send({ error: "Couldn't find booking'" });
+              }
+            }
+          );
+        });
+      })
+      .catch(function (err) {
+        return res.send({ error: err.message });
+      });
   } catch (error) {
-    return res.send({
-      error: error.message,
-    });
+    console.log(err.message);
   }
 }
-
 //create and modify order razorpay order
 export async function modifyCreateOrder(req, res) {
   const { bookingId, date } = req.body;
@@ -374,7 +492,7 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
               request.input("date", sql.Date, date);
               const newDate = new Date();
               request.input("newDate", sql.Date, newDate);
-              request.input("mentorHostUrl", sql.Text, mentorHostUrl);
+              request.input("mentorHostUrl", sql.VarChar, mentorHostUrl);
               request.input("traineeJoinUrl", sql.VarChar, traineeJoinUrl);
               const sqlUpdate =
                 "UPDATE booking_appointments_dtls SET booking_mentor_date = @date, booking_date = @newDate, trainee_modification_changed_times = @changes, mentor_host_url = @mentorHostUrl, trainee_join_url = @traineeJoinUrl WHERE booking_appt_id= @bookingId";
@@ -978,6 +1096,51 @@ export async function getAllRefundedSessions(req, res, next) {
   }
 }
 
+export async function getAllNotAttendedSessions(req, res, next) {
+  const { userEmail } = req.body;
+  console.log(userEmail);
+  try {
+    sql.connect(config, (err) => {
+      if (err) return res.send(err.message);
+      const request = new sql.Request();
+      const unattended = "unattended";
+      request.input("userEmail", sql.VarChar, userEmail);
+      request.input("unattended", sql.VarChar, unattended);
+      request.query(
+        "select * from booking_appointments_dtls where user_email = @userEmail AND trainee_session_status = @unattended ORDER BY booking_appt_id DESC",
+        (err, result) => {
+          if (err) return res.send(err.message);
+          if (result.recordset.length > 0) {
+            let mentorArray = [];
+            result.recordset.forEach((mentor) => {
+              let data = {
+                bookingId: mentor.booking_appt_id,
+                mentorEmail: mentor.mentor_email,
+                mentorFullName: mentor.mentor_name,
+                userEmail: mentor.user_email,
+                bookingDate: mentor.booking_mentor_date,
+                time: mentor.booking_time,
+                confirmed: mentor.mentor_booking_confirmed,
+                changes: mentor.trainee_modification_changed_times,
+                paymentStatus: mentor.mentor_amount_paid_status,
+                mentorId: mentor.mentor_dtls_id,
+                sessionStatus: mentor.trainee_session_status,
+                rewardPoints: mentor.trainee_and_mentor_reward_points,
+                rescheduleTimes: mentor.trainee_rescheduled_times,
+              };
+              mentorArray.push(data);
+            });
+            return res.send({ details: mentorArray });
+          } else {
+            return res.send();
+          }
+        }
+      );
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+}
 //remainder email will be sent before one day to trainee
 function sentEmailRemainderBeforeOneDayToTrainee(req, res) {
   try {
@@ -1393,4 +1556,4 @@ setInterval(() => {
 
   // remainder will be sent to start or join meeting function call
   sentEmailRemainderToTraineeToStart();
-});
+}, 60000);

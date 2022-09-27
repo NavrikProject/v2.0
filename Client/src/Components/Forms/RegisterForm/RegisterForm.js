@@ -33,6 +33,8 @@ import { toast } from "react-toastify";
 import Loading from "../../utils/Loading";
 import { useForm } from "react-hook-form";
 import regImg from "../../../images/reg-img.jpg";
+import PhoneInput2 from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 const RegisterForm = () => {
   const {
     register,
@@ -48,15 +50,17 @@ const RegisterForm = () => {
   const [showIcon, setShowIcon] = useState(false);
   const [showIcons, setShowIcons] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const password = watch("password");
 
   const registerSubmitHandler = async (data) => {
     // // http:localhost:5000/api/auth/register
-    console.log(data);
     try {
       setLoading(true);
-      const res = await axios.post("/auth/email-register", data);
+      const res = await axios.post("/auth/email-register", {
+        data,
+        phoneNumber,
+      });
       if (res.data.required) {
         setError(res.data.required);
         toast.error(res.data.required, { position: "top-center" });
@@ -88,14 +92,6 @@ const RegisterForm = () => {
     setError("");
   }, 7000);
 
-  const UploadFile = async (event) => {
-    event.preventDefault();
-    let data = new FormData();
-    data.append("image", image);
-    try {
-      const res = await axios.post("/feedback/upload", data);
-    } catch (error) {}
-  };
   return (
     <React.Fragment>
       <RegisterFormSect>
@@ -213,6 +209,14 @@ const RegisterForm = () => {
                     </PwdIcons>
                   </PwdField>
                   <Field>
+                    <PhoneInput2
+                      value={phoneNumber}
+                      country="in"
+                      inputStyle={{ width: "100%", padding: "5px 10px" }}
+                      onChange={(phone) => setPhoneNumber(phone)}
+                    />
+                  </Field>
+                  <Field>
                     <RadioWrapper>
                       <RadioWrapper>
                         <InputRadio
@@ -283,7 +287,7 @@ const RegisterForm = () => {
                         Terms & Conditions.
                       </Link>
                     </FormLabel>
-                  </FormLabelDiv>{" "}
+                  </FormLabelDiv>
                   {errors.checkBox && (
                     <ErrorMessage>{errors.checkBox.message}</ErrorMessage>
                   )}
@@ -301,15 +305,15 @@ const RegisterForm = () => {
             </RegisterFormLeft>
             <RegisterFormRight>
               <RegistrationImageDiv>
-                {/* <RegistrationImage src={regImg} /> */}
-                <input
+                <RegistrationImage src={regImg} />
+                {/* <input
                   type="file"
                   name="image"
                   onChange={(event) => setImage(event.target.files[0])}
                 />
                 <button type="submit" onClick={UploadFile}>
                   Upload
-                </button>
+                </button> */}
               </RegistrationImageDiv>
             </RegisterFormRight>
           </RegisterFormWrapper>

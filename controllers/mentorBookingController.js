@@ -701,7 +701,7 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
                 const msg = sendRemainderOnTheDay(
                   mentorEmail,
                   "Remainder for the session will start in 10 minutes",
-                  joinUrl,
+                  mentorHostUrl,
                   "Start Meeting"
                 );
                 sgMail
@@ -716,14 +716,13 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
               });
             }
             if (min === "45") {
-              console.log("Hello");
               const date = new Date(year, month, day, hour, 35, 0);
               schedule.scheduleJob(date, function () {
                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                 const msg = sendRemainderOnTheDay(
                   mentorEmail,
                   "Remainder for the session will start in 10 minutes",
-                  joinUrl,
+                  mentorHostUrl,
                   "Start Meeting"
                 );
                 sgMail
@@ -806,13 +805,12 @@ function sentEmailRemainderToMentorBefore5Min(req, res) {
             }
             if (min === "30") {
               const date = new Date(year, month, day, hour, 25, 0);
-
               schedule.scheduleJob(date, function () {
                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                 const msg = sendRemainderOnTheDay(
                   mentorEmail,
                   "Remainder for the session will start in 10 minutes",
-                  joinUrl,
+                  mentorHostUrl,
                   "Start Meeting"
                 );
                 sgMail
@@ -833,7 +831,7 @@ function sentEmailRemainderToMentorBefore5Min(req, res) {
                 const msg = sendRemainderOnTheDay(
                   mentorEmail,
                   "Remainder for the session will start in 10 minutes",
-                  joinUrl,
+                  mentorHostUrl,
                   "Start Meeting"
                 );
                 sgMail
@@ -857,7 +855,6 @@ function sentEmailRemainderToMentorToStart(req, res) {
   try {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
-
       const request = new sql.Request();
       const amountPaidStatus = "Paid";
       const mentorSessionsStatus = "upcoming";
@@ -875,7 +872,6 @@ function sentEmailRemainderToMentorToStart(req, res) {
             let hour = res.booking_starts_time.split(":")[0];
             let min = res.booking_starts_time.split(":")[1];
             const date = new Date(year, month, day, hour, min, 0);
-
             schedule.scheduleJob(date, function () {
               console.log("Entered this final call function");
               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -900,8 +896,6 @@ function sentEmailRemainderToMentorToStart(req, res) {
     });
   } catch (error) {}
 }
-
-
 
 // function sentEmail(req, res) {
 //   try {

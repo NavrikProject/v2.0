@@ -5,6 +5,7 @@ import styled from "styled-components";
 import GoToTop from "../GoToTop";
 import AttendedSessions from "./Sessions/AttendedSessions";
 import CompletedSessions from "./Sessions/CompletedSessions";
+import NotAttendedSessions from "./Sessions/NotAttendedSessions";
 import RefundedSessions from "./Sessions/RefundedSessions";
 import UpcomingSession from "./Sessions/UpcomingSession";
 const Section = styled.section`
@@ -41,7 +42,7 @@ const SidebarListItem = styled.li`
   cursor: pointer;
   border-bottom: 1px solid lightgrey;
 
-  :nth-child(6) {
+  :nth-child(7) {
     border-bottom: none;
   }
   &:hover {
@@ -63,6 +64,7 @@ const TraineeSessionDetails = () => {
   const [attendedSession, setAttendedSession] = useState(false);
   const [completedSession, setCompletedSession] = useState(false);
   const [refundedSession, setRefundedSession] = useState(false);
+  const [notAttendedSession, setNotAttendedSession] = useState(false);
   return (
     <Section>
       <Div>
@@ -91,7 +93,8 @@ const TraineeSessionDetails = () => {
                     setShowUpcomingSessions(!showUpcomingSessions),
                     setAttendedSession(false),
                     setCompletedSession(false),
-                    setRefundedSession(false)
+                    setRefundedSession(false),
+                    setNotAttendedSession(false)
                   );
                 }}
               >
@@ -103,7 +106,8 @@ const TraineeSessionDetails = () => {
                     setShowUpcomingSessions(false),
                     setAttendedSession(!attendedSession),
                     setCompletedSession(false),
-                    setRefundedSession(false)
+                    setRefundedSession(false),
+                    setNotAttendedSession(false)
                   );
                 }}
               >
@@ -115,7 +119,8 @@ const TraineeSessionDetails = () => {
                     setShowUpcomingSessions(false),
                     setAttendedSession(false),
                     setCompletedSession(!completedSession),
-                    setRefundedSession(false)
+                    setRefundedSession(false),
+                    setNotAttendedSession(false)
                   );
                 }}
               >
@@ -127,11 +132,25 @@ const TraineeSessionDetails = () => {
                     setShowUpcomingSessions(false),
                     setAttendedSession(false),
                     setCompletedSession(false),
-                    setRefundedSession(!refundedSession)
+                    setRefundedSession(!refundedSession),
+                    setNotAttendedSession(false)
                   );
                 }}
               >
                 <QuickMenuTitle>Refunded</QuickMenuTitle>
+              </SidebarListItem>
+              <SidebarListItem
+                onClick={() => {
+                  return (
+                    setShowUpcomingSessions(false),
+                    setAttendedSession(false),
+                    setCompletedSession(false),
+                    setRefundedSession(false),
+                    setNotAttendedSession(!notAttendedSession)
+                  );
+                }}
+              >
+                <QuickMenuTitle>Not Attended</QuickMenuTitle>
               </SidebarListItem>
               <SidebarListItem>
                 <QuickMenuTitle>Check Refund Status</QuickMenuTitle>
@@ -145,6 +164,7 @@ const TraineeSessionDetails = () => {
             {attendedSession && <AttendedSessions />}
             {completedSession && <CompletedSessions />}
             {refundedSession && <RefundedSessions />}
+            {notAttendedSession && <NotAttendedSessions />}
           </Wrapper>
         </LeftDiv>
       </Div>
