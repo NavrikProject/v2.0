@@ -191,3 +191,21 @@ export const FormInput = styled.input`
   padding: 5px;
   margin-right: 10px;
 `;
+export const MobileNumberDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+`;
+export const MobileNumberBtn = styled.button`
+  padding: 7px 20px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background: -webkit-linear-gradient(left, #3e5ce4, #4282fa);
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  margin-left: 12px;
+  font-size: 17px;
+  width: 70%;
+`;

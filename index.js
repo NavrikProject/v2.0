@@ -33,14 +33,6 @@ import Vonage from "@vonage/server-sdk";
 
 const __dirname = path.resolve();
 
-const KEY_PATH = fs.readFileSync(`${__dirname}/middleware/private.key`, "utf8");
-const vonage = new Vonage({
-  apiKey: "5c1f377e",
-  apiSecret: "c0QXia5GPkpyAyYF",
-  applicationId: "715adc2f-3411-4896-8024-c0c7c6f83b2c",
-  privateKey: KEY_PATH,
-});
-
 const app = express();
 dotenv.config();
 app.use(express.json());

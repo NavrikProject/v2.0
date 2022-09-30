@@ -1,7 +1,5 @@
-import React from "react";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
   apiKey: "AIzaSyCqKYbt-4qfFBjjUyTKdKIZBnlSUL-3k4M",
   authDomain: "practiwiz-phone-verify.firebaseapp.com",
@@ -11,11 +9,6 @@ const firebaseConfig = {
   appId: "1:759046946525:web:64d1fb4380c6aeba1b2534",
   measurementId: "G-NL4WCEZ1XT",
 };
-const FirebaseConfig = () => {
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  console.log(analytics);
-  return <div></div>;
-};
 
-export default FirebaseConfig;
+const app = initializeApp(firebaseConfig);
+export default app;

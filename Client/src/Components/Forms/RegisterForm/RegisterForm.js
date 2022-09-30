@@ -27,6 +27,8 @@ import {
   RegisterFormRight,
   RegistrationImageDiv,
   RegistrationImage,
+  MobileNumberBtn,
+  MobileNumberDiv,
 } from "./RegisterFormElements";
 import GoToTop from "../../GoToTop";
 import { toast } from "react-toastify";
@@ -34,7 +36,14 @@ import Loading from "../../utils/Loading";
 import { useForm } from "react-hook-form";
 import regImg from "../../../images/reg-img.jpg";
 import PhoneInput2 from "react-phone-input-2";
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
+
 import "react-phone-input-2/lib/style.css";
+import app from "../../FirebaseConfig";
 const RegisterForm = () => {
   const {
     register,
@@ -51,10 +60,74 @@ const RegisterForm = () => {
   const [showIcons, setShowIcons] = useState(false);
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otpVerifiedNumber, setOtpVerifiedNumber] = useState(false);
+  const [otp, setOtp] = useState("");
   const password = watch("password");
+  const captchaVerifyHandler = () => {
+    const auth = getAuth(app);
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      "sign-in-button",
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          // onSignInSubmit();
+          mobileNumberVerify();
+        },
+      },
+      auth
+    );
+  };
 
+  const mobileNumberVerify = () => {
+    captchaVerifyHandler();
+    const appVerifier = window.recaptchaVerifier;
+    let mobileNumber = "+" + phoneNumber;
+    const auth = getAuth();
+    signInWithPhoneNumber(auth, mobileNumber, appVerifier)
+      .then((confirmationResult) => {
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+        // ...
+        toast.success("OTP sent successfully to your number", {
+          position: "top-center",
+        });
+        setShowOtpInput(true);
+      })
+      .catch((error) => {
+        toast.error("There was an error while sending the OTP", {
+          position: "top-center",
+        });
+      });
+  };
+  const verifyOtpHandler = () => {
+    window.confirmationResult
+      .confirm(otp)
+      .then((result) => {
+        // User signed in successfully.
+        toast.success("OTP verified successfully", {
+          position: "top-center",
+        });
+        setOtpVerifiedNumber(true);
+        setShowOtpInput(false);
+        // ...
+      })
+      .catch((error) => {
+        toast.error("You have entered incorrect otp or invalid", {
+          position: "top-center",
+        });
+        setShowOtpInput(true);
+      });
+  };
   const registerSubmitHandler = async (data) => {
     // // http:localhost:5000/api/auth/register
+    if (!otpVerifiedNumber) {
+      return toast.error("Please verify mobile number", {
+        position: "top-center",
+      });
+    }
     try {
       setLoading(true);
       const res = await axios.post("/auth/email-register", {
@@ -97,6 +170,7 @@ const RegisterForm = () => {
       <RegisterFormSect>
         <RegisterFormSection>
           <RegisterFormWrapper>
+            <div id="sign-in-button"></div>
             <RegisterFormLeft>
               <FormInner>
                 <Form onSubmit={handleSubmit(registerSubmitHandler)}>
@@ -208,14 +282,44 @@ const RegisterForm = () => {
                       {showIcons ? <ShowIcon /> : <HideIcon />}
                     </PwdIcons>
                   </PwdField>
-                  <Field>
+                  <MobileNumberDiv>
                     <PhoneInput2
                       value={phoneNumber}
                       country="in"
                       inputStyle={{ width: "100%", padding: "5px 10px" }}
                       onChange={(phone) => setPhoneNumber(phone)}
                     />
-                  </Field>
+                    {phoneNumber && (
+                      <MobileNumberBtn
+                        type="button"
+                        onClick={mobileNumberVerify}
+                      >
+                        Send Otp
+                      </MobileNumberBtn>
+                    )}
+                  </MobileNumberDiv>
+                  {otpVerifiedNumber && (
+                    <p style={{ marginTop: "5px", color: "green" }}>
+                      Mobile number verified
+                    </p>
+                  )}
+                  {showOtpInput && (
+                    <MobileNumberDiv>
+                      <Input
+                        type="number"
+                        onChange={(e) => setOtp(e.target.value)}
+                      />
+                      {phoneNumber && (
+                        <MobileNumberBtn
+                          type="button"
+                          onClick={verifyOtpHandler}
+                        >
+                          Verify otp
+                        </MobileNumberBtn>
+                      )}
+                    </MobileNumberDiv>
+                  )}
+
                   <Field>
                     <RadioWrapper>
                       <RadioWrapper>
