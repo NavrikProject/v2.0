@@ -216,7 +216,7 @@ const TraineeProfile = () => {
                         <TraineeRole>
                           <b>Role : </b> {user.type} <br />
                           <b>Status : </b>
-                          {mentor.mentor_approved === "yes"
+                          {mentor.mentor_approved === "Yes"
                             ? "Application approved"
                             : "Application not approved"}
                         </TraineeRole>
@@ -297,6 +297,12 @@ const TraineeProfile = () => {
                         </DetailsTitles>
                         <DetailsFromDb>
                           {mentor.mentor_sessions_conducted}
+                        </DetailsFromDb>
+                      </DetailsFlex1>
+                      <DetailsFlex1>
+                        <DetailsTitles>Mentor Sessions Missed :</DetailsTitles>
+                        <DetailsFromDb>
+                          {mentor.mentor_unattended_sessions}
                         </DetailsFromDb>
                       </DetailsFlex1>
                       <DetailsFlex1>

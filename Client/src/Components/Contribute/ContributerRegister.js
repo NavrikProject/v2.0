@@ -59,6 +59,11 @@ const ContributerRegister = () => {
         toast.error(res.data.error, { position: "top-center" });
         setLoading(false);
       }
+      if (res.data.exists) {
+        setError(res.data.exists);
+        toast.error(res.data.exists, { position: "top-center" });
+        setLoading(false);
+      }
     } catch (error) {
       reset();
       return;

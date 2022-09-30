@@ -6,6 +6,7 @@ import MentorCompletedSessions from "./MentorCompletedSessions";
 import MentorCancelledSession from "./MentorCancelledSession";
 import MentorUpcomingSession from "./MentorUpcomingSession";
 import { Link } from "react-router-dom";
+import MentorNotAttendedSessions from "./MentorNotAttendedSessions";
 const Section = styled.section`
   width: 100%;
   height: 100vh;
@@ -39,7 +40,7 @@ const SidebarListItem = styled.li`
   width: 100%;
   cursor: pointer;
   border-bottom: 1px solid lightgrey;
-  :nth-child(5) {
+  :nth-child(6) {
     border-bottom: none;
   }
 `;
@@ -58,6 +59,7 @@ const MentorSessionDetails = () => {
   const [attendedSession, setAttendedSession] = useState(false);
   const [completedSession, setCompletedSession] = useState(false);
   const [refundedSession, setRefundedSession] = useState(false);
+  const [notAttendedSession, setNotAttendedSession] = useState(false);
   return (
     <Section>
       <Div>
@@ -85,7 +87,8 @@ const MentorSessionDetails = () => {
                     setShowUpcomingSessions(!showUpcomingSessions),
                     setAttendedSession(false),
                     setCompletedSession(false),
-                    setRefundedSession(false)
+                    setRefundedSession(false),
+                    setNotAttendedSession(false)
                   );
                 }}
               >
@@ -97,7 +100,8 @@ const MentorSessionDetails = () => {
                     setShowUpcomingSessions(false),
                     setAttendedSession(!attendedSession),
                     setCompletedSession(false),
-                    setRefundedSession(false)
+                    setRefundedSession(false),
+                    setNotAttendedSession(false)
                   );
                 }}
               >
@@ -109,7 +113,8 @@ const MentorSessionDetails = () => {
                     setShowUpcomingSessions(false),
                     setAttendedSession(false),
                     setCompletedSession(!completedSession),
-                    setRefundedSession(false)
+                    setRefundedSession(false),
+                    setNotAttendedSession(false)
                   );
                 }}
               >
@@ -121,7 +126,21 @@ const MentorSessionDetails = () => {
                     setShowUpcomingSessions(false),
                     setAttendedSession(false),
                     setCompletedSession(false),
-                    setRefundedSession(!refundedSession)
+                    setRefundedSession(false),
+                    setNotAttendedSession(!notAttendedSession)
+                  );
+                }}
+              >
+                <QuickMenuTitle>Not Attended</QuickMenuTitle>
+              </SidebarListItem>
+              <SidebarListItem
+                onClick={() => {
+                  return (
+                    setShowUpcomingSessions(false),
+                    setAttendedSession(false),
+                    setCompletedSession(false),
+                    setRefundedSession(!refundedSession),
+                    setNotAttendedSession(false)
                   );
                 }}
               >
@@ -136,6 +155,7 @@ const MentorSessionDetails = () => {
             {attendedSession && <MentorAttendedSessions />}
             {completedSession && <MentorCompletedSessions />}
             {refundedSession && <MentorCancelledSession />}
+            {notAttendedSession && <MentorNotAttendedSessions />}
           </Wrapper>
         </LeftDiv>
       </Div>

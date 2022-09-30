@@ -635,7 +635,7 @@ export async function getBookingDates(req, res) {
       if (err) return res.send(err.message);
       const request = new sql.Request();
       request.query(
-        "select * from booking_appointments_dtls",
+        "select * from booking_appointments_dtls where mentor_session_status = 'upcoming' and trainee_session_status = 'upcoming'",
         (err, result) => {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
@@ -691,7 +691,6 @@ export async function getIndividualMentorDetails(req, res) {
 }
 
 // fill mentor bank account details.
-
 export async function addBankAccountDetailsOfMentor(req, res, next) {
   const id = req.params.id;
   let { accountNumber, ifscCode, fullName } = req.body;

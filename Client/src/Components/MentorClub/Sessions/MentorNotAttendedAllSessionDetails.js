@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import TraineeModifyBooking from "../TraineeModifyBooking";
-
 import styled from "styled-components";
+import MentorModifyBooking from "./MentorModifyBooking";
 import {
-  ModifyButton,
   RefundedDoneButton,
+  ModifyButton,
   UnModifiedButton,
-} from "../ButtonElements";
-
+} from "../../Trainee/ButtonElements";
 const UpcomingAllDivContent = styled.p`
   font-size: 20px;
   color: #111;
@@ -17,7 +15,6 @@ const UpcomingAllDivContent = styled.p`
     text-transform: uppercase;
   }
 `;
-
 const AllButtonDiv = styled.div`
   margin-top: 30px;
   padding: 10px 0;
@@ -28,23 +25,20 @@ const NoteText = styled.p`
   opacity: 0.5;
   padding-top: 10px;
 `;
-const NotAttendedAllSessionDetails = (props) => {
+const MentorNotAttendedAllSessionDetails = (props) => {
   const [showModel, setShowModel] = useState(false);
   const [mentor, setMentor] = useState();
-  const [bookingStatus, setBookingStatus] = useState("");
   const modifyMentorAppointMent = async (mentor) => {
     setShowModel(!showModel);
     setMentor(mentor);
-    setBookingStatus("reschedule");
   };
 
   return (
     <div>
       {showModel && (
-        <TraineeModifyBooking
+        <MentorModifyBooking
           mentor={mentor}
           modifyMentorAppointMent={modifyMentorAppointMent}
-          bookingStatus={bookingStatus}
         />
       )}
       <div>
@@ -88,4 +82,4 @@ const NotAttendedAllSessionDetails = (props) => {
   );
 };
 
-export default NotAttendedAllSessionDetails;
+export default MentorNotAttendedAllSessionDetails;
