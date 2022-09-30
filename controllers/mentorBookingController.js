@@ -1049,7 +1049,6 @@ function sentEmailRemainderToMentorToStart(req, res) {
             let hour = res.booking_starts_time.split(":")[0];
             let min = res.booking_starts_time.split(":")[1];
             const date = new Date(year, month, day, hour, min, 0);
-            console.log(date);
             schedule.scheduleJob(date, function () {
               console.log("Entered this final call function");
               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
