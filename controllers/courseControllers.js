@@ -277,7 +277,7 @@ export function addJoinNowCourse(req, res) {
                                   "')",
                                 (err, success) => {
                                   if (err) {
-                                    console.log(err.message);
+                                    return res.send({ error: err.message });
                                   }
                                   if (success) {
                                     sgMail.setApiKey(

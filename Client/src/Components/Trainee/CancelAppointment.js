@@ -121,8 +121,17 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-
   const requestForRefundHandler = async (data) => {
+    if (
+      new Date().toDateString() === new Date(mentor.bookingDate).toDateString()
+    ) {
+      return (
+        setError("Sorry you can not cancel on the booking date"),
+        toast.error("Sorry you can not cancel on the booking date", {
+          position: "top-center",
+        })
+      );
+    }
     try {
       setLoading(true);
       const result = await axios.post(
@@ -165,11 +174,7 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
       <FormDiv>
         <FormData>
           {loading && <LoadingSpinner />}
-          {error && (
-            <p style={{ color: "red", fontSize: "20px" }}>
-              There was an issue while refunding your account
-            </p>
-          )}
+          {error && <p style={{ color: "red", fontSize: "20px" }}>{error}</p>}
           {success && (
             <p style={{ color: "green", fontSize: "20px" }}>{success}</p>
           )}

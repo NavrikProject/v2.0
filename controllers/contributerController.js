@@ -452,7 +452,7 @@ export async function updateContributerApprove(req, res, next) {
 
 export async function getAddContentCourseList(req, res) {
   const { email } = req.body;
-  console.log(email);
+
   try {
     sql.connect(config, (err) => {
       if (err) res.send({ error: err.message });
@@ -477,7 +477,7 @@ export async function getAddContentCourseList(req, res) {
 }
 export async function getSuggestContentCourseList(req, res) {
   const { email } = req.body;
-  console.log(email);
+
   try {
     sql.connect(config, (err) => {
       if (err) res.send({ error: err.message });
@@ -502,7 +502,8 @@ export async function getSuggestContentCourseList(req, res) {
 }
 export async function getRemoveContentCourseList(req, res) {
   const { email } = req.body;
-  console.log(email);
+  email;
+
   try {
     sql.connect(config, (err) => {
       if (err) res.send({ error: err.message });

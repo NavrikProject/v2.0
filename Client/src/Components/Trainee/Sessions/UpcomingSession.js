@@ -78,9 +78,7 @@ const UpcomingSession = () => {
     };
     getAllUpcomingSessions();
   }, [token, user]);
-  console.log(upComingSessions);
   const toggleShowDetails = (index) => {
-    console.log(index);
     if (selected === index) {
       return setSelected(null);
     }

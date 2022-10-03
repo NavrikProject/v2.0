@@ -131,7 +131,7 @@ export async function updateAdminDisapprove(req, res, next) {
                     .then(() => {
                       res.send({
                         success:
-                          "Successfully disapproved as admin in the Elevashun",
+                          "Successfully disapproved as admin in the Practiwiz",
                       });
                     })
                     .catch((error) => {

@@ -66,6 +66,9 @@ export const DetailsTitles = styled.h4`
 export const DetailsFromDb = styled.p`
   font-weight: 400;
   margin-left: 5px;
+  span {
+    color: gold;
+  }
 `;
 export const Section = styled.section`
   width: 100%;

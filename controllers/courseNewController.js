@@ -28,7 +28,6 @@ export async function createNewCourse(req, res) {
   const participants = 20;
   const createdBy = "Navrik Team";
   const description = req.body.description;
-  console.log(creationDate);
   const blobName = new Date().getTime() + "-" + req.files.image.name;
 
   let fileName = `https://navrik.blob.core.windows.net/navrikimage/${blobName}`;

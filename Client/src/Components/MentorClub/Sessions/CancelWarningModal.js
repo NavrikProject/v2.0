@@ -167,6 +167,17 @@ const CancelWarningModal = (props) => {
   const [loading, setLoading] = useState(false);
 
   const cancelAppointment = async (data) => {
+    if (
+      new Date().toDateString() ===
+      new Date(props.sendMentor.bookingDate).toDateString()
+    ) {
+      return (
+        setError("Sorry you can not cancel on the booking date"),
+        toast.error("Sorry you can not cancel on the booking date", {
+          position: "top-center",
+        })
+      );
+    }
     setLoading(true);
     const res = await axios.put(
       `/mentor/bookings/update/cancel/appointment/${props.sendMentor.bookingId}`,

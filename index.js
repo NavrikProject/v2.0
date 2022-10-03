@@ -30,7 +30,10 @@ import masterRoute from "./routes/masterRoute.js";
 import BlobServiceClient from "@azure/storage-blob";
 import config from "./config/dbconfig.js";
 import Vonage from "@vonage/server-sdk";
-
+import {
+  BlockBlobClient,
+  StorageSharedKeyCredential,
+} from "@azure/storage-blob";
 const __dirname = path.resolve();
 
 const app = express();
@@ -65,12 +68,10 @@ app.get("/hello-world", async (req, res) => {
   const time = new Date().getTime();
 
   sql.connect(config, async (err, connection) => {
-    console.log(connection);
     if (err) return res.send(err.message);
     const request = new sql.Request();
     request.query("select * from users_dtls", async (err, response) => {
       if (err) return res.send(err.message);
-      console.log(response);
       res.send(response.recordset);
     });
   });
@@ -94,19 +95,7 @@ app.use("/api/google", googleRoute);
 app.use("/api", masterRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/reschedule", rescheduleRoute);
-// BlobServiceClient.fromConnectionString(
-//   process.env.AZURE_STORAGE_CONNECTION_STRING
-// );
-// console.log(blobServiceClient);
-// async function getBlobServiceClient() {
-//   if (!blobServiceClient) {
-//     blobServiceClient = await BlobServiceClient.fromConnectionString(
-//       "BlobEndpoint=https://navrikimages.blob.core.windows.net/;QueueEndpoint=https://navrikimages.queue.core.windows.net/;FileEndpoint=https://navrikimages.file.core.windows.net/;TableEndpoint=https://navrikimages.table.core.windows.net/;SharedAccessSignature=sv=2021-06-08&ss=bfqt&srt=c&sp=rwdlacupyx&se=2022-09-15T19:03:20Z&st=2022-09-15T11:03:20Z&spr=https&sig=oun1iznX7Ql2BDj6vsEZhlYUz5QQr3yfbYU714FgXdI%3D"
-//     );
-//   }
-//   return blobServiceClient;
-// }
-// getBlobServiceClient();
+
 app.listen(port, (req, res) => {
   console.log("listening on port " + port);
 });

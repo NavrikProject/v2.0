@@ -258,9 +258,9 @@ export async function googleSignUp(req, res, next) {
         }
       })
       .catch((err) => {
-        console.log(err.message);
+        return res.send({ error: err.message });
       });
   } catch (error) {
-    console.log(error);
+    return res.send({ error: error.message });
   }
 }

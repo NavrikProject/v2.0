@@ -170,7 +170,7 @@ export async function fillAdditionalMentorDetails(req, res) {
       );
     });
   } catch (error) {
-    console.log(err.message);
+    return res.send({ error: error.message });
   }
 }
 
@@ -374,7 +374,7 @@ export async function updateMentorDisapprove(req, res, next) {
                     .then(() => {
                       res.send({
                         success:
-                          "Successfully disapproved as admin in the Elevashun",
+                          "Successfully disapproved as admin in the Practiwiz",
                       });
                     })
                     .catch((error) => {
@@ -430,7 +430,7 @@ export async function createMentorRazorPayOrder(req, res, next) {
                 res.send(order);
               })
               .catch((error) => {
-                console.log(error.message);
+                return res.send({ error: error.message });
               });
           } else {
             return res.send({
@@ -441,7 +441,7 @@ export async function createMentorRazorPayOrder(req, res, next) {
       );
     });
   } catch (error) {
-    console.log(err.message);
+    return res.send({ error: error.message });
   }
 }
 
@@ -599,10 +599,10 @@ export async function createMentorAppointment(req, res, next) {
       })
       .catch(function (err) {
         // API call failed...
-        console.log("API call failed, reason ", err.message);
+        return res.send({ error: err.message });
       });
   } catch (error) {
-    console.log(err.message);
+    return res.send({ error: error.message });
   }
 }
 

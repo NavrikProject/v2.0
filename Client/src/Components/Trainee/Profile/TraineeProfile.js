@@ -37,6 +37,8 @@ const TraineeProfile = () => {
   const [deleteAccountForm, setDeleteAccountForm] = useState(false);
   const [changeImageForm, setChangeImageForm] = useState(false);
   const [traineeDetails, setTraineeDetails] = useState([]);
+  const [mentorPoints, setMentorPoints] = useState([]);
+
   const user = useSelector((state) => state.user.currentUser);
 
   const showPersonalForm = () => {
@@ -86,6 +88,20 @@ const TraineeProfile = () => {
     };
     onImageGetHandler();
   }, [user.id, token]);
+  useEffect(() => {
+    const getTraineePointsDetails = async () => {
+      const res = await axios.get(`/feedback/reward-points/${user?.email}`, {
+        headers: { authorization: "Bearer " + token },
+      });
+      if (res.data.success) {
+        setMentorPoints(res.data.success);
+      }
+      if (res.data.notFound) {
+        setMentorPoints([]);
+      }
+    };
+    getTraineePointsDetails();
+  }, [user?.email, token]);
   return (
     <>
       <Section>
@@ -245,7 +261,15 @@ const TraineeProfile = () => {
                       <DetailsFlex1>
                         <DetailsTitles>Your Total Rewards : </DetailsTitles>
                         <DetailsFromDb>
-                          <span> {trainee.trainee_points}</span> points
+                          <span>
+                            {mentorPoints?.map((mentorPoint) => (
+                              <>
+                                {mentorPoint.user_points_dtls_closing_points +
+                                  " "}
+                              </>
+                            ))}
+                          </span>
+                          points
                         </DetailsFromDb>
                       </DetailsFlex1>
                       <DetailsFlex1>

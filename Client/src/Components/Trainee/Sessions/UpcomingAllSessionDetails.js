@@ -51,9 +51,7 @@ const UpcomingAllSessionDetails = (props) => {
 
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
-  console.log(props);
   const attendMeetingHandler = async (bookingId) => {
-    console.log(bookingId);
     await axios.post(
       `/mentor/profile/get/bookings/attended/update`,
       { userEmail: user?.email, bookingId: bookingId },
