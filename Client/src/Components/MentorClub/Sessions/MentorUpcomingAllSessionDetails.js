@@ -72,9 +72,8 @@ const UpcomingAllSessionDetails = (props) => {
       )}
       <div>
         <UpcomingAllDivContent>
-          You have successfully booked a mentorship session with
-          <span>{" " + props.mentor.userEmail + " "}</span>
-          on
+          <span>{" " + props.mentor.username + " "}</span> has successfully
+          booked a mentorship session with you on
           <span>
             {" " + new Date(props.mentor.bookingDate).toDateString() + " "}
           </span>

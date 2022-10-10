@@ -44,7 +44,7 @@ const MentorNotAttendedAllSessionDetails = (props) => {
       <div>
         <UpcomingAllDivContent>
           You have missed a mentorship session with
-          <span>{" " + props.mentor.mentorFullName + " "}</span>
+          <span>{" " + props.mentor.username + " "}</span>
           on
           <span>
             {" " + new Date(props.mentor.bookingDate).toDateString() + " "}

@@ -291,7 +291,7 @@ const MentorIndividual = ({ socket }) => {
             }}
             spaceBetween={50}
             slidesPerView={1}
-            onSwiper={(swiper) => console.log(swiper)}
+            // onSwiper={(swiper) => console.log(swiper)}
             navigation={true}
             modules={[Autoplay, Pagination, Navigation]}
           >

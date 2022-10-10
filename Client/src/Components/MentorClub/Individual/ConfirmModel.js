@@ -144,6 +144,7 @@ const ConfirmModel = (props) => {
   const [loading, setLoading] = useState(false);
 
   const bookMentorHandler = async (data) => {
+    const username = user.firstname + " " + user.lastname;
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onerror = () => {
@@ -198,6 +199,7 @@ const ConfirmModel = (props) => {
                 from: props.sendMentor.mentor_availability_start_time,
                 to: props.sendMentor.mentor_availability_end_time,
                 data: data,
+                username: username,
               }
             );
             if (res.data.success) {

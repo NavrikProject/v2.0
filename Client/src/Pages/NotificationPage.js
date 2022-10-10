@@ -32,7 +32,21 @@ const NotificationPage = () => {
         <NotificationSection>
           <NotificationSectionDiv>
             <NotificationSectionWrapper>
-              Notifications
+              <div>
+                <p>Subject: Welcome to Practiwiz!</p>
+                <h3> Hi Mahesh Bandari,</h3>
+                <p>We're pleased to see you onboard with Practiwiz.</p>
+                <p>
+                  Please click the following link and/or the "Activate Account"
+                  button below for activation.
+                </p>
+                <a href="hrll">Activate Account</a>
+                <p>We look forward to seeing your progress with our service!</p>
+                <p>
+                  If you have any questions, reply back to this email and we'll
+                  be happy to help. Thanks, Practiwiz
+                </p>
+              </div>
             </NotificationSectionWrapper>
           </NotificationSectionDiv>
         </NotificationSection>

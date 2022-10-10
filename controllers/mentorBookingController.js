@@ -377,6 +377,7 @@ export async function getMentorAllUpcomingSessions(req, res, next) {
                 mentorId: mentor.mentor_dtls_id,
                 hostUrl: mentor.mentor_host_url,
                 sessionStatus: mentor.mentor_session_status,
+                username: mentor.user_fullname,
               };
               mentorArray.push(data);
             });
@@ -456,6 +457,7 @@ export async function getMentorAllAttendedSessions(req, res, next) {
                 mentorId: mentor.mentor_dtls_id,
                 userEmail: mentor.user_email,
                 sessionStatus: mentor.mentor_session_status,
+                username: mentor.user_fullname,
               };
               mentorArray.push(data);
             });
@@ -496,6 +498,7 @@ export async function getMentorAllCompletedSessions(req, res, next) {
                 mentorId: mentor.mentor_dtls_id,
                 mentorFullName: mentor.mentor_name,
                 paymentStatus: mentor.mentor_amount_paid_status,
+                username: mentor.user_fullname,
               };
               mentorArray.push(data);
             });
@@ -535,6 +538,7 @@ export async function getMentorAllCancelledSessions(req, res, next) {
                 time: mentor.booking_time,
                 paymentStatus: mentor.mentor_amount_paid_status,
                 mentorId: mentor.mentor_dtls_id,
+                username: mentor.user_fullname,
               };
               mentorArray.push(data);
             });
@@ -578,6 +582,7 @@ export async function getMentorAllNotAttendedSessions(req, res, next) {
                 userEmail: mentor.user_email,
                 sessionStatus: mentor.mentor_session_status,
                 rescheduleTimes: mentor.mentor_rescheduled_times,
+                username: mentor.user_fullname,
               };
               mentorArray.push(data);
             });
@@ -750,7 +755,7 @@ function sentEmailRemainderBeforeOneDayToMentor(req, res) {
               sgMail
                 .send(msg)
                 .then(() => {
-                  console.log("Sent");
+                  console.log("Email Sent before one day");
                 })
                 .catch((error) => {
                   console.log(error.message);
@@ -831,6 +836,7 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
             if (min === "00") {
               hour = hour - 1;
               const date = new Date(year, month, day, hour, 50, 0);
+
               schedule.scheduleJob(date, function () {
                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                 const msg = sendRemainderOnTheDay(
@@ -842,7 +848,7 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
                 sgMail
                   .send(msg)
                   .then(() => {
-                    console.log("Sent");
+                    console.log("Email Sent before 10 minutes");
                   })
                   .catch((error) => {
                     console.log(error.message);
@@ -862,7 +868,7 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
                 sgMail
                   .send(msg)
                   .then(() => {
-                    console.log("Sent");
+                    console.log("Email Sent before 10 minutes");
                   })
                   .catch((error) => {
                     console.log(error.message);
@@ -871,7 +877,7 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
             }
             if (min === "30") {
               min = min - 10;
-              console.log("30 minutes");
+
               const date = new Date(year, month, day, hour, min, 0);
               schedule.scheduleJob(date, function () {
                 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -884,8 +890,7 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
                 sgMail
                   .send(msg)
                   .then(() => {
-                    console.log("Sent");
-                    console.log("Email sent");
+                    console.log("Email Sent before 10 minutes");
                   })
                   .catch((error) => {
                     console.log(error.message);
@@ -905,7 +910,7 @@ function sentEmailRemainderToMentorBefore10Min(req, res) {
                 sgMail
                   .send(msg)
                   .then(() => {
-                    console.log("Sent");
+                    console.log("Email Sent before 10 minutes");
                   })
                   .catch((error) => {
                     console.log(error.message);
@@ -939,6 +944,7 @@ function sentEmailRemainderToMentorBefore5Min(req, res) {
             let day = new Date(res.booking_mentor_date).getDate();
             let hour = res.booking_starts_time.split(":")[0];
             let min = res.booking_starts_time.split(":")[1];
+            console.log(day);
             if (min === "00") {
               hour = hour - 1;
               const date = new Date(year, month, day, hour, 55, 0);
@@ -1050,7 +1056,6 @@ function sentEmailRemainderToMentorToStart(req, res) {
             let min = res.booking_starts_time.split(":")[1];
             const date = new Date(year, month, day, hour, min, 0);
             schedule.scheduleJob(date, function () {
-              console.log("Entered this final call function");
               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
               const msg = sendRemainderOnTheDay(
                 mentorEmail,
@@ -1119,9 +1124,6 @@ function sentEmail(req, res) {
     });
   } catch (error) {}
 }
-setInterval(() => {
-  sentEmail();
-}, 10000);
 
 setInterval(() => {
   //remainder email will be sent before one day function call

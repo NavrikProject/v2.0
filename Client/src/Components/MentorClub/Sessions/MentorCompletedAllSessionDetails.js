@@ -61,7 +61,7 @@ const CompletedAllSessionDetails = (props) => {
       <div>
         <UpcomingAllDivContent>
           You have successfully completed a mentorship session with
-          <span>{" " + props.mentor.mentorFullName + " "}</span>
+          <span>{" " + props.mentor.username + " "}</span>
           on
           <span>
             {" " + new Date(props.mentor.bookingDate).toDateString() + " "}

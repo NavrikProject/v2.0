@@ -188,6 +188,8 @@ export const RatingContentText = styled.p`
   font-size: 19px;
   color: #111;
   font-weight: normal;
+  overflow: hidden;
+  overflow-wrap: break-word;
 `;
 export const RatingContentStarDiv = styled.div`
   padding: 20px;
