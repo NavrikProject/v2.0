@@ -28,6 +28,7 @@ import rescheduleRoute from "./routes/rescheduleRoute.js";
 import fs from "fs";
 import masterRoute from "./routes/masterRoute.js";
 import BlobServiceClient from "@azure/storage-blob";
+import DefaultAzureCredential from "@azure/identity";
 import config from "./config/dbconfig.js";
 import Vonage from "@vonage/server-sdk";
 import {
@@ -35,6 +36,7 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 const __dirname = path.resolve();
+
 
 const app = express();
 dotenv.config();

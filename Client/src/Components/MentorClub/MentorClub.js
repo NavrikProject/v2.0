@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ClearFilter,
   FaSearchIcon,
@@ -32,10 +32,13 @@ import {
   mentorSkills,
 } from "../Data/MentorData";
 import GoToTop from "../GoToTop";
+import axios from "axios";
 const MentorClub = () => {
   const [searchItem, setSearchItem] = useState("");
   const [searchItemWord, setSearchItemWord] = useState("");
   const [categoryItem, setCategoryItem] = useState("");
+  const [skillCategory, setSkillCategory] = useState("technology");
+  const [skills, setSkills] = useState([]);
   const searchEngineAll = (event) => {
     event.preventDefault();
     setSearchItemWord(searchItem);
@@ -43,6 +46,14 @@ const MentorClub = () => {
   const clearFilterHandler = () => {
     window.location.reload();
   };
+  useEffect(() => {
+    const getSkillsData = async () => {
+      const res = await axios.get(`/get/skills/master?name=${skillCategory}`);
+      setSkills(res.data);
+    };
+    getSkillsData();
+  }, [skillCategory]);
+
   return (
     <>
       <MentorSect>
@@ -55,7 +66,7 @@ const MentorClub = () => {
                 <ClearFilter>
                   Showing filters for
                   <span onClick={clearFilterHandler}>
-                    {categoryItem} <i class="fa-solid fa-xmark"></i>
+                    {categoryItem} <i className="fa-solid fa-xmark"></i>
                   </span>
                 </ClearFilter>
               )}
@@ -63,7 +74,7 @@ const MentorClub = () => {
             <MentorSearchDiv>
               <MentorSearchRightDiv>
                 <MentorSelect
-                  onChange={(event) => setCategoryItem(event.target.value)}
+                  onChange={(event) => setSkillCategory(event.target.value)}
                 >
                   <MentorOptions value="">
                     Choose the Mentor by Skills
@@ -71,6 +82,23 @@ const MentorClub = () => {
                   {mentorSkills.map((skill) => (
                     <MentorOptions key={skill.id} value={skill.skills}>
                       {skill.skills}
+                    </MentorOptions>
+                  ))}
+                </MentorSelect>
+              </MentorSearchRightDiv>
+              <MentorSearchRightDiv>
+                <MentorSelect
+                  onChange={(event) => setCategoryItem(event.target.value)}
+                  name="skills"
+                  value={categoryItem}
+                >
+                  <MentorOptions value="">Choose your skill</MentorOptions>
+                  {skills?.map((skill) => (
+                    <MentorOptions
+                      key={skill.skill_master_id}
+                      value={skill.skill_master_skill_name}
+                    >
+                      {skill.skill_master_skill_name}
                     </MentorOptions>
                   ))}
                 </MentorSelect>
@@ -106,7 +134,7 @@ const MentorClub = () => {
                   ))}
                 </MentorSelect>
               </MentorSearchRightDiv>
-              <MentorSearchRightDiv>
+              {/* <MentorSearchRightDiv>
                 <SearchForm onSubmit={searchEngineAll}>
                   <SearchBoxInput
                     placeholder="Search any mentor"
@@ -114,11 +142,12 @@ const MentorClub = () => {
                   ></SearchBoxInput>
                   <FaSearchIcon onClick={searchEngineAll} />
                 </SearchForm>
-              </MentorSearchRightDiv>
+              </MentorSearchRightDiv> */}
             </MentorSearchDiv>
             <MentorWrapper>
               <MentorDivFlex>
                 <MentorCourseCard
+                  skillCategory={skillCategory}
                   categoryItem={categoryItem}
                   searchItemWord={searchItemWord}
                 />

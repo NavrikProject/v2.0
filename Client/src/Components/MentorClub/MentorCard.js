@@ -20,9 +20,10 @@ import {
 } from "./MentorClubElements";
 import { Link } from "react-router-dom";
 
-const MentorCourseCard = ({ searchItemWord, categoryItem }) => {
+const MentorCourseCard = ({ searchItemWord, categoryItem, skillCategory }) => {
   const [mentorDetails, setMentorDetails] = useState([]);
   const [error, setError] = useState("");
+  
   useEffect(() => {
     try {
       const getAllMentorDetails = async () => {

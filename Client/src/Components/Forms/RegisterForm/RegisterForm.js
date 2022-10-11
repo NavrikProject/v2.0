@@ -62,6 +62,7 @@ const RegisterForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otpVerifiedNumber, setOtpVerifiedNumber] = useState(false);
+  const [image, setImage] = useState("");
   const [otp, setOtp] = useState("");
   const password = watch("password");
   const captchaVerifyHandler = () => {
@@ -164,7 +165,15 @@ const RegisterForm = () => {
   setTimeout(() => {
     setError("");
   }, 7000);
-
+  const UploadFile = async (event) => {
+    event.preventDefault();
+    let data = new FormData();
+    data.append("image", image);
+    try {
+      const res = await axios.post("/feedback/upload", data);
+      console.log(res.data);
+    } catch (error) {}
+  };
   return (
     <React.Fragment>
       <RegisterFormSect>
@@ -417,7 +426,8 @@ const RegisterForm = () => {
                 />
                 <button type="submit" onClick={UploadFile}>
                   Upload
-                </button> */}
+                </button>
+                */}
               </RegistrationImageDiv>
             </RegisterFormRight>
           </RegisterFormWrapper>

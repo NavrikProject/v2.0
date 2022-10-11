@@ -5,6 +5,10 @@ import { sendFeedbackEmail } from "../middleware/sendRemainder.js";
 import path from "path";
 import BlobServiceClient from "@azure/storage-blob";
 import moment from "moment";
+import {
+  BlockBlobClient,
+  StorageSharedKeyCredential,
+} from "@azure/storage-blob";
 const __dirname = path.resolve();
 
 let blobServiceClient;
@@ -705,18 +709,30 @@ export async function insertContactUsDetails(req, res) {
 }
 
 export async function uploadImage(req, res, next) {
-  if (!req.files || !Object.keys(req.files).length === 0) {
-    return res.status(480).send(" No files were uploaded . ");
-  }
-  const file = req.files.image;
-  file.mv(
-    `${__dirname}/mnt/testing/${new Date().getTime() + file.name}`,
-    (err) => {
-      if (err)
-        return res.send({ err: "There was an error uploading the file" });
-      return res.send({ message: "The file was uploaded successfully" });
-    }
-  );
+  // if (!req.files || !Object.keys(req.files).length === 0) {
+  //   return res.status(480).send(" No files were uploaded . ");
+  // }
+  // const file = req.files.image;
+  // file.mv(
+  //   `${__dirname}/mnt/testing/${new Date().getTime() + file.name}`,
+  //   (err) => {
+  //     if (err)
+  //       return res.send({ err: "There was an error uploading the file" });
+  //     return res.send({ message: "The file was uploaded successfully" });
+  //   }
+  // );
+  console.log(req.files);
+  // try {
+  //   const filePath = "<local-file-path>";
+  //   const blobName = new Date().getTime() + "-" + req.files.image.name;
+  //   const blobUrl = `https://navrikimages.blob.core.windows.net/newcontainer/${blobName}`;
+  //   const blockBlobClient = new BlockBlobClient(
+  //     blobUrl,
+  //     new StorageSharedKeyCredential("<accountName>", "<accountKey>")
+  //   );
+
+  //   await blockBlobClient.uploadFile(filePath);
+  // } catch (error) {}
 }
 
 export async function getRewardPointsForUsers(req, res, next) {

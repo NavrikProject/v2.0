@@ -116,7 +116,9 @@ export const MentorSelect = styled.select`
     border-color: #fc83bb;
   }
 `;
-export const MentorOptions = styled.option``;
+export const MentorOptions = styled.option`
+  text-transform: capitalize;
+`;
 
 export const SearchForm = styled.form`
   position: relative;

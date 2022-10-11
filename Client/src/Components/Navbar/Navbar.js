@@ -115,7 +115,7 @@ const Navbar = ({ toggleMenuItems, socket }) => {
             <NavItem>
               <Link
                 style={{ textDecoration: "none", color: "#062C30" }}
-                to="/job-seeker"
+                to="/jobs"
               >
                 Jobs
               </Link>

@@ -33,6 +33,8 @@ import CookieNotice from "./Components/utils/CookieNotice";
 import MentorAddRegdFormPage from "./Pages/MentorAddRegdFormPage";
 import MentorSuccessRegdPage from "./Pages/MentorSuccessRegdPage";
 import NotificationPage from "./Pages/NotificationPage";
+import JobHomePage from "./Pages/JobsPages/JobHomePage";
+import JobIndividualPage from "./Pages/JobsPages/JobIndividualPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -60,6 +62,7 @@ const App = () => {
             <Route path="/faq" exact element={<FaqPage />} />
             <Route path="/professionals" exact element={<ProfessionalPage />} />
             <Route path="/login" exact element={<LoginPage />} />
+            <Route path="/jobs" exact element={<JobHomePage />} />
             <Route
               path="/contributers-corner"
               exact
@@ -176,6 +179,12 @@ const App = () => {
             {user?.role === 1 && (
               <Route path="/user/admin/dashboard" element={<Dashboard />} />
             )}
+
+            {/* jobs pages */}
+            <Route
+              path={`/jobs/individual-job/:id`}
+              element={<JobIndividualPage />}
+            />
           </Routes>
         </Suspense>
       </Router>

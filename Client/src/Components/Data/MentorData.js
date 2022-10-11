@@ -1,11 +1,7 @@
 export const mentorSkills = [
-  { id: 0, skills: "All" },
-  { id: 1, skills: "Automation Anywhere" },
-  { id: 2, skills: "Java" },
-  { id: 3, skills: "Python" },
-  { id: 4, skills: "React Js" },
-  { id: 5, skills: "Node Js" },
-  { id: 6, skills: "Mysql" },
+  { id: 1, skills: "technology" },
+  { id: 2, skills: "domain" },
+  { id: 3, skills: "business-skills" },
 ];
 
 export const mentorshipAreas = [
@@ -16,10 +12,10 @@ export const mentorshipAreas = [
 ];
 
 export const mentorAvailabilityTimings = [
-  { id: 0, timings: "All" },
   { id: 1, timings: "weekdays" },
   { id: 2, timings: "weekends" },
-  { id: 3, timings: "specific" },
+  { id: 3, timings: "saturday" },
+  { id: 4, timings: "sunday" },
 ];
 export const mentorFaqData = [
   {

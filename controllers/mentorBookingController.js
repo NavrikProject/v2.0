@@ -944,7 +944,7 @@ function sentEmailRemainderToMentorBefore5Min(req, res) {
             let day = new Date(res.booking_mentor_date).getDate();
             let hour = res.booking_starts_time.split(":")[0];
             let min = res.booking_starts_time.split(":")[1];
-            console.log(day);
+           
             if (min === "00") {
               hour = hour - 1;
               const date = new Date(year, month, day, hour, 55, 0);
