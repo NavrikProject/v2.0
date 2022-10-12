@@ -36,8 +36,10 @@ import axios from "axios";
 const MentorClub = () => {
   const [searchItem, setSearchItem] = useState("");
   const [searchItemWord, setSearchItemWord] = useState("");
-  const [categoryItem, setCategoryItem] = useState("");
-  const [skillCategory, setSkillCategory] = useState("technology");
+  const [skillFilter, setSkillFilter] = useState("");
+  const [mentorAreaFilter, setMentorAreaFilter] = useState("");
+  const [mentorAvailabilityFilter, setMentorAvailabilityFilter] = useState("");
+  const [skillCategoryFilter, setSkillCategoryFilter] = useState("");
   const [skills, setSkills] = useState([]);
   const searchEngineAll = (event) => {
     event.preventDefault();
@@ -48,11 +50,13 @@ const MentorClub = () => {
   };
   useEffect(() => {
     const getSkillsData = async () => {
-      const res = await axios.get(`/get/skills/master?name=${skillCategory}`);
+      const res = await axios.get(
+        `/get/skills/master?name=${skillCategoryFilter}`
+      );
       setSkills(res.data);
     };
     getSkillsData();
-  }, [skillCategory]);
+  }, [skillCategoryFilter]);
 
   return (
     <>
@@ -62,11 +66,11 @@ const MentorClub = () => {
             <MentorWrapper>
               <MentorTitle>Meet Our Mentors</MentorTitle>
               <LineAfter />
-              {categoryItem && (
+              {skillFilter && (
                 <ClearFilter>
                   Showing filters for
                   <span onClick={clearFilterHandler}>
-                    {categoryItem} <i className="fa-solid fa-xmark"></i>
+                    {skillFilter} <i className="fa-solid fa-xmark"></i>
                   </span>
                 </ClearFilter>
               )}
@@ -74,10 +78,12 @@ const MentorClub = () => {
             <MentorSearchDiv>
               <MentorSearchRightDiv>
                 <MentorSelect
-                  onChange={(event) => setSkillCategory(event.target.value)}
+                  onChange={(event) =>
+                    setSkillCategoryFilter(event.target.value)
+                  }
                 >
                   <MentorOptions value="">
-                    Choose the Mentor by Skills
+                    Choose the Mentor by Category
                   </MentorOptions>
                   {mentorSkills.map((skill) => (
                     <MentorOptions key={skill.id} value={skill.skills}>
@@ -88,9 +94,9 @@ const MentorClub = () => {
               </MentorSearchRightDiv>
               <MentorSearchRightDiv>
                 <MentorSelect
-                  onChange={(event) => setCategoryItem(event.target.value)}
+                  onChange={(event) => setSkillFilter(event.target.value)}
                   name="skills"
-                  value={categoryItem}
+                  value={skillFilter}
                 >
                   <MentorOptions value="">Choose your skill</MentorOptions>
                   {skills?.map((skill) => (
@@ -105,7 +111,7 @@ const MentorClub = () => {
               </MentorSearchRightDiv>
               <MentorSearchRightDiv>
                 <MentorSelect
-                  onChange={(event) => setCategoryItem(event.target.value)}
+                  onChange={(event) => setMentorAreaFilter(event.target.value)}
                 >
                   <MentorOptions value="">
                     Choose the Mentor by Mentorship Area
@@ -119,7 +125,9 @@ const MentorClub = () => {
               </MentorSearchRightDiv>
               <MentorSearchRightDiv>
                 <MentorSelect
-                  onChange={(event) => setCategoryItem(event.target.value)}
+                  onChange={(event) =>
+                    setMentorAvailabilityFilter(event.target.value)
+                  }
                 >
                   <MentorOptions value="">
                     Choose the Mentor by Availability
@@ -147,9 +155,10 @@ const MentorClub = () => {
             <MentorWrapper>
               <MentorDivFlex>
                 <MentorCourseCard
-                  skillCategory={skillCategory}
-                  categoryItem={categoryItem}
-                  searchItemWord={searchItemWord}
+                  skillCategoryFilter={skillCategoryFilter}
+                  skillFilter={skillFilter}
+                  mentorAreaFilter={mentorAreaFilter}
+                  mentorAvailabilityFilter={mentorAvailabilityFilter}
                 />
               </MentorDivFlex>
             </MentorWrapper>
