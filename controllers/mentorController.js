@@ -250,7 +250,6 @@ export async function getMentorByFiltering(req, res) {
   console.log(category, skill, area, availability);
   try {
     if (category && !skill && !availability && !area) {
-      console.log(category);
       sql.connect(config, (err) => {
         if (err) return res.send(err.message);
         const request = new sql.Request();
@@ -267,7 +266,6 @@ export async function getMentorByFiltering(req, res) {
         });
       });
     } else if (category && skill && !availability && !area) {
-      console.log(category, skill);
       sql.connect(config, (err) => {
         if (err) return res.send(err.message);
         const request = new sql.Request();
@@ -286,7 +284,8 @@ export async function getMentorByFiltering(req, res) {
           }
         });
       });
-    } else if (category && skill && availability && !area) {
+    } else if (category && skill && area && !availability) {
+      console.log("entered this function");
       sql.connect(config, (err) => {
         if (err) return res.send(err.message);
         const request = new sql.Request();

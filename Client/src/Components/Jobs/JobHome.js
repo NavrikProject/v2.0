@@ -7,11 +7,6 @@ const JobHome = () => {
     <JobSection>
       <JobDivWrapper>
         <JobCard />
-        <JobCard />
-        <JobCard />
-        <JobCard />
-        <JobCard />
-        <JobCard />
       </JobDivWrapper>
     </JobSection>
   );

@@ -24,6 +24,9 @@ import ContributersRoute from "./routes/contributersRoute.js";
 import googleRoute from "./routes/googleRoute.js";
 import notificationRoute from "./routes/notificationRoute.js";
 import rescheduleRoute from "./routes/rescheduleRoute.js";
+import recruiterRoute from "./routes/jobRoutes/recruiterRoute.js";
+import jobsRoute from "./routes/jobRoutes/jobRoute.js";
+
 //import config from "./config/dbconfig.js";
 import fs from "fs";
 import masterRoute from "./routes/masterRoute.js";
@@ -36,7 +39,6 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 const __dirname = path.resolve();
-
 
 const app = express();
 dotenv.config();
@@ -97,6 +99,8 @@ app.use("/api/google", googleRoute);
 app.use("/api", masterRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/reschedule", rescheduleRoute);
+app.use("/api/recruiter", recruiterRoute);
+app.use("/api/jobs", jobsRoute);
 
 app.listen(port, (req, res) => {
   console.log("listening on port " + port);

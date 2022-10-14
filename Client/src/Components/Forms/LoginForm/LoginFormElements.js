@@ -1,6 +1,55 @@
 import styled from "styled-components";
 import { BiHide, BiShow } from "react-icons/bi";
+import { AiOutlineClose } from "react-icons/ai";
+export const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 12000000000;
+  background-color: rgba(0, 0, 0, 0.75);
+`;
+export const Modal = styled.div`
+  position: fixed;
+  left: 5%;
+  width: 90%;
+  height: auto;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 100000;
+  animation: slide-down 300ms ease-out forwards;
+  @media (min-width: 768px) {
+    width: 40rem;
+    left: calc(50% - 20rem);
+  }
 
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-3rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+export const CloseButton = styled(AiOutlineClose)`
+  font-size: 25px;
+  color: #111;
+  cursor: pointer;
+`;
+export const CloseButtonDiv = styled.div`
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  cursor: pointer;
+`;
 export const HomeSectionComponent = styled.div`
   width: 100%;
   height: 100%;

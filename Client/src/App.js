@@ -35,6 +35,7 @@ import MentorSuccessRegdPage from "./Pages/MentorSuccessRegdPage";
 import NotificationPage from "./Pages/NotificationPage";
 import JobHomePage from "./Pages/JobsPages/JobHomePage";
 import JobIndividualPage from "./Pages/JobsPages/JobIndividualPage";
+import RecruiterProfilePages from "./Pages/JobsPages/RecruiterProfilePages";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -184,6 +185,10 @@ const App = () => {
             <Route
               path={`/jobs/individual-job/:id`}
               element={<JobIndividualPage />}
+            />
+            <Route
+              path="/recruiter/profile"
+              element={<RecruiterProfilePages />}
             />
           </Routes>
         </Suspense>

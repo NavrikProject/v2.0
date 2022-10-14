@@ -28,6 +28,27 @@ export const MentorDesc = styled.p`
   color: #627792;
   overflow: hidden;
 `;
+export const MentorExpertDiv = styled.div`
+  p {
+    padding-left: 10px;
+    color: #627792;
+    font-size: 17px;
+  }
+`;
+export const MentorCategoryDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+`;
+export const MentorSlotTimeDiv = styled.div`
+  padding: 0 10px 10px 10px;
+  font-size: 17px;
+  overflow: hidden;
+  color: #627792;
+  span {
+    color: #111 !important;
+  }
+`;
 export const MentorDescP = styled.p`
   padding: 10px;
   font-size: 19px;
@@ -77,5 +98,20 @@ export const LineAfter = styled.div`
     margin: 0 auto;
     display: block;
     background-color: #9926f0;
+  }
+`;
+export const FiltersInMentorCard = styled.p`
+  margin: 3px;
+  span {
+    margin-left: 10px;
+    padding: 3px 7px;
+    background-color: lightgray;
+    color: #111;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  i {
+    padding: 5px;
   }
 `;

@@ -66,7 +66,38 @@ const MentorClub = () => {
             <MentorWrapper>
               <MentorTitle>Meet Our Mentors</MentorTitle>
               <LineAfter />
-              {skillFilter && (
+              {skillFilter || skillCategoryFilter ? (
+                <span>
+                  <ClearFilter>
+                    Showing filters for
+                    {skillCategoryFilter && (
+                      <span onClick={() => setSkillCategoryFilter("")}>
+                        {skillCategoryFilter}
+                        <i className="fa-solid fa-xmark"></i>
+                      </span>
+                    )}
+                    {skillFilter && (
+                      <span onClick={() => setSkillFilter("")}>
+                        {skillFilter} <i className="fa-solid fa-xmark"></i>
+                      </span>
+                    )}
+                    {mentorAreaFilter && (
+                      <span onClick={() => setMentorAreaFilter("")}>
+                        {mentorAreaFilter} <i className="fa-solid fa-xmark"></i>
+                      </span>
+                    )}
+                    {mentorAvailabilityFilter && (
+                      <span onClick={() => setMentorAvailabilityFilter("")}>
+                        {mentorAvailabilityFilter}
+                        <i className="fa-solid fa-xmark"></i>
+                      </span>
+                    )}
+                  </ClearFilter>
+                </span>
+              ) : (
+                ""
+              )}
+              {/* {skillFilter && (
                 <ClearFilter>
                   Showing filters for
                   <span onClick={clearFilterHandler}>
@@ -74,6 +105,11 @@ const MentorClub = () => {
                   </span>
                 </ClearFilter>
               )}
+              {skillCategoryFilter && (
+                <span onClick={clearFilterHandler}>
+                  {skillCategoryFilter} <i className="fa-solid fa-xmark"></i>
+                </span>
+              )} */}
             </MentorWrapper>
             <MentorSearchDiv>
               <MentorSearchRightDiv>
@@ -98,15 +134,21 @@ const MentorClub = () => {
                   name="skills"
                   value={skillFilter}
                 >
-                  <MentorOptions value="">Choose your skill</MentorOptions>
-                  {skills?.map((skill) => (
-                    <MentorOptions
-                      key={skill.skill_master_id}
-                      value={skill.skill_master_skill_name}
-                    >
-                      {skill.skill_master_skill_name}
+                  <MentorOptions value="">Choose below option</MentorOptions>
+                  {skills.length > 0 ? (
+                    skills?.map((skill) => (
+                      <MentorOptions
+                        key={skill.skill_master_id}
+                        value={skill.skill_master_skill_name}
+                      >
+                        {skill.skill_master_skill_name}
+                      </MentorOptions>
+                    ))
+                  ) : (
+                    <MentorOptions value="">
+                      Please select the category
                     </MentorOptions>
-                  ))}
+                  )}
                 </MentorSelect>
               </MentorSearchRightDiv>
               <MentorSearchRightDiv>

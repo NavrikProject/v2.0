@@ -65,70 +65,70 @@ const RegisterForm = () => {
   const [image, setImage] = useState("");
   const [otp, setOtp] = useState("");
   const password = watch("password");
-  const captchaVerifyHandler = () => {
-    const auth = getAuth(app);
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      "sign-in-button",
-      {
-        size: "invisible",
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          // onSignInSubmit();
-          mobileNumberVerify();
-        },
-      },
-      auth
-    );
-  };
+  // const captchaVerifyHandler = () => {
+  //   const auth = getAuth(app);
+  //   window.recaptchaVerifier = new RecaptchaVerifier(
+  //     "sign-in-button",
+  //     {
+  //       size: "invisible",
+  //       callback: (response) => {
+  //         // reCAPTCHA solved, allow signInWithPhoneNumber.
+  //         // onSignInSubmit();
+  //         mobileNumberVerify();
+  //       },
+  //     },
+  //     auth
+  //   );
+  // };
 
-  const mobileNumberVerify = () => {
-    captchaVerifyHandler();
-    const appVerifier = window.recaptchaVerifier;
-    let mobileNumber = "+" + phoneNumber;
-    const auth = getAuth();
-    signInWithPhoneNumber(auth, mobileNumber, appVerifier)
-      .then((confirmationResult) => {
-        // SMS sent. Prompt user to type the code from the message, then sign the
-        // user in with confirmationResult.confirm(code).
-        window.confirmationResult = confirmationResult;
-        // ...
-        toast.success("OTP sent successfully to your number", {
-          position: "top-center",
-        });
-        setShowOtpInput(true);
-      })
-      .catch((error) => {
-        toast.error("There was an error while sending the OTP", {
-          position: "top-center",
-        });
-      });
-  };
-  const verifyOtpHandler = () => {
-    window.confirmationResult
-      .confirm(otp)
-      .then((result) => {
-        // User signed in successfully.
-        toast.success("OTP verified successfully", {
-          position: "top-center",
-        });
-        setOtpVerifiedNumber(true);
-        setShowOtpInput(false);
-        // ...
-      })
-      .catch((error) => {
-        toast.error("You have entered incorrect otp or invalid", {
-          position: "top-center",
-        });
-        setShowOtpInput(true);
-      });
-  };
+  // const mobileNumberVerify = () => {
+  //   captchaVerifyHandler();
+  //   const appVerifier = window.recaptchaVerifier;
+  //   let mobileNumber = "+" + phoneNumber;
+  //   const auth = getAuth();
+  //   signInWithPhoneNumber(auth, mobileNumber, appVerifier)
+  //     .then((confirmationResult) => {
+  //       // SMS sent. Prompt user to type the code from the message, then sign the
+  //       // user in with confirmationResult.confirm(code).
+  //       window.confirmationResult = confirmationResult;
+  //       // ...
+  //       toast.success("OTP sent successfully to your number", {
+  //         position: "top-center",
+  //       });
+  //       setShowOtpInput(true);
+  //     })
+  //     .catch((error) => {
+  //       toast.error(error.message, {
+  //         position: "top-center",
+  //       });
+  //     });
+  // };
+  // const verifyOtpHandler = () => {
+  //   window.confirmationResult
+  //     .confirm(otp)
+  //     .then((result) => {
+  //       // User signed in successfully.
+  //       toast.success("OTP verified successfully", {
+  //         position: "top-center",
+  //       });
+  //       setOtpVerifiedNumber(true);
+  //       setShowOtpInput(false);
+  //       // ...
+  //     })
+  //     .catch((error) => {
+  //       toast.error("You have entered incorrect otp or invalid", {
+  //         position: "top-center",
+  //       });
+  //       setShowOtpInput(true);
+  //     });
+  // };
   const registerSubmitHandler = async (data) => {
     // // http:localhost:5000/api/auth/register
-    if (!otpVerifiedNumber) {
-      return toast.error("Please verify mobile number", {
-        position: "top-center",
-      });
-    }
+    // if (!otpVerifiedNumber) {
+    //   return toast.error("Please verify mobile number", {
+    //     position: "top-center",
+    //   });
+    // }
     try {
       setLoading(true);
       const res = await axios.post("/auth/email-register", {
@@ -298,16 +298,16 @@ const RegisterForm = () => {
                       inputStyle={{ width: "100%", padding: "5px 10px" }}
                       onChange={(phone) => setPhoneNumber(phone)}
                     />
-                    {phoneNumber && (
+                    {/* {phoneNumber && (
                       <MobileNumberBtn
                         type="button"
                         onClick={mobileNumberVerify}
                       >
                         Send Otp
                       </MobileNumberBtn>
-                    )}
+                    )} */}
                   </MobileNumberDiv>
-                  {otpVerifiedNumber && (
+                  {/* {otpVerifiedNumber && (
                     <p style={{ marginTop: "5px", color: "green" }}>
                       Mobile number verified
                     </p>
@@ -327,7 +327,7 @@ const RegisterForm = () => {
                         </MobileNumberBtn>
                       )}
                     </MobileNumberDiv>
-                  )}
+                  )} */}
 
                   <Field>
                     <RadioWrapper>
