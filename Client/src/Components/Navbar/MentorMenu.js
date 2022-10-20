@@ -51,6 +51,14 @@ const MentorMenu = () => {
           <SubmenuListItem>
             <Link
               style={{ textDecoration: "none", color: "#062C30" }}
+              to="/mentor/apply-for-registration"
+            >
+              Apply For Mentor
+            </Link>
+          </SubmenuListItem>
+          <SubmenuListItem>
+            <Link
+              style={{ textDecoration: "none", color: "#062C30" }}
               to="/faq"
             >
               Faq

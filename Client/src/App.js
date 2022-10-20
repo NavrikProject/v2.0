@@ -36,6 +36,9 @@ import NotificationPage from "./Pages/NotificationPage";
 import JobHomePage from "./Pages/JobsPages/JobHomePage";
 import JobIndividualPage from "./Pages/JobsPages/JobIndividualPage";
 import RecruiterProfilePages from "./Pages/JobsPages/RecruiterProfilePages";
+import MentorRegistrationPage from "./Pages/MentorRegistrationPage";
+import AdminPage from "./Pages/AdminPage";
+import BaJumpstartPage from "./Pages/BaJumpstartPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -180,7 +183,6 @@ const App = () => {
             {user?.role === 1 && (
               <Route path="/user/admin/dashboard" element={<Dashboard />} />
             )}
-
             {/* jobs pages */}
             <Route
               path={`/jobs/individual-job/:id`}
@@ -189,6 +191,15 @@ const App = () => {
             <Route
               path="/recruiter/profile"
               element={<RecruiterProfilePages />}
+            />
+            <Route
+              path="/mentor/apply-for-registration"
+              element={<MentorRegistrationPage />}
+            />
+            <Route path="/user/admin" element={<AdminPage />} />
+            <Route
+              path="/training/individual/ba-jumpstart"
+              element={<BaJumpstartPage />}
             />
           </Routes>
         </Suspense>

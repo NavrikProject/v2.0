@@ -154,3 +154,35 @@ export async function updateAdminDisapprove(req, res, next) {
     if (error) res.send(error.message);
   }
 }
+
+export async function getAllTraineeUsersData(req, res, next) {
+  try {
+    sql.connect(config, (err) => {
+      const request = new sql.Request();
+      request.query(
+        "SELECT * FROM users_dtls where user_type = 'trainee' ORDER BY user_dtls_id DESC",
+        (err, result) => {
+          if (err) res.send(err.message);
+          if (result.recordset.length > 0) {
+            let userData = [];
+            result.recordset?.forEach((user) => {
+              let data = {
+                userDtlsId: user.user_dtls_id,
+                userEmail: user.user_email,
+                userName: user.user_firstname + " " + user.user_lastname,
+                userPhone: user.user_phone_number,
+                userType: user.user_type,
+              };
+              userData.push(data);
+            });
+            return res.send(userData);
+          } else {
+            return;
+          }
+        }
+      );
+    });
+  } catch (error) {
+    if (error) res.send(error.message);
+  }
+}

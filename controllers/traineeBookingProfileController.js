@@ -586,7 +586,7 @@ export async function modifyAppointmentAndMakePayment(req, res, next) {
                               sql.VarChar,
                               razorpayPaymentId
                             );
-                          
+
                             request.query(
                               "insert into modify_and_refund_payment_dtls (booking_appt_id,user_email,modify_date,modify_payment_amount,modify_razorpay_payment_id) VALUES('" +
                                 bookingId +
@@ -1562,5 +1562,4 @@ setInterval(() => {
 
   // remainder will be sent to start or join meeting function call
   sentEmailRemainderToTraineeToStart();
-  console.log("logged after one minute");
 }, 60000);
