@@ -12,7 +12,7 @@ const ViewAllTraineeProgress = () => {
 
   useEffect(() => {
     const getAllTraineeProgress = async () => {
-      const res = await axios.get(`/courses/get-all-trainee-courses`, {
+      const res = await axios.get(`/trainee/courses/get-all-trainee-courses`, {
         headers: { authorization: "Bearer " + user?.accessToken },
       });
       if (res.data.success) {
@@ -68,11 +68,22 @@ const ViewAllTraineeProgress = () => {
                 {new Date(trainee.trainee_course_start_date).toDateString()}
               </td>
               <td>
-                <ModifyButton
-                  onClick={() => modifyTraineeProgressHandler(trainee)}
-                >
-                  Modify Progress
-                </ModifyButton>
+                {trainee.trainee_course_progress_percentage === 100 &&
+                trainee.trainee_course_progress_status === "completed" &&
+                trainee.trainee_course_video_upload_status === "uploaded" &&
+                trainee.trainee_course_video_upload_email === "yes" &&
+                trainee.trainee_course_mentor_session_email === "yes" &&
+                trainee.trainee_course_reward_points_status === "yes" ? (
+                  <ModifyButton disabled={true}>
+                    Can not be modified
+                  </ModifyButton>
+                ) : (
+                  <ModifyButton
+                    onClick={() => modifyTraineeProgressHandler(trainee)}
+                  >
+                    Modify Progress
+                  </ModifyButton>
+                )}
               </td>
             </tr>
           ))}

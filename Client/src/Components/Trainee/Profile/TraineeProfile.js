@@ -81,7 +81,7 @@ const TraineeProfile = () => {
 
   useEffect(() => {
     const onImageGetHandler = async () => {
-      const res = await axios.get(`/trainee/details/get/${user?.id}`, {
+      const res = await axios.get(`/trainee/profile/details/get/${user?.id}`, {
         headers: { authorization: "Bearer " + token },
       });
       setTraineeDetails(res.data);

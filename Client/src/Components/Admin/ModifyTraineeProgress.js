@@ -98,7 +98,7 @@ const ModifyTraineeProgress = (props) => {
   useEffect(() => {
     const getAllUsers = async () => {
       const res = await axios.get(
-        `/courses/trainee/course-status/${props.traineeDetails.trainee_course_dtls_id}`,
+        `/trainee/courses/trainee/course-status/${props.traineeDetails.trainee_course_dtls_id}`,
         {
           headers: { authorization: "Bearer " + user?.accessToken },
         }
@@ -117,7 +117,7 @@ const ModifyTraineeProgress = (props) => {
     setLoading(true);
     try {
       const res = await axios.put(
-        `/courses/update-course-progress/${props.traineeDetails.trainee_course_dtls_id}`,
+        `/trainee/courses/update-course-progress/${props.traineeDetails.trainee_course_dtls_id}`,
         {
           coursePercentage: data.coursePercentage,
           courseChapters: data.courseChapters,
@@ -158,7 +158,7 @@ const ModifyTraineeProgress = (props) => {
     setLoading(true);
     try {
       const res = await axios.put(
-        `/courses/update-video-upload/${props.traineeDetails.trainee_course_dtls_id}`,
+        `/trainee/courses/update-video-upload/${props.traineeDetails.trainee_course_dtls_id}`,
         {
           courseVideoUploadStatus: data.courseVideoUploadStatus,
         },

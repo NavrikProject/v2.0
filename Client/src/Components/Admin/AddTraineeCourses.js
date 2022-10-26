@@ -41,7 +41,7 @@ const AddTraineeCourses = () => {
   useEffect(() => {
     const getSkillsData = async () => {
       const res = await axios.get(
-        `/courses/get-courses-by-category/master?name=${speciality}`
+        `/trainee/courses/get-courses-by-category/master?name=${speciality}`
       );
       if (res.data.success) {
         setSkills(res.data.success);
@@ -55,7 +55,7 @@ const AddTraineeCourses = () => {
   const addTraineeCourseHandler = async (data) => {
     setLoading(true);
     const res = await axios.post(
-      `/courses/add-trainee-course/${data.userId}`,
+      `/trainee/courses/add-trainee-course/${data.userId}`,
       {
         courseNameId: data.courseName,
         courseCategory: speciality,

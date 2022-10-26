@@ -64,7 +64,7 @@ const TraineeModifyBooking = ({
     try {
       const getAllMentorDetailsAvailability = async () => {
         const res = await axios.post(
-          `/mentor/profile/get/bookings/onlymentor`,
+          `/trainee/profile/booking/get/bookings/onlymentor`,
           {
             mentorEmail: mentor.mentorEmail,
           }
@@ -81,7 +81,7 @@ const TraineeModifyBooking = ({
     try {
       const getAllMentorDetailsAvailability = async () => {
         const res = await axios.post(
-          `/mentor/profile/get/bookings/availability`,
+          `/trainee/profile/booking/get/bookings/availability`,
           {
             mentorEmail: mentor.mentorEmail,
           }
@@ -156,8 +156,8 @@ const TraineeModifyBooking = ({
     setLoading(true);
     const res = await axios.put(
       !bookingStatus
-        ? `/mentor/profile/update/bookings/${mentor.bookingId}`
-        : `/mentor/profile/reschedule/bookings/${mentor.bookingId}`,
+        ? `/trainee/profile/booking/update/bookings/${mentor.bookingId}`
+        : `/trainee/profile/booking/reschedule/bookings/${mentor.bookingId}`,
       {
         date: date.toLocaleDateString(),
         bookingId: mentor.bookingId,
@@ -202,7 +202,7 @@ const TraineeModifyBooking = ({
       try {
         setLoading(true);
         const result = await axios.post(
-          "/mentor/profile/update/bookings/modify-order",
+          "/trainee/profile/booking/update/bookings/modify-order",
           {
             bookingId: mentor.bookingId,
             date: date.toLocaleDateString(),
@@ -231,7 +231,7 @@ const TraineeModifyBooking = ({
           order_id: order_id,
           handler: async function (response) {
             const res = await axios.put(
-              "/mentor/profile/update/bookings/modify-booking/pay",
+              "/trainee/profile/booking/update/bookings/modify-booking/pay",
               {
                 amount: amount,
                 razorpayPaymentId: response.razorpay_payment_id,

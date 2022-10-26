@@ -135,7 +135,7 @@ const CancelAppointment = ({ mentor, showCancelMentorModel }) => {
     try {
       setLoading(true);
       const result = await axios.post(
-        "/mentor/profile/update/bookings/issue-refund",
+        "/trainee/profile/booking/update/bookings/issue-refund",
         {
           bookingId: mentor.bookingId,
           selected: data.selected,

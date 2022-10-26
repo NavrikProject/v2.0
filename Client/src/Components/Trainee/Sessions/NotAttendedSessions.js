@@ -66,7 +66,7 @@ const NotAttendedSessions = () => {
     const getAllAttendedSessions = async () => {
       setLoading(true);
       const res = await axios.post(
-        `/mentor/profile/get/bookings/not-attended`,
+        `/trainee/profile/booking/get/bookings/not-attended`,
         {
           headers: { authorization: "Bearer " + token },
           userEmail: user?.email,

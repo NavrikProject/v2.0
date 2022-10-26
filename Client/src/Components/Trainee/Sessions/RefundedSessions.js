@@ -65,10 +65,13 @@ const RefundedSessions = () => {
   useEffect(() => {
     const getAllRefundedSessions = async () => {
       setLoading(true);
-      const res = await axios.post(`/mentor/profile/get/bookings/refunded`, {
-        headers: { authorization: "Bearer " + token },
-        userEmail: user?.email,
-      });
+      const res = await axios.post(
+        `/trainee/profile/booking/get/bookings/refunded`,
+        {
+          headers: { authorization: "Bearer " + token },
+          userEmail: user?.email,
+        }
+      );
       if (res.data.details) {
         setLoading(false);
         setRefundedSessions(res.data.details);

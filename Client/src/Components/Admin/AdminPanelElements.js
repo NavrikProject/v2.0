@@ -137,4 +137,9 @@ export const ModifyButton = styled.button`
   &:hover {
     transition: all 0.5s ease-in-out;
   }
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #ff8787;
+    color: white;
+  }
 `;

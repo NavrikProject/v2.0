@@ -80,9 +80,9 @@ const ResetPassword = () => {
                   required: "Password is Required",
                   pattern: {
                     value:
-                      /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/,
+                      /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&_]{8,16}$/,
                     message:
-                      "A minimum 8 to 16 characters password contains a combination of uppercase, lowercase letter , special character and number are required.",
+                      "A minimum 8 characters password contains a combination of uppercase and lowercase letter and number are required special characters like _ @ $ ! % * ? & and space is not allowed.",
                   },
                 })}
                 onKeyUp={() => {

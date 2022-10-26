@@ -21,9 +21,13 @@ const ImageForm = (props) => {
     event.preventDefault();
     let data = new FormData();
     data.append("image", image);
-    const res = await axios.put(`/trainee/image/upload/${user?.id}`, data, {
-      headers: { authorization: "Bearer " + token },
-    });
+    const res = await axios.put(
+      `/trainee/profile/image/upload/${user?.id}`,
+      data,
+      {
+        headers: { authorization: "Bearer " + token },
+      }
+    );
     if (res.data.upload) {
       setSuccess(res.data.upload);
       toast.success(res.data.upload, {
