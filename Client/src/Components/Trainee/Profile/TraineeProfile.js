@@ -123,6 +123,19 @@ const TraineeProfile = () => {
                     </Link>
                   </QuickMenuTitle>
                 </SidebarListItem>
+                <SidebarListItem>
+                  <QuickMenuTitle>
+                    <Link
+                      style={{ textDecoration: "none", color: "#062C30" }}
+                      to={`/trainee/profile/my-courses`}
+                    >
+                      <span>
+                        <i className="fa-solid fa-calendar-chec"></i>
+                      </span>
+                      My Courses
+                    </Link>
+                  </QuickMenuTitle>
+                </SidebarListItem>
                 <SidebarListItem onClick={showPersonalForm}>
                   <QuickMenuTitle>
                     <span>

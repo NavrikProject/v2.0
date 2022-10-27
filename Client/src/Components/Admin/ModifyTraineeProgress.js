@@ -124,6 +124,7 @@ const ModifyTraineeProgress = (props) => {
           courseProgressStatus: data.courseProgressStatus,
           endDate: data.endDate,
           courseCompletedStatus,
+          traineeCourseStatus: data.traineeCourseStatus,
         },
         {
           headers: { authorization: "Bearer " + user?.accessToken },
@@ -318,6 +319,58 @@ const ModifyTraineeProgress = (props) => {
                           {errors.courseProgressStatus && (
                             <ErrorMessage>
                               {errors.courseProgressStatus.message}
+                            </ErrorMessage>
+                          )}
+                        </Field>
+                        <Field>
+                          <LabelTitle htmlFor="">
+                            Course trainee status :
+                          </LabelTitle>
+                          <FormSelect
+                            name=""
+                            id=""
+                            {...register("traineeCourseStatus", {
+                              required: "Select the course progress status",
+                            })}
+                          >
+                            <FormOption value="">
+                              Choose below option
+                            </FormOption>
+                            <FormOption value="4">Course started</FormOption>
+                            <FormOption value="5">
+                              Instructor session 1 pending
+                            </FormOption>
+                            <FormOption value="6">
+                              Instructor session 1 completed
+                            </FormOption>
+                            <FormOption value="7">
+                              Instructor session 2 pending
+                            </FormOption>
+                            <FormOption value="8">
+                              Instructor session 2 completed
+                            </FormOption>
+                            <FormOption value="9">
+                              Instructor final session pending
+                            </FormOption>
+                            <FormOption value="10">
+                              Instructor final session completed
+                            </FormOption>
+                            <FormOption value="11">
+                              Trainee video Recording uploaded
+                            </FormOption>
+                            <FormOption value="12">Reward dispatch</FormOption>
+                            <FormOption value="13">
+                              Certificate dispatch
+                            </FormOption>
+                            <FormOption value="14">Mentor session</FormOption>
+                            <FormOption value="15">Course feedback</FormOption>
+                            <FormOption value="16">
+                              Trainee points update
+                            </FormOption>
+                          </FormSelect>
+                          {errors.traineeCourseStatus && (
+                            <ErrorMessage>
+                              {errors.traineeCourseStatus.message}
                             </ErrorMessage>
                           )}
                         </Field>

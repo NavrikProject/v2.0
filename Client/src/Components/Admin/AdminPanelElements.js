@@ -24,7 +24,7 @@ export const Div = styled.div`
   display: flex;
 `;
 export const RightDiv = styled.div`
-  flex: 2.5;
+  flex: 2;
   position: sticky;
   top: 120px;
   width: 100%;
