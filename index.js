@@ -27,6 +27,7 @@ import courseRoute from "./routes/courseRoutes/courseRoute.js";
 import courseRegdRoute from "./routes/courseRoutes/courseRegdRoute.js";
 import corporateCourseRoute from "./routes/courseRoutes/corpCourseRoute.js";
 
+import AdminTraineeCourseRoute from "./routes/AdminTraineeCourseRoutes/AdminTraineeCourseRoutes.js";
 import mentorRoute from "./routes/mentorRoutes/mentorRoute.js";
 import mentorBookingRoute from "./routes/mentorRoutes/MentorBookingRoute.js";
 import FeedbackRoute from "./routes/feedbackRoutes/feedbackRoute.js";
@@ -99,6 +100,9 @@ app.use("/api/trainee/profile/booking", TraineeBookingProfileRoute);
 app.use("/api/trainee/profile", traineeProfileRoute);
 app.use("/api/trainee/courses", traineeCourseRoute);
 app.use("/api/trainee/courses/progress", traineeCourseProgressRoute);
+
+// admin routes
+app.use("/api/admin", AdminTraineeCourseRoute);
 
 //trainer routers
 app.use("/api/trainer/earnings", trainerEarningsRoute);

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { traineeCourseStatusDetails } from "../Data/FeedbackQuestion";
 import Model from "../Modal/Model";
 import { ModifyButton } from "./AdminPanelElements";
 import ModifyTraineeProgress from "./ModifyTraineeProgress";
@@ -62,7 +63,14 @@ const ViewAllTraineeProgress = () => {
               <td>{trainee.trainee_course_progress_percentage}%</td>
               <td>{trainee.trainee_course_chapter_completed}</td>
               <td>{trainee.trainee_course_progress_status}</td>
-              <td>{trainee.trainee_course_status}</td>
+              <td>
+                {traineeCourseStatusDetails.map(
+                  (status) =>
+                    status.statusId === trainee.trainee_course_status && (
+                      <p>{status.status}</p>
+                    )
+                )}
+              </td>
               <td>{trainee.trainee_course_video_upload_status}</td>
               <td>
                 {new Date(trainee.trainee_course_start_date).toDateString()}

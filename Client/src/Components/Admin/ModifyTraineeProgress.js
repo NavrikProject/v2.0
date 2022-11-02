@@ -91,7 +91,7 @@ const ModifyTraineeProgress = (props) => {
   const user = useSelector((state) => state.user.currentUser);
   const [userProgressData, setUsersProgressData] = useState([]);
   const [showDateInput, setShowDateInput] = useState(false);
-  const [courseCompletedStatus, setCourseCompletedStatus] = useState("");
+  const [traineeCourseStatus, setTraineeCourseStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -123,8 +123,7 @@ const ModifyTraineeProgress = (props) => {
           courseChapters: data.courseChapters,
           courseProgressStatus: data.courseProgressStatus,
           endDate: data.endDate,
-          courseCompletedStatus,
-          traineeCourseStatus: data.traineeCourseStatus,
+          traineeCourseStatus: traineeCourseStatus,
         },
         {
           headers: { authorization: "Bearer " + user?.accessToken },
@@ -162,6 +161,7 @@ const ModifyTraineeProgress = (props) => {
         `/trainee/courses/update-video-upload/${props.traineeDetails.trainee_course_dtls_id}`,
         {
           courseVideoUploadStatus: data.courseVideoUploadStatus,
+          traineeCourseStatus,
         },
         {
           headers: { authorization: "Bearer " + user?.accessToken },
@@ -193,12 +193,12 @@ const ModifyTraineeProgress = (props) => {
   };
 
   const showCompleteDateHandler = (event) => {
-    if (event.target.value === "completed") {
+    if (event.target.value === "12") {
       setShowDateInput(true);
-      setCourseCompletedStatus(event.target.value);
+      setTraineeCourseStatus(event.target.value);
     } else {
       setShowDateInput(false);
-      setCourseCompletedStatus(event.target.value);
+      setTraineeCourseStatus(event.target.value);
     }
   };
   return (
@@ -212,48 +212,19 @@ const ModifyTraineeProgress = (props) => {
       <>
         {userProgressData?.map((usersData) => (
           <>
-            <div key={usersData.trainee_course_dtls_id}>
-              {usersData.trainee_course_progress_percentage === 100 &&
-                usersData.trainee_course_progress_status === "completed" &&
-                usersData.trainee_course_video_upload_status === "pending" &&
-                usersData.trainee_course_video_upload_email === "yes" && (
-                  <form onSubmit={handleSubmit(videoUploadUpdateHandler)}>
-                    <Field>
-                      <LabelTitle htmlFor="">Video upload status :</LabelTitle>
-                      <FormSelect
-                        name=""
-                        id=""
-                        {...register("courseVideoUploadStatus", {
-                          required: "Please select from the dropdown option",
-                        })}
-                      >
-                        <FormOption value="">Choose below Option</FormOption>
-                        <FormOption value="pending">pending</FormOption>
-                        <FormOption value="uploaded">uploaded</FormOption>
-                      </FormSelect>
-                      {errors.courseVideoUploadStatus && (
-                        <ErrorMessage>
-                          {errors.courseVideoUploadStatus.message}
-                        </ErrorMessage>
-                      )}
-                    </Field>
-                    <Button type="submit">Update progress Details</Button>
-                    <ErrorText>
-                      * Please, see the all details before updating
-                    </ErrorText>
-                  </form>
-                )}
+            <div>
+              {/* show progressing form */}
               <>
                 {usersData.trainee_course_progress === "enrolled" ||
                   usersData.trainee_course_progress === "progressing" ||
                   usersData.trainee_course_progress === "not-attending" ||
                   usersData.trainee_course_progress === "dropped" ||
                   (usersData.trainee_course_progress_percentage <= 100 &&
-                    usersData.trainee_course_video_upload_email === "no" &&
-                    usersData.trainee_course_mentor_session_email === "no" &&
-                    usersData.trainee_course_reward_points_status === "no" &&
+                    usersData.trainee_course_status < 12 &&
                     usersData.trainee_course_video_upload_status ===
-                      "pending" && (
+                      "pending" &&
+                    usersData.trainee_course_complete_status ===
+                      "incomplete" && (
                       <form
                         onSubmit={handleSubmit(traineeProgressUpdateHandler)}
                       >
@@ -327,91 +298,68 @@ const ModifyTraineeProgress = (props) => {
                             Course trainee status :
                           </LabelTitle>
                           <FormSelect
-                            name=""
-                            id=""
-                            {...register("traineeCourseStatus", {
-                              required: "Select the course progress status",
-                            })}
-                          >
-                            <FormOption value="">
-                              Choose below option
-                            </FormOption>
-                            <FormOption value="4">Course started</FormOption>
-                            <FormOption value="5">
-                              Instructor session 1 pending
-                            </FormOption>
-                            <FormOption value="6">
-                              Instructor session 1 completed
-                            </FormOption>
-                            <FormOption value="7">
-                              Instructor session 2 pending
-                            </FormOption>
-                            <FormOption value="8">
-                              Instructor session 2 completed
-                            </FormOption>
-                            <FormOption value="9">
-                              Instructor final session pending
-                            </FormOption>
-                            <FormOption value="10">
-                              Instructor final session completed
-                            </FormOption>
-                            <FormOption value="11">
-                              Trainee video Recording uploaded
-                            </FormOption>
-                            <FormOption value="12">Reward dispatch</FormOption>
-                            <FormOption value="13">
-                              Certificate dispatch
-                            </FormOption>
-                            <FormOption value="14">Mentor session</FormOption>
-                            <FormOption value="15">Course feedback</FormOption>
-                            <FormOption value="16">
-                              Trainee points update
-                            </FormOption>
-                          </FormSelect>
-                          {errors.traineeCourseStatus && (
-                            <ErrorMessage>
-                              {errors.traineeCourseStatus.message}
-                            </ErrorMessage>
-                          )}
-                        </Field>
-                        <Field>
-                          <LabelTitle htmlFor="">
-                            Course completed status :
-                          </LabelTitle>
-                          <FormSelect
-                            name=""
-                            id=""
                             required
+                            name=""
+                            id=""
                             onClick={(event) => {
                               showCompleteDateHandler(event);
                             }}
                           >
                             <FormOption value="">
-                              Choose below Option
+                              Choose below option
                             </FormOption>
-                            <FormOption value="incomplete">
-                              incomplete
+                            <FormOption value="5">Course started</FormOption>
+                            <FormOption value="6">
+                              Instructor session 1 pending
                             </FormOption>
-                            <FormOption value="completed">Completed</FormOption>
+                            <FormOption value="7">
+                              Instructor session 1 completed
+                            </FormOption>
+                            <FormOption value="8">
+                              Instructor session 2 pending
+                            </FormOption>
+                            <FormOption value="9">
+                              Instructor session 2 completed
+                            </FormOption>
+                            <FormOption value="10">
+                              Instructor final session pending
+                            </FormOption>
+                            <FormOption value="11">
+                              Instructor final session completed
+                            </FormOption>
+                            <FormOption value="12">Course Completed</FormOption>
+                            <FormOption value="13">
+                              Trainee video Recording uploaded
+                            </FormOption>
+                            <FormOption value="14">Reward dispatch</FormOption>
+                            <FormOption value="15">
+                              Certificate dispatch
+                            </FormOption>
+                            <FormOption value="16">Mentor session</FormOption>
+                            <FormOption value="18">
+                              Trainee points update
+                            </FormOption>
                           </FormSelect>
                         </Field>
                         {showDateInput === true && (
-                          <Field>
-                            <LabelTitle htmlFor="">
-                              Course completed end date :
-                            </LabelTitle>
-                            <Input
-                              type="date"
-                              {...register("endDate", {
-                                required: "Select the course progress status",
-                              })}
-                            />
-                            {errors.endDate && (
-                              <ErrorMessage>
-                                {errors.endDate.message}
-                              </ErrorMessage>
-                            )}
-                          </Field>
+                          <>
+                            <Field>
+                              <LabelTitle htmlFor="">
+                                Course completed end date :
+                              </LabelTitle>
+                              <Input
+                                type="date"
+                                {...register("endDate", {
+                                  required: "Select the course progress status",
+                                })}
+                              />
+                              {errors.endDate && (
+                                <ErrorMessage>
+                                  {errors.endDate.message}
+                                </ErrorMessage>
+                              )}{" "}
+                            </Field>
+                          </>
                         )}
                         <Button type="submit">Update progress Details</Button>
                         <ErrorText>
@@ -420,16 +368,117 @@ const ModifyTraineeProgress = (props) => {
                       </form>
                     ))}
               </>
+              {/* show video update form */}
+              <>
+                {usersData.trainee_course_progress_percentage === 100 &&
+                  usersData.trainee_course_status >= 12 &&
+                  usersData.trainee_course_progress_status === "completed" &&
+                  usersData.trainee_course_video_upload_status ===
+                    "pending" && (
+                    <form onSubmit={handleSubmit(videoUploadUpdateHandler)}>
+                      <Field>
+                        <LabelTitle htmlFor="">
+                          Video upload status :
+                        </LabelTitle>
+                        <FormSelect
+                          name=""
+                          id=""
+                          {...register("courseVideoUploadStatus", {
+                            required: "Please select from the dropdown option",
+                          })}
+                        >
+                          <FormOption value="">Choose below Option</FormOption>
+                          <FormOption value="uploaded">uploaded</FormOption>
+                        </FormSelect>
+                        {errors.courseVideoUploadStatus && (
+                          <ErrorMessage>
+                            {errors.courseVideoUploadStatus.message}
+                          </ErrorMessage>
+                        )}
+                      </Field>
+                      <Field>
+                        <LabelTitle htmlFor="">
+                          Course trainee status :
+                        </LabelTitle>
+                        <FormSelect
+                          required
+                          name=""
+                          id=""
+                          onClick={(event) => {
+                            showCompleteDateHandler(event);
+                          }}
+                        >
+                          <FormOption value="">Choose below option</FormOption>
+                          <FormOption value="13">
+                            Trainee video Recording uploaded
+                          </FormOption>
+                          <FormOption value="14">Reward dispatched</FormOption>
+                          <FormOption value="15">
+                            Certificate dispatched
+                          </FormOption>
+                          <FormOption value="16">
+                            Mentor session attended
+                          </FormOption>
+                          <FormOption value="18">
+                            Update the trainee points
+                          </FormOption>
+                        </FormSelect>
+                      </Field>
+                      <Button type="submit">Update progress Details</Button>
+                      <ErrorText>
+                        * Please, see the all details before updating
+                      </ErrorText>
+                    </form>
+                  )}
+              </>
+              {/* show course progress option */}
               <>
                 {usersData.trainee_course_progress_percentage === 100 &&
                   usersData.trainee_course_progress_status === "completed" &&
+                  usersData.trainee_course_status >= 12 &&
                   usersData.trainee_course_video_upload_status === "uploaded" &&
-                  usersData.trainee_course_video_upload_email === "yes" &&
-                  usersData.trainee_course_mentor_session_email === "yes" &&
-                  usersData.trainee_course_reward_points_status === "yes" && (
+                  usersData.trainee_course_reward_points_status === "no" && (
+                    <form onSubmit={handleSubmit(videoUploadUpdateHandler)}>
+                      <Field>
+                        <LabelTitle htmlFor="">
+                          Course trainee status :
+                        </LabelTitle>
+                        <FormSelect
+                          required
+                          name=""
+                          id=""
+                          onClick={(event) => {
+                            showCompleteDateHandler(event);
+                          }}
+                        >
+                          <FormOption value="">Choose below option</FormOption>
+                          <FormOption value="14">Reward dispatched</FormOption>
+                          <FormOption value="15">
+                            Certificate dispatched
+                          </FormOption>
+                          <FormOption value="16">
+                            Completed Mentor session
+                          </FormOption>
+                        </FormSelect>
+                      </Field>
+                      <Button type="submit">Update progress Details</Button>
+                      <ErrorText>
+                        * Please, see the all details before updating
+                      </ErrorText>
+                    </form>
+                  )}
+              </>
+              {/* show course complete text */}
+              <>
+                {usersData.trainee_course_progress_percentage === 100 &&
+                  usersData.trainee_course_progress_status === "completed" &&
+                  usersData.trainee_course_status <= 18 &&
+                  usersData.trainee_course_video_upload_status === "uploaded" &&
+                  usersData.trainee_course_reward_points_status === "yes" &&
+                  usersData.trainee_course_complete_status === "completed" && (
                     <CourseCompletedText>
-                      You can not modified this user progress because he has all
-                      ready completed the course
+                      The trainee has been successfully completed course and
+                      reward points has been updated successfully.
                     </CourseCompletedText>
                   )}
               </>

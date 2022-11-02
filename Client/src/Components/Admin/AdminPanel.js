@@ -12,20 +12,39 @@ import {
   SidebarListUl,
   Wrapper,
 } from "./AdminPanelElements";
+import TraineeIncompleteCourses from "./TraineeIncompleteCourses";
+import ViewAllLiveClasses from "./ViewAllLiveClasses";
 import ViewAllTraineeProgress from "./ViewAllTraineeProgress";
 
 const AdminPanel = () => {
   const [showTraineeCourse, setShowTraineeCourse] = useState(true);
   const [showAllTraineeProgress, setShowAllTraineeProgress] = useState(false);
+  const [showInstructorBooking, setShowInstructorBooking] = useState(false);
+  const [showLiveClasses, setShowLiveClasses] = useState(false);
   const showAddTraineeCourseHandler = () => {
     setShowTraineeCourse(!showTraineeCourse);
     setShowAllTraineeProgress(false);
+    setShowInstructorBooking(false);
+    setShowLiveClasses(false);
   };
   const showTraineeProgressHandler = () => {
     setShowAllTraineeProgress(!showAllTraineeProgress);
     setShowTraineeCourse(false);
+    setShowInstructorBooking(false);
+    setShowLiveClasses(false);
   };
-
+  const showInstructorBookingHandler = () => {
+    setShowInstructorBooking(!showInstructorBooking);
+    setShowAllTraineeProgress(false);
+    setShowTraineeCourse(false);
+    setShowLiveClasses(false);
+  };
+  const showLiveInstructorClassesHandler = () => {
+    setShowLiveClasses(!showLiveClasses);
+    setShowInstructorBooking(false);
+    setShowAllTraineeProgress(false);
+    setShowTraineeCourse(false);
+  };
   return (
     <>
       <Section>
@@ -40,6 +59,12 @@ const AdminPanel = () => {
                 <SidebarListItem onClick={showTraineeProgressHandler}>
                   <QuickMenuTitle>View Trainee Progress</QuickMenuTitle>
                 </SidebarListItem>
+                <SidebarListItem onClick={showInstructorBookingHandler}>
+                  <QuickMenuTitle>Schedule Instructor Class</QuickMenuTitle>
+                </SidebarListItem>
+                <SidebarListItem onClick={showLiveInstructorClassesHandler}>
+                  <QuickMenuTitle>Live Classes</QuickMenuTitle>
+                </SidebarListItem>
               </SidebarListUl>
             </Wrapper>
           </RightDiv>
@@ -48,6 +73,8 @@ const AdminPanel = () => {
               <DetailsWrapper>
                 {showTraineeCourse && <AddTraineeCourses />}
                 {showAllTraineeProgress && <ViewAllTraineeProgress />}
+                {showInstructorBooking && <TraineeIncompleteCourses />}
+                {showLiveClasses && <ViewAllLiveClasses />}
               </DetailsWrapper>
             </Wrapper>
           </LeftDiv>

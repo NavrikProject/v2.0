@@ -61,7 +61,6 @@ const TraineeCompletedCourses = () => {
 
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
-
   useEffect(() => {
     const getAllTraineeCompletedCourse = async () => {
       setLoading(true);
@@ -72,11 +71,12 @@ const TraineeCompletedCourses = () => {
           email: user?.email,
         }
       );
-      if (res.data.details) {
+      if (res.data.success) {
         setLoading(false);
-        setTraineeCompletedCourse(res.data.details);
+        setTraineeCompletedCourse(res.data.success);
       } else {
-        return setLoading(false);
+        setLoading(false);
+        setTraineeCompletedCourse([]);
       }
     };
     getAllTraineeCompletedCourse();
@@ -91,38 +91,36 @@ const TraineeCompletedCourses = () => {
   return (
     <Div>
       {loading && <LoadingSpinner />}
-      <AttendedTitle>Your Attended Sessions</AttendedTitle>
+      <AttendedTitle>Your Completed Courses</AttendedTitle>
       <AttendedUl>
         {traineeCompletedCourse?.length > 0 ? (
-          traineeCompletedCourse?.map((attendedSession) => (
-            <AttendedDiv key={attendedSession.bookingId}>
+          traineeCompletedCourse?.map((completeCourse) => (
+            <AttendedDiv key={completeCourse.trainee_course_dtls_id}>
               <AttendedList>
                 <AttendedDivFlex>
                   <AttendedDivRight>
                     <AttendedDivContent>
-                      A session on
+                      Details for course
                       <span>
-                        {" " +
-                          new Date(attendedSession.bookingDate).toDateString() +
-                          " "}
+                        {" " + completeCourse.trainee_course_name + " "}
                       </span>
-                      and Time is
-                      <span>{" " + attendedSession.time}</span>
                     </AttendedDivContent>
                   </AttendedDivRight>
                   <AttendedDivLeft>
                     <AttendedDivButtons
                       onClick={() =>
-                        toggleShowDetails(attendedSession.bookingId)
+                        toggleShowDetails(completeCourse.trainee_course_dtls_id)
                       }
                     >
-                      Click here to view all session details
+                      See course Details
                     </AttendedDivButtons>
                   </AttendedDivLeft>
                 </AttendedDivFlex>
-                {selected === attendedSession.bookingId ? (
+                {selected === completeCourse.trainee_course_dtls_id ? (
                   <SessionDetailsDiv>
-                    <TraineeCompletedCourseDetails mentor={attendedSession} />
+                    <TraineeCompletedCourseDetails
+                      completeCourse={completeCourse}
+                    />
                   </SessionDetailsDiv>
                 ) : null}
               </AttendedList>
