@@ -127,7 +127,7 @@ export const TraineeCourseFeedbackQuestion1 = [
 ];
 export const TraineeCourseFeedbackQuestion2 = [
   {
-    qnId: 7,
+    qnId: 2,
     question:
       "Do you feel you were given enough time and resources to complete the training ?",
     options: [
@@ -138,7 +138,7 @@ export const TraineeCourseFeedbackQuestion2 = [
 ];
 export const TraineeCourseFeedbackQuestion3 = [
   {
-    qnId: 7,
+    qnId: 3,
     question:
       "Were you satisfied with the learning content and material provided in the course ?",
     options: [
@@ -149,7 +149,7 @@ export const TraineeCourseFeedbackQuestion3 = [
 ];
 export const TraineeCourseFeedbackQuestion4 = [
   {
-    qnId: 7,
+    qnId: 4,
     question: "Was the learning material easy to understand ?",
     options: [
       { optionId: 1, value: "Yes" },
@@ -179,12 +179,20 @@ export const traineeCourseStatusDetails = [
   { id: 8, statusId: "8", status: "Instructor Session2  pending" },
   { id: 9, statusId: "9", status: "Instructor session 2 completed" },
   { id: 10, statusId: "10", status: "Instructor Session 3 pending" },
-  { id: 11, statusId: "11", status: "Instructor final completed" },
-  { id: 12, statusId: "12", status: "Course Completion" },
-  { id: 13, statusId: "13", status: "Trainee video Recording" },
-  { id: 14, statusId: "14", status: "Reward dispatch" },
-  { id: 15, statusId: "15", status: "Certificate dispatch" },
-  { id: 16, statusId: "16", status: "Update the Mentor session" },
-  { id: 17, statusId: "17", status: "Course feedback" },
-  { id: 18, statusId: "18", status: "Trainee points updated" },
+  { id: 11, statusId: "11", status: "Instructor final session completed" },
+  { id: 12, statusId: "12", status: "Course Completed successfully" },
+  { id: 13, statusId: "13", status: "Trainee video Recording uploaded" },
+  { id: 14, statusId: "14", status: "T shirt or Book Reward dispatched" },
+  {
+    id: 15,
+    statusId: "15",
+    status: "Course Completion Certificate dispatched",
+  },
+  { id: 16, statusId: "16", status: "Trainee Attended Mentor session" },
+  {
+    id: 17,
+    statusId: "17",
+    status: "Course feedback Received from the Trainee",
+  },
+  { id: 18, statusId: "18", status: "Trainee Reward points updated" },
 ];

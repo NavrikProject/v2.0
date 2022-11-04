@@ -59,8 +59,6 @@ export const FormInputDiv = styled.div`
 `;
 export const Form = styled.form``;
 
-
-
 export const FormBtn = styled.button`
   margin: 0 auto;
   padding: 12px 20px;
@@ -76,6 +74,9 @@ export const FormBtn = styled.button`
   border-radius: 5px;
   &:hover {
     opacity: 0.9;
+  }
+  &:disabled {
+    cursor: not-allowed;
   }
 `;
 export const TextArea = styled.textarea`

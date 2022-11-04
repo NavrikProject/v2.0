@@ -22,6 +22,15 @@ import PhoneInput2 from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "./FormProfileElements";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import app from "../../FirebaseConfig";
+import { useEffect } from "react";
+
 const SingleProfile = (props) => {
   const {
     register,
@@ -29,16 +38,25 @@ const SingleProfile = (props) => {
     formState: { errors },
     reset,
   } = useForm();
+  const [loading, setLoading] = useState();
+  const [fileUploading, setFileUploading] = useState("");
+  const [imageUploaded, setImageUploaded] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [imageFileName, setImageFileName] = useState("");
   const [image, setImage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
-
   const profileSubmitHandler = async (newData) => {
+    setLoading(true);
+    if (!imageUploaded) {
+      toast.error("There was an error while uploading the image", {
+        position: "top-center",
+      });
+    }
     let data = new FormData();
-    data.append("image", image);
+    data.append("imageFileName", imageFileName);
     data.append("mobile", phoneNumber);
     data.append("dob", newData.date);
     data.append("address", newData.address);
@@ -63,8 +81,50 @@ const SingleProfile = (props) => {
     } catch (error) {
       return;
     }
+    setLoading(false);
   };
-
+  useEffect(() => {
+    const uploadImageTOFirebase = () => {
+      if (!image) {
+        return;
+      }
+      const fileName = new Date().getTime() + "-" + image.name;
+      const storage = getStorage(app);
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, image);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setFileUploading("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+          }
+        },
+        (error) => {
+          console.log(error);
+          toast.error("There was an error while uploading the image", {
+            position: "top-center",
+          });
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageFileName(downloadURL);
+            setImageUploaded(true);
+            setFileUploading("File uploaded");
+          });
+        }
+      );
+    };
+    uploadImageTOFirebase();
+  }, [image]);
   return (
     <SingleProfileSect>
       <CloseButtonDiv>
@@ -200,8 +260,11 @@ const SingleProfile = (props) => {
                   placeholder="Choose the profile picture"
                   onChange={(event) => setImage(event.target.files[0])}
                 />
+                {fileUploading && <p>{fileUploading}</p>}
               </Field>
-              <FormBtn>Update Profile</FormBtn>
+              <FormBtn disabled={!imageUploaded && !image}>
+                Update Profile
+              </FormBtn>
             </Form>
           </FormDiv>
         </SingleProfileWrapper>

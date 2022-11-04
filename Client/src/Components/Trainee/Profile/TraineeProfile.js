@@ -102,6 +102,7 @@ const TraineeProfile = () => {
     };
     getTraineePointsDetails();
   }, [user?.email, token]);
+
   return (
     <>
       <Section>
@@ -254,13 +255,7 @@ const TraineeProfile = () => {
                           <b>Role : </b> {user.type}
                         </TraineeRole>
                       </div>
-                      <Img
-                        src={
-                          trainee.trainee_image
-                            ? trainee.trainee_image
-                            : DefaultImg
-                        }
-                      />
+                      <Img src={trainee.trainee_image} />
                     </ImgBox>
                     <DetailsFlex>
                       <DetailsFlex1>
