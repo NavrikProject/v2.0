@@ -15,6 +15,7 @@ export const Modal = styled.div`
   left: 5%;
   width: 90%;
   height: auto;
+  top: 100px;
   background-color: white;
   padding: 1rem;
   border-radius: 14px;

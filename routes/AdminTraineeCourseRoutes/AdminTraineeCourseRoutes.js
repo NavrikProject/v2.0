@@ -2,6 +2,8 @@ import express from "express";
 import {
   bookInstructorLiveClass,
   getAllBookingLiveClasses,
+  getAllTraineeCompleteCourses,
+  getTraineeCompletedLiveClassDetailsInAdmin,
   getTraineeInCompleteCourses,
   getTraineeLiveClassDetailsInAdmin,
 } from "../../controllers/AdminTraineeCourseControllers/AdminTraineeCourseControllers.js";
@@ -14,4 +16,10 @@ router.post(
   "/get/individual/instructor-class",
   getTraineeLiveClassDetailsInAdmin
 );
+router.get("/get/all/completed-courses", getAllTraineeCompleteCourses);
+router.post(
+  "/get/all/live-completed-classes",
+  getTraineeCompletedLiveClassDetailsInAdmin
+);
+
 export default router;

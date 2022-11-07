@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   ClearFilter,
-  FaSearchIcon,
   JoinAsMentorButton,
   MentorContainer,
   MentorDivFlex,
@@ -35,16 +34,12 @@ import GoToTop from "../GoToTop";
 import axios from "axios";
 const MentorClub = () => {
   const [searchItem, setSearchItem] = useState("");
-  const [searchItemWord, setSearchItemWord] = useState("");
   const [skillFilter, setSkillFilter] = useState("");
   const [mentorAreaFilter, setMentorAreaFilter] = useState("");
   const [mentorAvailabilityFilter, setMentorAvailabilityFilter] = useState("");
   const [skillCategoryFilter, setSkillCategoryFilter] = useState("");
   const [skills, setSkills] = useState([]);
-  const searchEngineAll = (event) => {
-    event.preventDefault();
-    setSearchItemWord(searchItem);
-  };
+
   const clearFilterHandler = () => {
     window.location.reload();
   };
@@ -156,7 +151,7 @@ const MentorClub = () => {
                   onChange={(event) => setMentorAreaFilter(event.target.value)}
                 >
                   <MentorOptions value="">
-                    Choose the Mentor by Mentorship Area
+                    Choose Mentor by Mentorship Area
                   </MentorOptions>
                   {mentorshipAreas.map((mentorArea) => (
                     <MentorOptions key={mentorArea.id} value={mentorArea.area}>
@@ -184,19 +179,19 @@ const MentorClub = () => {
                   ))}
                 </MentorSelect>
               </MentorSearchRightDiv>
-              {/* <MentorSearchRightDiv>
-                <SearchForm onSubmit={searchEngineAll}>
+              <MentorSearchRightDiv>
+                <SearchForm>
                   <SearchBoxInput
                     placeholder="Search any mentor"
                     onChange={(event) => setSearchItem(event.target.value)}
                   ></SearchBoxInput>
-                  <FaSearchIcon onClick={searchEngineAll} />
                 </SearchForm>
-              </MentorSearchRightDiv> */}
+              </MentorSearchRightDiv>
             </MentorSearchDiv>
             <MentorWrapper>
               <MentorDivFlex>
                 <MentorCourseCard
+                  searchItem={searchItem}
                   skillCategoryFilter={skillCategoryFilter}
                   skillFilter={skillFilter}
                   mentorAreaFilter={mentorAreaFilter}

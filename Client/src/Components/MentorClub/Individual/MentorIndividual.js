@@ -3,7 +3,7 @@ import axios from "axios";
 import "swiper/swiper.min.css";
 
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   BookNowButton,
   MentorBioDesc,
@@ -49,8 +49,9 @@ import GoToTop from "../../GoToTop";
 import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper";
+import LoginModel from "../../Forms/LoginModel";
 
-const MentorIndividual = ({ socket }) => {
+const MentorIndividual = () => {
   const location = useLocation();
   let path = location.pathname.split("/")[3];
   const [indMentor, setIndMentor] = useState([]);
@@ -60,6 +61,8 @@ const MentorIndividual = ({ socket }) => {
   const [showModal, setShowModal] = useState(false);
   const [sendMentor, setSendMentor] = useState();
   const [mentorFeedback, setMentorFeedback] = useState([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   useEffect(() => {
     try {
       const getIndMentorDetails = async () => {
@@ -149,16 +152,20 @@ const MentorIndividual = ({ socket }) => {
     setSendMentor(mentor);
   };
   const user = useSelector((state) => state.user.currentUser);
-
+  const showLoginModelHandler = () => {
+    setShowLoginModal(!showLoginModal);
+  };
   return (
     <MentorIndSection>
       {showModal && (
         <ConfirmModel
-          socket={socket}
           showModalHandler={showModalHandler}
           sendMentor={sendMentor}
           date={date}
         />
+      )}
+      {showLoginModal && (
+        <LoginModel showLoginModelHandler={showLoginModelHandler} />
       )}
       <MentorCoverDiv></MentorCoverDiv>
       {indMentor?.map((mentor) => (
@@ -261,8 +268,8 @@ const MentorIndividual = ({ socket }) => {
                       </MentorTimeSlotDiv>
                     </MentorProfileDateDiv>
                     {!user ? (
-                      <BookNowButton>
-                        <Link to="/login">Login</Link>
+                      <BookNowButton onClick={showLoginModelHandler}>
+                        Login
                       </BookNowButton>
                     ) : (
                       <BookNowButton onClick={() => showModalHandler(mentor)}>

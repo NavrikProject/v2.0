@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import LinearBuffer from "../utils/Loading";
 import {
   Button,
   ErrorMessage,
@@ -69,22 +70,32 @@ const AddTraineeCourses = () => {
       return (
         toast.success(res.data.success, { position: "top-center" }),
         reset(),
-        setSuccess(res.data.success)
+        setSuccess(res.data.success),
+        setLoading(false)
       );
     }
     if (res.data.error) {
       return (
         toast.error(res.data.error, { position: "top-center" }),
-        setError(res.data.error)
+        setError(res.data.error),
+        setLoading(false)
       );
     }
     setLoading(false);
   };
   return (
     <div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
-      {loading && <p>Loading... Please wait...</p>}
+      {error && (
+        <p style={{ color: "red", fontSize: "17px", textAlign: "center" }}>
+          {error}
+        </p>
+      )}
+      {success && (
+        <p style={{ color: "green", fontSize: "17px", textAlign: "center" }}>
+          {success}
+        </p>
+      )}
+      {loading && <LinearBuffer />}
       <>
         <form action="" onSubmit={handleSubmit(addTraineeCourseHandler)}>
           <Field>

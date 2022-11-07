@@ -120,10 +120,7 @@ export const MentorOptions = styled.option`
   text-transform: capitalize;
 `;
 
-export const SearchForm = styled.form`
-  position: relative;
-  display: inline-block;
-`;
+export const SearchForm = styled.form``;
 export const SearchBoxInput = styled.input`
   width: 100%;
   padding: 8px 10px;
@@ -134,6 +131,7 @@ export const SearchBoxInput = styled.input`
   border-bottom-width: 2px;
   transition: all 0.4s ease;
   margin-bottom: 10px !important;
+  margin-left: 10px;
   &:focus {
     border-color: #fc83bb;
   }

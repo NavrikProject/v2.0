@@ -56,7 +56,6 @@ const TraineeCompletedCoursesDetails = (props) => {
     };
     getAllTraineeLiveAttendedClasses();
   }, [user?.email, props.completeCourse.trainee_course_id]);
-  console.log(allLiveClasses);
   return (
     <div>
       <div>

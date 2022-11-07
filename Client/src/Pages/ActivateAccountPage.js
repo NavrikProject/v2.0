@@ -1,11 +1,9 @@
 import React, { Suspense, useState } from "react";
-
 import styled from "styled-components";
 import GoToTop from "../Components/GoToTop";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Loading from "../Components/utils/Loading";
 import LoadingSpinner from "../Components/utils/LoadingSpinner";
 const Footer = React.lazy(() => import("../Components/Footer/Footer"));
 const NavbarRes = React.lazy(() => import("../Components/Navbar/NavbarRes"));
@@ -81,7 +79,7 @@ const ActivateAccountPage = () => {
       );
       if (res.data.token) {
         setError(res.data.error);
-        toast.success(res.data.success, { position: "top-center" });
+        toast.error(res.data.success, { position: "top-center" });
         // navigate(`/login`);
         setLoading(false);
       }
@@ -93,7 +91,8 @@ const ActivateAccountPage = () => {
       if (res.data.error) {
         setError(res.data.error);
         toast.error(res.data.error, { position: "top-center" });
-        // navigate(`/login`);        setLoading(false);
+        // navigate(`/login`);
+        setLoading(false);
       }
     } catch (error) {
       return;
@@ -117,7 +116,7 @@ const ActivateAccountPage = () => {
                 {success && (
                   <p style={{ color: "green", fontSize: "20px" }}>{success}</p>
                 )}
-                {loading && <Loading />}
+                {loading && <LoadingSpinner />}
                 <Field>
                   <InputButton>Activate Account</InputButton>
                   <Link to="/login" style={{ textDecoration: "none" }}>

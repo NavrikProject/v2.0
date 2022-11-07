@@ -6,6 +6,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "./AdminPanelElements";
+import LinearBuffer from "../utils/Loading";
 
 const Div = styled.div`
   padding: 20px 30px;
@@ -135,7 +136,8 @@ const ModifyTraineeProgress = (props) => {
             position: "top-center",
           }),
           setSuccess(res.data.success)),
-          reset()
+          reset(),
+          setLoading(false)
         );
       }
       if (res.data.error) {
@@ -143,13 +145,17 @@ const ModifyTraineeProgress = (props) => {
           toast.error(res.data.error, {
             position: "top-center",
           }),
-          setError(res.data.error)
+          setError(res.data.error),
+          setLoading(false)
         );
       }
     } catch (error) {
-      return toast.error("There was an error processing your request", {
-        position: "top-center",
-      });
+      return (
+        toast.error("There was an error processing your request", {
+          position: "top-center",
+        }),
+        setLoading(false)
+      );
     }
     setLoading(false);
   };
@@ -173,7 +179,8 @@ const ModifyTraineeProgress = (props) => {
             position: "top-center",
           }),
           setSuccess(res.data.success),
-          reset()
+          reset(),
+          setLoading(false)
         );
       }
       if (res.data.error) {
@@ -181,13 +188,17 @@ const ModifyTraineeProgress = (props) => {
           toast.error(res.data.error, {
             position: "top-center",
           }),
-          setError(res.data.error)
+          setError(res.data.error),
+          setLoading(false)
         );
       }
     } catch (error) {
-      return toast.error("There was an error processing your request", {
-        position: "top-center",
-      });
+      return (
+        toast.error("There was an error processing your request", {
+          position: "top-center",
+        }),
+        setLoading(false)
+      );
     }
     setLoading(false);
   };
@@ -208,7 +219,7 @@ const ModifyTraineeProgress = (props) => {
       </CloseButtonDiv>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
-      {loading && <p>Loading... Please wait...</p>}
+      {loading && <LinearBuffer />}
       <>
         {userProgressData?.map((usersData) => (
           <>

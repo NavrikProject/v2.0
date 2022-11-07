@@ -19,7 +19,7 @@ const Backdrop = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 12000000000;
+  z-index: 12000;
   background-color: rgba(0, 0, 0, 0.75);
 `;
 const Modal = styled.div`
@@ -299,11 +299,11 @@ const MentorBookingCardModel = (props) => {
   return (
     <>
       {loading && <LoadingSpinner />}
+      {showLoginModal && (
+        <LoginModel showLoginModelHandler={showLoginModelHandler} />
+      )}
       <Backdrop>
         <Modal>
-          {showLoginModal && (
-            <LoginModel showLoginModelHandler={showLoginModelHandler} />
-          )}
           <CloseButtonDiv onClick={props.ShowBookingModalHandler}>
             <CloseButton />
           </CloseButtonDiv>
@@ -395,7 +395,7 @@ const MentorBookingCardModel = (props) => {
               {user ? (
                 <ConfirmButton type="submit">Confirm Booking</ConfirmButton>
               ) : (
-                <ConfirmButton onClick={showLoginModelHandler}>
+                <ConfirmButton type="button" onClick={showLoginModelHandler}>
                   Login
                 </ConfirmButton>
               )}
