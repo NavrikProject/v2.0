@@ -53,7 +53,7 @@ const UpcomingAllSessionDetails = (props) => {
   const token = user?.accessToken;
   const attendMeetingHandler = async (bookingId) => {
     await axios.post(
-      `/mentor/profile/get/bookings/attended/update`,
+      `/trainee/profile/booking/get/bookings/attended/update`,
       { userEmail: user?.email, bookingId: bookingId },
       {
         headers: { authorization: "Bearer " + token },

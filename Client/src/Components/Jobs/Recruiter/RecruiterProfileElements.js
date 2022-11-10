@@ -78,7 +78,7 @@ export const Div = styled.div`
   display: flex;
 `;
 export const RightDiv = styled.div`
-  flex: 3;
+  flex: 2;
   position: sticky;
   top: 120px;
   width: 100%;
@@ -103,12 +103,12 @@ export const SidebarListItem = styled.li`
   width: 100%;
   cursor: pointer;
   border-bottom: 1px solid lightgrey;
-  :nth-child(7) {
+  :nth-child(4) {
     border-bottom: none;
   }
 `;
 export const Wrapper = styled.div`
-  padding: 30px;
+  padding: 10px;
 `;
 export const DetailsWrapper = styled.div`
   margin: 10px;

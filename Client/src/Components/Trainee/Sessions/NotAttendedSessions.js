@@ -88,6 +88,7 @@ const NotAttendedSessions = () => {
     }
     setSelected(index);
   };
+
   return (
     <Div>
       {loading && <LoadingSpinner />}

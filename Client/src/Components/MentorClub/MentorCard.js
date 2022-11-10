@@ -185,10 +185,13 @@ const MentorCourseCard = ({
                 mentorFilter.mentor_mentorship_area
                   .toLowerCase()
                   .includes(searchItem.toLowerCase()) ||
-                mentorFilter.mentor_availability
+                mentorFilter.mentor_skills
                   .toLowerCase()
                   .includes(searchItem.toLowerCase()) ||
-                mentorFilter.mentor_category
+                mentorFilter.mentor_speciality
+                  .toLowerCase()
+                  .includes(searchItem.toLowerCase()) ||
+                mentorFilter.mentor_availability
                   .toLowerCase()
                   .includes(searchItem.toLowerCase())
           )

@@ -40,6 +40,7 @@ import MentorRegistrationPage from "./Pages/MentorRegistrationPage";
 import AdminPage from "./Pages/AdminPage";
 import BaJumpstartPage from "./Pages/BaJumpstartPage";
 import TraineeCourseProgressPage from "./Pages/TraineeCourseProgressPage";
+import JobsAdminPage from "./Pages/AdminPages/JobsAdminPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -208,6 +209,7 @@ const App = () => {
                 element={<TraineeCourseProgressPage />}
               />
             )}
+            <Route path="/user/admin/jobs" element={<JobsAdminPage />} />
           </Routes>
         </Suspense>
       </Router>

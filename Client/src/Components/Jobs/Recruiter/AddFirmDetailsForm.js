@@ -11,13 +11,28 @@ import {
   Input,
   TextArea,
   ErrorMessage,
+  WarnText,
+  ImgBox,
+  UserTitle,
+  SocialButton,
+  Img,
+  DetailsFlex,
+  DetailsFlex1,
+  DetailsTitles,
+  DetailsFromDb,
 } from "./FormElements";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import PhoneInput2 from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useForm } from "react-hook-form";
-
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import app from "../../FirebaseConfig";
 const AddFirmDetailsForm = () => {
   const {
     register,
@@ -30,11 +45,15 @@ const AddFirmDetailsForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [hiringCompanyDetails, setHiringCompanyDetails] = useState([]);
+  const [fileUploading, setFileUploading] = useState("");
+  const [imageUploaded, setImageUploaded] = useState(false);
+  const [imageFileName, setImageFileName] = useState("");
+
   const user = useSelector((state) => state.user.currentUser);
   const userEmail = user?.email;
   const addFirmDetailsSubmitHandler = async (newData) => {
     let data = new FormData();
-    data.append("image", image);
+    data.append("imageFileName", imageFileName);
     data.append("mobile", phoneNumber);
     data.append("email", newData.email);
     data.append("city", newData.city);
@@ -76,11 +95,99 @@ const AddFirmDetailsForm = () => {
     };
     getAllFirmDetails();
   }, [userEmail]);
+
+  useEffect(() => {
+    const uploadImageTOFirebase = () => {
+      if (!image) {
+        return;
+      }
+      const fileName = new Date().getTime() + "-" + image.name;
+      const storage = getStorage(app);
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, image);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setFileUploading("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+          }
+        },
+        (error) => {
+          console.log(error);
+          toast.error("There was an error while uploading the image", {
+            position: "top-center",
+          });
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageFileName(downloadURL);
+            setImageUploaded(true);
+            setFileUploading("File uploaded");
+          });
+        }
+      );
+    };
+    uploadImageTOFirebase();
+  }, [image]);
   return (
     <SingleProfileSection>
       <SingleProfileWrapper>
         {hiringCompanyDetails?.length > 0 ? (
-          <h1>Found company details</h1>
+          hiringCompanyDetails?.map((company) => (
+            <div key={company.trainee_id}>
+              <>
+                <div>
+                  <UserTitle>{user.firstname + " " + user.lastname}</UserTitle>
+                  <p>
+                    <b>Role : </b> {user.type} <br />
+                  </p>
+                  <br />
+                  <ImgBox>
+                    <SocialButton>
+                      <a
+                        rel="noreferrer"
+                        target="_blank"
+                        href={company.hiring_company_website}
+                      >
+                        website
+                      </a>
+                    </SocialButton>
+                    <Img src={company.hiring_company_image} />
+                    Firm logo
+                  </ImgBox>
+                </div>
+              </>
+              <DetailsFlex>
+                <DetailsFlex1>
+                  <DetailsTitles>Your Email : </DetailsTitles>
+                  <DetailsFromDb>{company.hiring_user_email}</DetailsFromDb>
+                </DetailsFlex1>
+                <DetailsFlex1>
+                  <DetailsTitles>Office Email : </DetailsTitles>
+                  <DetailsFromDb>{company.hiring_company_email}</DetailsFromDb>
+                </DetailsFlex1>
+                <DetailsFlex1>
+                  <DetailsTitles>Your Mobile : </DetailsTitles>
+                  <DetailsFromDb>{company.hiring_company_mobile}</DetailsFromDb>
+                </DetailsFlex1>
+                <DetailsFlex1>
+                  <DetailsTitles>Address : </DetailsTitles>
+                  <DetailsFromDb>
+                    {company.hiring_company_address}
+                  </DetailsFromDb>
+                </DetailsFlex1>
+              </DetailsFlex>
+            </div>
+          ))
         ) : (
           <FormDiv>
             {error && (
@@ -101,6 +208,7 @@ const AddFirmDetailsForm = () => {
                 {success}
               </p>
             )}
+            <WarnText>Please fill before applying for the job post</WarnText>
             <Form onSubmit={handleSubmit(addFirmDetailsSubmitHandler)}>
               <Field>
                 <FormLabel>Email:</FormLabel>
@@ -242,8 +350,11 @@ const AddFirmDetailsForm = () => {
                   placeholder="Choose the profile picture"
                   onChange={(event) => setImage(event.target.files[0])}
                 />
+                {fileUploading && (
+                  <p style={{ color: "green" }}>{fileUploading}</p>
+                )}
               </Field>
-              <FormBtn>Add Details</FormBtn>
+              <FormBtn disabled={!imageUploaded && !image}>Add Details</FormBtn>
             </Form>
           </FormDiv>
         )}

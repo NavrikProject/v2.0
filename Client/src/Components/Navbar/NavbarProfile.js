@@ -90,7 +90,18 @@ const NavbarProfile = (props) => {
                       <span>
                         <i className="fa-solid fa-chart-area"></i>
                       </span>
-                      Admin
+                      Course Admin
+                    </Link>
+                  </SubmenuListItem>
+                  <SubmenuListItem>
+                    <Link
+                      style={{ textDecoration: "none", color: "#062C30" }}
+                      to={`/user/admin/jobs`}
+                    >
+                      <span>
+                        <i className="fa-solid fa-chart-area"></i>
+                      </span>
+                      Jobs Admin
                     </Link>
                   </SubmenuListItem>
                 </>

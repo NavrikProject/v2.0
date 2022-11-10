@@ -100,7 +100,6 @@ const PostJobForm = () => {
               <ErrorMessage>{errors.category.message}</ErrorMessage>
             )}
           </Field>
-
           <Field>
             <FormLabel>Job Role:</FormLabel>
             <FormSelect
@@ -120,6 +119,20 @@ const PostJobForm = () => {
               </FormOption>
             </FormSelect>
             {errors.role && <ErrorMessage>{errors.role.message}</ErrorMessage>}
+          </Field>
+          <Field>
+            <FormLabel>Number of positions:</FormLabel>
+            <Input
+              placeholder="Enter the number of positions"
+              type="number"
+              name="positions"
+              {...register("positions", {
+                required: "enter the number of positions",
+              })}
+            />
+            {errors.positions && (
+              <ErrorMessage>{errors.positions.message}</ErrorMessage>
+            )}
           </Field>
         </FieldFlexDiv>
         <Field>

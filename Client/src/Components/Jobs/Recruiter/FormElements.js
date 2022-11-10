@@ -53,7 +53,14 @@ export const Input = styled.input`
     border-color: #fc83bb;
   }
 `;
-
+export const WarnText = styled.h1`
+  color: #fff;
+  padding: 7px 10px;
+  background-color: rgb(239, 116, 116);
+  text-align: center;
+  border-radius: 5px;
+  font-weight: normal;
+`;
 export const FormDiv = styled.div`
   margin-left: 20px;
 `;
@@ -77,6 +84,9 @@ export const FormBtn = styled.button`
   border-radius: 5px;
   &:hover {
     opacity: 0.9;
+  }
+  &:disabled {
+    cursor: not-allowed !important;
   }
 `;
 export const TextArea = styled.textarea`
@@ -118,4 +128,61 @@ export const FieldFlexDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+`;
+export const ImgBox = styled.div`
+  margin-bottom: 20px;
+  justify-content: space-evenly;
+`;
+export const UserTitle = styled.h1`
+  font-size: 32px;
+  font-weight: 500;
+  margin-right: 20px;
+  text-transform: capitalize;
+`;
+export const ImgForm = styled.form``;
+
+export const Img = styled.img`
+  width: 200px;
+  height: 100px;
+  @media only screen and (max-width: 868px) {
+    width: 130px;
+    height: 130px;
+  }
+`;
+export const SocialButton = styled.a`
+  margin-top: 20px !important;
+  padding: 10px 20px;
+  border: none;
+  outline: none;
+  box-shadow: rgb(0 0 0 / 10%) 0px 5px 24px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 15px 15px 0 0;
+  font-size: 16px;
+  transition: all 0.5s ease-in-out;
+  text-decoration: none;
+  &:hover {
+    border: 1px solid #111;
+  }
+`;
+export const DetailsFlex = styled.div`
+  text-transform: capitalize;
+  @media only screen and (max-width: 968px) {
+    margin-left: 0px;
+  }
+`;
+export const DetailsFlex1 = styled.div`
+  display: flex;
+  padding: 7px 10px;
+`;
+export const DetailsTitles = styled.h4`
+  font-weight: 600;
+  margin-right: 5px;
+`;
+export const DetailsFromDb = styled.p`
+  font-weight: 400;
+  margin-left: 5px;
+  span {
+    color: gold;
+  }
 `;

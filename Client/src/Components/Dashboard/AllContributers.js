@@ -19,7 +19,10 @@ const AllContributers = () => {
       if (res.data) {
         setAllContributers(res.data);
         setLoading(false);
+      } else {
+        setLoading(false);
       }
+      setLoading(false);
     };
     getAllTheCourse();
   }, [token]);
@@ -76,47 +79,48 @@ const AllContributers = () => {
               <th>Contributer Status</th>
             </tr>
           </tbody>
-          {allContributers?.length > 0 &&
-            allContributers?.map((contributer) => (
-              <tbody>
-                <tr key={contributer.contributer_details_id}>
-                  <td>{contributer.contributer_details_id}</td>
-                  <td>{contributer.contributer_email}</td>
-                  <td>{contributer.contributer_fullname}</td>
-                  <td>{contributer.contributer_mobile}</td>
-                  <td>{contributer.contributer_qualifications}</td>
-                  <td>{contributer.contributer_exp_yrs}</td>
-                  <td>{contributer.contributer_course_name}</td>
-                  <td>{contributer.contributer_course_category}</td>
-                  <td>
-                    {contributer.contributer_approve_status === "yes" ? (
-                      <button
-                        className="disapprove"
-                        onClick={() =>
-                          contributerDisApproveHandler(contributer)
-                        }
-                      >
-                        {approve ? " Disapprove" : "Approve"}
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => contributerApproveHandler(contributer)}
-                        className="approve"
-                      >
-                        {approve ? " Approve" : "Disapprove"}
-                      </button>
-                    )}
-                  </td>
-                  <td>
-                    {contributer.contributer_approve_status === "yes" ? (
-                      <button className="approved">Approved</button>
-                    ) : (
-                      <button className="disapproved">Not Approved</button>
-                    )}
-                  </td>
-                </tr>
-              </tbody>
-            ))}
+          {allContributers?.length > 0
+            ? allContributers?.map((contributer) => (
+                <tbody>
+                  <tr key={contributer.contributer_details_id}>
+                    <td>{contributer.contributer_details_id}</td>
+                    <td>{contributer.contributer_email}</td>
+                    <td>{contributer.contributer_fullname}</td>
+                    <td>{contributer.contributer_mobile}</td>
+                    <td>{contributer.contributer_qualifications}</td>
+                    <td>{contributer.contributer_exp_yrs}</td>
+                    <td>{contributer.contributer_course_name}</td>
+                    <td>{contributer.contributer_course_category}</td>
+                    <td>
+                      {contributer.contributer_approve_status === "yes" ? (
+                        <button
+                          className="disapprove"
+                          onClick={() =>
+                            contributerDisApproveHandler(contributer)
+                          }
+                        >
+                          {approve ? " Disapprove" : "Approve"}
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => contributerApproveHandler(contributer)}
+                          className="approve"
+                        >
+                          {approve ? " Approve" : "Disapprove"}
+                        </button>
+                      )}
+                    </td>
+                    <td>
+                      {contributer.contributer_approve_status === "yes" ? (
+                        <button className="approved">Approved</button>
+                      ) : (
+                        <button className="disapproved">Not Approved</button>
+                      )}
+                    </td>
+                  </tr>
+                </tbody>
+              ))
+            : "No contributer found"}
         </table>
       </div>
     </div>

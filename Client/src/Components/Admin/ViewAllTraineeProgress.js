@@ -20,6 +20,20 @@ const Input = styled.input`
     border-color: #fc83bb;
   }
 `;
+const Table = styled.table`
+  border: none;
+`;
+const Tbody = styled.tbody``;
+const Tr = styled.tr`
+  border-bottom: 1px solid #ccc;
+`;
+const Th = styled.th`
+  border: none;
+  border-bottom: 2px solid #ccc;
+`;
+const Td = styled.td`
+  border: none;
+`;
 const ViewAllTraineeProgress = () => {
   const [allTraineeProgress, setAllTraineeProgress] = useState([]);
   const [showProgressEditModel, setShowProgressEditModel] = useState(false);
@@ -62,20 +76,20 @@ const ViewAllTraineeProgress = () => {
           onChange={(event) => setSearchItem(event.target.value)}
         />
       </form>
-      <table>
-        <tbody>
+      <Table>
+        <Tbody>
           <tr>
-            <th>Id</th>
-            <th>Trainee email</th>
-            <th>Course Name</th>
-            <th>Trainer Name</th>
-            <th>Progress %</th>
-            <th>Chapter Completed</th>
-            <th>Progress Status</th>
-            <th>Course status</th>
-            <th>Video Upload</th>
-            <th>Course Started date</th>
-            <th>Modify Progress</th>
+            <Th>Id</Th>
+            <Th>Trainee email</Th>
+            <Th>Course Name</Th>
+            <Th>Trainer Name</Th>
+            <Th>Progress %</Th>
+            <Th>Chapter Completed</Th>
+            <Th>Progress Status</Th>
+            <Th>Course status</Th>
+            <Th>Video Upload</Th>
+            <Th>Course Started date</Th>
+            <Th>Modify Progress</Th>
           </tr>
           {/* {  allTraineeProgress ?.filter( (traineeFilter) =>
          return searchItem.toLowerCase() === " " ? traineeFilter: traineeFilter.trainee_course_email.toLowerCase().includes(searchItem.toLowerCase)) .map((trainee) =>{" "}
@@ -92,30 +106,37 @@ const ViewAllTraineeProgress = () => {
                     .includes(searchItem.toLowerCase()) ||
                   traineeFilter.trainee_course_instructor_name
                     .toLowerCase()
+                    .includes(searchItem.toLowerCase()) ||
+                  traineeFilter.trainee_course_progress_percentage
+                    .toString()
+                    .toLowerCase()
+                    .includes(searchItem.toLowerCase()) ||
+                  traineeFilter.trainee_course_video_upload_status
+                    .toLowerCase()
                     .includes(searchItem.toLowerCase())
             )
             .map((trainee) => (
-              <tr key={trainee.trainee_course_dtls_id}>
-                <td>{trainee.trainee_course_dtls_id}</td>
-                <td>{trainee.trainee_course_email}</td>
-                <td>{trainee.trainee_course_name}</td>
-                <td>{trainee.trainee_course_instructor_name}</td>
-                <td>{trainee.trainee_course_progress_percentage}%</td>
-                <td>{trainee.trainee_course_chapter_completed}</td>
-                <td>{trainee.trainee_course_progress_status}</td>
-                <td>
+              <Tr key={trainee.trainee_course_dtls_id}>
+                <Td>{trainee.trainee_course_dtls_id}</Td>
+                <Td>{trainee.trainee_course_email}</Td>
+                <Td>{trainee.trainee_course_name}</Td>
+                <Td>{trainee.trainee_course_instructor_name}</Td>
+                <Td>{trainee.trainee_course_progress_percentage}%</Td>
+                <Td>{trainee.trainee_course_chapter_completed}</Td>
+                <Td>{trainee.trainee_course_progress_status}</Td>
+                <Td>
                   {traineeCourseStatusDetails.map(
                     (status) =>
                       status.statusId === trainee.trainee_course_status && (
                         <p>{status.status}</p>
                       )
                   )}
-                </td>
-                <td>{trainee.trainee_course_video_upload_status}</td>
-                <td>
+                </Td>
+                <Td>{trainee.trainee_course_video_upload_status}</Td>
+                <Td>
                   {new Date(trainee.trainee_course_start_date).toDateString()}
-                </td>
-                <td>
+                </Td>
+                <Td>
                   {trainee.trainee_course_progress_percentage === 100 &&
                   trainee.trainee_course_progress_status === "completed" &&
                   trainee.trainee_course_video_upload_status === "uploaded" &&
@@ -132,11 +153,11 @@ const ViewAllTraineeProgress = () => {
                       Modify Progress
                     </ModifyButton>
                   )}
-                </td>
-              </tr>
+                </Td>
+              </Tr>
             ))}
-        </tbody>
-      </table>
+        </Tbody>
+      </Table>
     </div>
   );
 };

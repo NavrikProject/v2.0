@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-//import Form1 from "../Forms/ProfileForm/Form1.js";
-
 import GoToTop from "../../GoToTop.js";
 import {
   DetailsWrapper,
@@ -14,27 +11,32 @@ import {
   SidebarListUl,
   Wrapper,
 } from "./RecruiterProfileElements.js";
-
-import { Link } from "react-router-dom";
+import ActiveJobs from "./ActiveJobs";
+import InActiveJobs from "./InActiveJobs";
 import AddFirmDetailsForm from "./AddFirmDetailsForm.js";
 import PostJobForm from "./PostJobForm.js";
-import ViewPostedJobs from "./ViewPostedJobs.js";
 const RecruiterProfile = () => {
   const [showAddFirmDetails, setShowAddFirmDetails] = useState(true);
   const [showJobPostForm, setShowJobPostForm] = useState(false);
   const [showResponseForJobPost, setShowResponseForJobPost] = useState(false);
   const [showViewJobPosts, setShowViewJobPosts] = useState(false);
+  const [activeJobPosts, setActiveJobPosts] = useState(false);
+  const [inActiveJobPosts, setInActiveJobPosts] = useState(false);
   const AddFirmDetailsHandler = () => {
     setShowAddFirmDetails(!showAddFirmDetails);
     setShowResponseForJobPost(false);
     setShowViewJobPosts(false);
     setShowJobPostForm(false);
+    setInActiveJobPosts(false);
+    setActiveJobPosts(false);
   };
   const PostAJobHandler = () => {
     setShowJobPostForm(!showJobPostForm);
     setShowAddFirmDetails(false);
     setShowResponseForJobPost(false);
     setShowViewJobPosts(false);
+    setInActiveJobPosts(false);
+    setActiveJobPosts(false);
   };
 
   const ViewResponseHandler = () => {
@@ -50,6 +52,22 @@ const RecruiterProfile = () => {
     setShowJobPostForm(false);
     setShowAddFirmDetails(false);
   };
+  const inActiveJobPostsHandler = () => {
+    setShowViewJobPosts(false);
+    setShowResponseForJobPost(false);
+    setShowJobPostForm(false);
+    setShowAddFirmDetails(false);
+    setInActiveJobPosts(!inActiveJobPosts);
+    setActiveJobPosts(false);
+  };
+  const activeJobPostsHandler = () => {
+    setShowViewJobPosts(false);
+    setShowResponseForJobPost(false);
+    setShowJobPostForm(false);
+    setShowAddFirmDetails(false);
+    setInActiveJobPosts(false);
+    setActiveJobPosts(!activeJobPosts);
+  };
   return (
     <Section>
       <Div>
@@ -63,8 +81,11 @@ const RecruiterProfile = () => {
               <SidebarListItem onClick={PostAJobHandler}>
                 <QuickMenuTitle>Post a Job</QuickMenuTitle>
               </SidebarListItem>
-              <SidebarListItem onClick={ViewJobPosts}>
-                <QuickMenuTitle>View Job Posts</QuickMenuTitle>
+              <SidebarListItem onClick={activeJobPostsHandler}>
+                <QuickMenuTitle>Open Jobs</QuickMenuTitle>
+              </SidebarListItem>
+              <SidebarListItem onClick={inActiveJobPostsHandler}>
+                <QuickMenuTitle>Closed Jobs</QuickMenuTitle>
               </SidebarListItem>
             </SidebarListUl>
           </Wrapper>
@@ -75,7 +96,8 @@ const RecruiterProfile = () => {
             <DetailsWrapper>
               {showAddFirmDetails && <AddFirmDetailsForm />}
               {showJobPostForm && <PostJobForm />}
-              {showViewJobPosts && <ViewPostedJobs />}
+              {activeJobPosts && <ActiveJobs />}
+              {inActiveJobPosts && <InActiveJobs />}
             </DetailsWrapper>
           </Wrapper>
         </LeftDiv>
