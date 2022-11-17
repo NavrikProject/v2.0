@@ -27,6 +27,12 @@ import courseRoute from "./routes/courseRoutes/courseRoute.js";
 import courseRegdRoute from "./routes/courseRoutes/courseRegdRoute.js";
 import corporateCourseRoute from "./routes/courseRoutes/corpCourseRoute.js";
 
+// jobs applications import
+import JobsApplyRoute from "./routes/jobPostsRoutes/jobsApplyRoute.js";
+
+// job seeker routes import
+import jobSeekerRoute from "./routes/jobSeekerRoutes/jobSeekerRoutes.js";
+
 import AdminTraineeCourseRoute from "./routes/AdminTraineeCourseRoutes/AdminTraineeCourseRoutes.js";
 import mentorRoute from "./routes/mentorRoutes/mentorRoute.js";
 import mentorBookingRoute from "./routes/mentorRoutes/MentorBookingRoute.js";
@@ -126,6 +132,10 @@ app.use("/api/recruiter", recruiterRoute);
 
 // jobs posts routes
 app.use("/api/jobs", jobsRoute);
+app.use("/api/jobs/apply", JobsApplyRoute);
+
+// job seeker routers
+app.use("/api/job-seeker", jobSeekerRoute);
 
 // master routes
 app.use("/api", masterRoute);

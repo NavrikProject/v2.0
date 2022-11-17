@@ -12,8 +12,16 @@ import {
 } from "./JobCardElements";
 import axios from "axios";
 import moment from "moment/moment";
+import { useSelector } from "react-redux";
+import LoginModel from "../../Forms/LoginModel";
+import ApplyJobForm from "./ApplyJobForm";
 const JobCard = () => {
+  const user = useSelector((state) => state.user.currentUser);
   const [allJobs, setAllJobs] = useState([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showApplyJobForm, setApplyJobForm] = useState(false);
+  const [indJobDetails, setIndJobDetails] = useState("");
+
   useEffect(() => {
     const getAllJobPosts = async () => {
       const res = await axios.get("/jobs/get/all-jobs-posts");
@@ -26,8 +34,26 @@ const JobCard = () => {
     };
     getAllJobPosts();
   }, []);
+  const showApplyJobModalHandler = (job) => {
+    setShowLoginModal(false);
+    setApplyJobForm(!showApplyJobForm);
+    setIndJobDetails(job);
+  };
+  const showLoginModelHandler = () => {
+    setShowLoginModal(!showLoginModal);
+    setApplyJobForm(false);
+  };
   return (
     <JobCardSection>
+      {showLoginModal && (
+        <LoginModel showLoginModelHandler={showLoginModelHandler} />
+      )}
+      {showApplyJobForm && (
+        <ApplyJobForm
+          showApplyJobModalHandler={showApplyJobModalHandler}
+          indJobDetails={indJobDetails}
+        />
+      )}
       {allJobs?.length > 0 ? (
         allJobs?.map((job) => (
           <JobCardDiv key={job.job_post_dtls_id}>
@@ -111,7 +137,20 @@ const JobCard = () => {
                     View Job
                   </Link>
                 </ViewJobButton>
-                <ApplyNowButton>Apply Now</ApplyNowButton>
+                {!user ? (
+                  <ApplyNowButton type="btn" onClick={showLoginModelHandler}>
+                    Login to Apply
+                  </ApplyNowButton>
+                ) : (
+                  <ApplyNowButton
+                    type="submit"
+                    onClick={() => {
+                      showApplyJobModalHandler(job);
+                    }}
+                  >
+                    Apply Now
+                  </ApplyNowButton>
+                )}
               </div>
             </JobCardDisplayFlexDiv>
           </JobCardDiv>

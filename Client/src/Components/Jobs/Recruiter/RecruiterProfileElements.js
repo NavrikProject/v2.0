@@ -103,7 +103,7 @@ export const SidebarListItem = styled.li`
   width: 100%;
   cursor: pointer;
   border-bottom: 1px solid lightgrey;
-  :nth-child(4) {
+  :nth-child(5) {
     border-bottom: none;
   }
 `;

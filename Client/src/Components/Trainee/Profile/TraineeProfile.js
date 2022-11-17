@@ -114,7 +114,7 @@ const TraineeProfile = () => {
                 <SidebarListItem>
                   <QuickMenuTitle>
                     <Link
-                      style={{ textDecoration: "none", color: "#062C30" }}
+                      style={{ textDecoration: "none", color: "#111" }}
                       to={`/trainee/profile/my-sessions`}
                     >
                       <span>
@@ -127,13 +127,26 @@ const TraineeProfile = () => {
                 <SidebarListItem>
                   <QuickMenuTitle>
                     <Link
-                      style={{ textDecoration: "none", color: "#062C30" }}
+                      style={{ textDecoration: "none", color: "#111" }}
                       to={`/trainee/profile/my-courses`}
                     >
                       <span>
-                        <i className="fa-solid fa-calendar-chec"></i>
+                        <i class="fa-solid fa-book-open-reader"></i>
                       </span>
                       My Courses
+                    </Link>
+                  </QuickMenuTitle>
+                </SidebarListItem>
+                <SidebarListItem>
+                  <QuickMenuTitle>
+                    <Link
+                      style={{ textDecoration: "none", color: "#111" }}
+                      to={`/${user?.type}/profile/my-jobs`}
+                    >
+                      <span>
+                        <i className="fa-regular fa-file"></i>
+                      </span>
+                      Applied Jobs
                     </Link>
                   </QuickMenuTitle>
                 </SidebarListItem>
@@ -148,7 +161,7 @@ const TraineeProfile = () => {
                 <SidebarListItem onClick={showAccountForm}>
                   <QuickMenuTitle>
                     <span>
-                      <i className="fa-regular fa-user"></i>
+                      <i className="fa-solid fa-circle-user"></i>
                     </span>
                     Account
                   </QuickMenuTitle>

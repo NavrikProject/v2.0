@@ -15,7 +15,10 @@ import ActiveJobs from "./ActiveJobs";
 import InActiveJobs from "./InActiveJobs";
 import AddFirmDetailsForm from "./AddFirmDetailsForm.js";
 import PostJobForm from "./PostJobForm.js";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 const RecruiterProfile = () => {
+  const user = useSelector((state) => state.user.currentUser);
   const [showAddFirmDetails, setShowAddFirmDetails] = useState(true);
   const [showJobPostForm, setShowJobPostForm] = useState(false);
   const [showResponseForJobPost, setShowResponseForJobPost] = useState(false);
@@ -86,6 +89,19 @@ const RecruiterProfile = () => {
               </SidebarListItem>
               <SidebarListItem onClick={inActiveJobPostsHandler}>
                 <QuickMenuTitle>Closed Jobs</QuickMenuTitle>
+              </SidebarListItem>
+              <SidebarListItem>
+                <QuickMenuTitle>
+                  <Link
+                    style={{ textDecoration: "none", color: "#111" }}
+                    to={`/${user?.type}/profile/my-jobs`}
+                  >
+                    <span>
+                      <i className="fa-regular fa-file"></i>
+                    </span>
+                    Applied Jobs
+                  </Link>
+                </QuickMenuTitle>
               </SidebarListItem>
             </SidebarListUl>
           </Wrapper>

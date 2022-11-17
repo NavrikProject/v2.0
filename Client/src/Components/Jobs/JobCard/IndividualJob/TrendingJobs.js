@@ -85,7 +85,7 @@ const TrendingJobs = () => {
                     }}
                     to={`/jobs/individual-job/${job.job_post_unique_id}`}
                   >
-                    Apply Now
+                    View Job
                   </Link>
                 </ApplyNowButton>
               </ButtonDiv>

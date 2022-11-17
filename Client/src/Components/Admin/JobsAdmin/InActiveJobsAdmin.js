@@ -28,6 +28,35 @@ const EditButton = styled.button`
     margin-right: 4px;
   }
 `;
+const Input = styled.input`
+  outline: none;
+  font-size: 17px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  border-bottom-width: 2px;
+  transition: all 0.4s ease;
+  width: 50%;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  &:focus {
+    border-color: #fc83bb;
+  }
+`;
+const NotFoundDiv = styled.div`
+  box-shadow: rgb(142 151 158 / 15%) 0px 4px 19px;
+  text-align: center;
+  width: 70%;
+  margin: 0 auto;
+  h1 {
+    font-weight: normal;
+    padding: 20px;
+  }
+`;
+const JobsTitle = styled.h1`
+  color: #111;
+  opacity: 0.7;
+  padding-bottom: 10px;
+`;
 const InActiveJobsAdmin = () => {
   const [allInActiveJobs, setAllInActiveJobs] = useState([]);
   const [jobDetails, setJobDetails] = useState("");
@@ -59,72 +88,91 @@ const InActiveJobsAdmin = () => {
           showModalHandler={showModalHandler}
         />
       )}
-      <h1>In active jobs</h1>
-      <input
-        type="text"
-        onChange={(event) => {
-          setSearchItem(event.target.value);
-        }}
-      />
-      <Table>
-        <Tbody>
-          <Tr>
-            <Th>Id</Th>
-            <Th>Job Title</Th>
-            <Th>Job Category</Th>
-            <Th>Req Skills</Th>
-            <Th>Qualification and Exp</Th>
-            <Th>Salary</Th>
-            <Th>Job created on</Th>
-            <Th>Job status</Th>
-            <Th>Approve status</Th>
-            <Th>Actions</Th>
-          </Tr>
-          {allInActiveJobs
-            ?.filter((jobFilter) =>
-              searchItem === " "
-                ? jobFilter
-                : jobFilter.job_post_heading
-                    .toLowerCase()
-                    .includes(searchItem.toLowerCase()) ||
-                  jobFilter.job_post_req_skills
-                    .toLowerCase()
-                    .includes(searchItem.toLowerCase()) ||
-                  jobFilter.job_post_min_qual
-                    .toLowerCase()
-                    .includes(searchItem.toLowerCase()) ||
-                  jobFilter.job_post_hiring_status
-                    .toLowerCase()
-                    .includes(searchItem.toLowerCase()) ||
-                  jobFilter.job_post_open_position_status
-                    .toLowerCase()
-                    .includes(searchItem.toLowerCase())
-            )
-            .map((job) => (
-              <Tr key={job.job_post_dtls_id}>
-                <Td>{job.job_post_dtls_id}</Td>
-                <Td>{job.job_post_heading}</Td>
-                <Td>{job.job_post_category}</Td>
-                <Td>{job.job_post_req_skills}</Td>
-                <Td>
-                  {job.job_post_min_qual} {job.job_post_min_exp}
-                </Td>
-                <Td>{job.job_post_expected_salary}</Td>
-                <Td>{new Date(job.job_post_cr_dt).toDateString()}</Td>
-                <Td>{job.job_post_status}</Td>
-                <Td>{job.job_post_approve_status}</Td>
-                <Td>
-                  <EditButton onClick={() => showModalHandler(job)}>
-                    <i className="fa-solid fa-pen-to-square"></i>Edit
-                  </EditButton>
-                </Td>
+      <JobsTitle>
+        Job posts need to be approved
+        <hr />
+      </JobsTitle>
+      {allInActiveJobs.length > 0 ? (
+        <>
+          {" "}
+          <Input
+            placeholder="Search by the Skills,Qualification,Role, Opening status...."
+            type="text"
+            onChange={(event) => {
+              setSearchItem(event.target.value);
+            }}
+          />
+          <Table>
+            <Tbody>
+              <Tr>
+                <Th>Id</Th>
+                <Th>Job Title</Th>
+                <Th>Job Category</Th>
+                <Th>Req Skills</Th>
+                <Th>Qualification and Exp</Th>
+                <Th>Salary</Th>
+                <Th>Job created on</Th>
+                <Th>Job status</Th>
+                <Th>Approve status</Th>
+                <Th>Actions</Th>
               </Tr>
-            ))}
-        </Tbody>
-      </Table>
-      {/* <a href="https://firebasestorage.googleapis.com/v0/b/practiwiz-phone-verify.appspot.com/o/Acc%20resume%20-%20Copy%20(2).doc?alt=media&token=e8f7a901-c95c-4cac-a02e-040d39b16130">
-        Download resume
-      </a> */}
+              {allInActiveJobs
+                ?.filter((jobFilter) =>
+                  searchItem === " "
+                    ? jobFilter
+                    : jobFilter.job_post_heading
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase()) ||
+                      jobFilter.job_post_req_skills
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase()) ||
+                      jobFilter.job_post_min_qual
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase()) ||
+                      jobFilter.job_post_status
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase()) ||
+                      jobFilter.job_post_approve_status
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase()) ||
+                      jobFilter.job_post_category
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase()) ||
+                      jobFilter.job_post_role
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase()) ||
+                      jobFilter.job_post_open_position_status
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase())
+                )
+                .map((job) => (
+                  <Tr key={job.job_post_dtls_id}>
+                    <Td>{job.job_post_dtls_id}</Td>
+                    <Td>{job.job_post_heading}</Td>
+                    <Td>{job.job_post_category}</Td>
+                    <Td>{job.job_post_req_skills}</Td>
+                    <Td>
+                      {job.job_post_min_qual} {job.job_post_min_exp}
+                    </Td>
+                    <Td>{job.job_post_expected_salary}</Td>
+                    <Td>{new Date(job.job_post_cr_dt).toDateString()}</Td>
+                    <Td>{job.job_post_status}</Td>
+                    <Td>{job.job_post_approve_status}</Td>
+                    <Td>
+                      <EditButton onClick={() => showModalHandler(job)}>
+                        <i className="fa-solid fa-pen-to-square"></i>Edit
+                      </EditButton>
+                    </Td>
+                  </Tr>
+                ))}
+            </Tbody>
+          </Table>
+        </>
+      ) : (
+        <NotFoundDiv>
+          <h1>No Jobs are posted</h1>
+        </NotFoundDiv>
+      )}
     </div>
   );
 };

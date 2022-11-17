@@ -20,15 +20,20 @@ import {
   JobCardSection,
   JobTitle,
   ViewJobButton,
+  AppliedText,
 } from "./IndividualJobElements";
+import GoToTop from "../../../GoToTop";
 import TrendingJobs from "./TrendingJobs";
 import LoginModel from "../../../Forms/LoginModel.js";
 import { useSelector } from "react-redux";
+import ApplyJobForm from "../ApplyJobForm";
 const IndividualJobDetails = () => {
   const user = useSelector((state) => state.user.currentUser);
   const [individualJobDetail, setIndividualJobDetail] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
-
+  const [showApplyJobForm, setApplyJobForm] = useState(false);
+  const [indJobDetails, setIndJobDetails] = useState("");
+  const [appliedStatus, setAppliedStatus] = useState(false);
   const location = useLocation();
   let path = location.pathname.split("/")[3];
   useEffect(() => {
@@ -43,13 +48,40 @@ const IndividualJobDetails = () => {
     };
     getAllJobPosts();
   }, [path]);
+
+  useEffect(() => {
+    const getJobAppliedStatus = async () => {
+      const res = await axios.post(`/jobs/apply/post/applied-status/${path}`, {
+        email: user?.email,
+      });
+      if (res.data.success) {
+        setAppliedStatus(true);
+      }
+      if (res.data.error) {
+        setAppliedStatus(false);
+      }
+    };
+    getJobAppliedStatus();
+  }, [path, user?.email]);
   const showLoginModelHandler = () => {
     setShowLoginModal(!showLoginModal);
+    setApplyJobForm(false);
+  };
+  const showApplyJobModalHandler = (job) => {
+    setShowLoginModal(false);
+    setApplyJobForm(!showApplyJobForm);
+    setIndJobDetails(job);
   };
   return (
     <IndividualJobSection>
       {showLoginModal && (
         <LoginModel showLoginModelHandler={showLoginModelHandler} />
+      )}
+      {showApplyJobForm && (
+        <ApplyJobForm
+          showApplyJobModalHandler={showApplyJobModalHandler}
+          indJobDetails={indJobDetails}
+        />
       )}
       <IndividualJobWrapper>
         <IndividualJobDisplayFlex>
@@ -119,27 +151,43 @@ const IndividualJobDetails = () => {
                           </span>
                         </div>
                         <div>
-                          {!user ? (
+                          {user && appliedStatus === true && (
+                            <AppliedText>
+                              <i className="fa-solid fa-circle-info"></i>
+                              You have all ready applied.
+                            </AppliedText>
+                          )}
+                          {user && appliedStatus === false && (
                             <ViewJobButton
                               type="btn"
-                              onClick={showLoginModelHandler}
-                            >
-                              Login to Apply
-                            </ViewJobButton>
-                          ) : (
-                            <ViewJobButton type="btn">Apply Now</ViewJobButton>
-                          )}
-                          <ApplyNowButton>
-                            <Link
-                              to={`/register`}
-                              style={{
-                                textDecoration: "none",
-                                color: "#fff",
+                              onClick={() => {
+                                showApplyJobModalHandler(job);
                               }}
                             >
-                              Register to apply
-                            </Link>
-                          </ApplyNowButton>
+                              Apply Now
+                            </ViewJobButton>
+                          )}
+                          {!user && appliedStatus === false && (
+                            <>
+                              <ViewJobButton
+                                type="btn"
+                                onClick={showLoginModelHandler}
+                              >
+                                Login to Apply
+                              </ViewJobButton>
+                              <ApplyNowButton>
+                                <Link
+                                  to={`/register`}
+                                  style={{
+                                    textDecoration: "none",
+                                    color: "#fff",
+                                  }}
+                                >
+                                  Register to apply
+                                </Link>
+                              </ApplyNowButton>
+                            </>
+                          )}
                         </div>
                       </JobCardDisplayFlexDiv>
                     </JobCardSection>
@@ -374,6 +422,7 @@ const IndividualJobDetails = () => {
           </IndividualJobDivLeft>
         </IndividualJobDisplayFlex>
       </IndividualJobWrapper>
+      <GoToTop />
     </IndividualJobSection>
   );
 };
