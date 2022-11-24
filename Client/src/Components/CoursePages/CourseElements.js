@@ -168,19 +168,24 @@ export const FaqDivFlex = styled.div`
   padding: 60px 0;
 `;
 export const FaqDiv1 = styled.div`
-  padding: 50px 0;
+  padding: 20px 0;
   width: 80%;
   margin: 0 auto;
+  p {
+    margin-left: 30px;
+  }
 `;
 export const CourseHighlightTitle = styled.h1`
-  font-size: 34px;
+  font-size: 27px;
+  color: #111;
+  opacity: 0.9;
 `;
 export const CourseHighlight = styled.ul`
-  padding: 20px;
+  padding: 0 20px;
   margin-left: 30px;
 `;
 export const CourseHighlightList = styled.li`
-  font-size: 19px;
+  font-size: 17px;
   padding: 3px 0;
 `;
 export const FaqDiv2 = styled.div``;

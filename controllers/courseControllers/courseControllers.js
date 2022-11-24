@@ -5,20 +5,20 @@ import moment from "moment";
 import { trainerApplicationEmail } from "../../middleware/trainerEmailTemplates.js";
 
 export async function getCourseController(req, res, next) {
-  const id = req.params.id;
+  const courseTitle = req.query.name;
   try {
     sql.connect(config, (err) => {
       if (err) return res.send(err.message);
       const request = new sql.Request();
-      request.input("id", sql.Int, id);
+      request.input("courseTitle", sql.VarChar, courseTitle);
       request.query(
-        "SELECT * FROM courses_dtls WHERE course_id = @id",
+        "SELECT * FROM courses_dtls WHERE course_title = @courseTitle",
         (err, result) => {
           if (err) return res.send(err.message);
           if (result.recordset.length > 0) {
-            return res.send(result.recordset);
+            return res.send({ success: result.recordset });
           } else {
-            return;
+            return res.send({ error: " " });
           }
         }
       );

@@ -17,7 +17,7 @@ import routers from "express";
 let router = routers.Router();
 
 // specific  course
-router.get("/full-course/:id", getCourseController);
+router.get("/full-course", getCourseController);
 
 // get course by name
 router.get("/all-courses", allCourseControllers);

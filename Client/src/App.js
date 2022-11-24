@@ -43,6 +43,7 @@ import TraineeCourseProgressPage from "./Pages/TraineeCourseProgressPage";
 import JobsAdminPage from "./Pages/AdminPages/JobsAdminPage";
 import ViewJobResponsesPage from "./Pages/JobsPages/ViewJobResponsesPage";
 import AppliedJobPage from "./Pages/JobsPages/AppliedJobPage";
+import RpaJumpstartPage from "./Pages/RpaJumpstartPage";
 
 const MentorProfilePage = React.lazy(() => import("./Pages/MentorProfilePage"));
 const ActivateAccountPage = React.lazy(() =>
@@ -204,6 +205,10 @@ const App = () => {
             <Route
               path="/training/individual/ba-jumpstart"
               element={<BaJumpstartPage />}
+            />
+            <Route
+              path="/training/individual/jumpstart-to-rpa-live-bot-development"
+              element={<RpaJumpstartPage />}
             />
             {user?.type === "trainee" && (
               <Route
