@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import ReactGA from "react-ga4";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -59,7 +60,9 @@ const MentorPage = React.lazy(() => import("./Pages/MentorFormPage"));
 const RpaBaPage = React.lazy(() => import("./Pages/RpaBaCoursePage"));
 const App = () => {
   const user = useSelector((state) => state.user?.currentUser);
-
+  ReactGA.initialize("G-67LS5L1Z3G");
+  ReactGA.send("pageview");
+  console.log(ReactGA);
   return (
     <>
       <ToastContainer />
